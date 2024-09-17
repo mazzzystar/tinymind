@@ -101,16 +101,18 @@ export default function Editor() {
             required
           />
 
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? (
-              <>
-                <Loader2 className="m-2 h-4 w-6 animate-spin" />
-                Publishing...
-              </>
-            ) : (
-              "Publish"
-            )}
-          </Button>
+          <div className="flex justify-center">
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Publishing...
+                </>
+              ) : (
+                "Publish"
+              )}
+            </Button>
+          </div>
 
           {isSuccess && (
             <div className="text-green-500 text-center mt-4">
