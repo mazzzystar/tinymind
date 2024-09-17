@@ -8,7 +8,6 @@ import { FiPlus } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import Script from "next/script";
 import Footer from "@/components/Footer";
-import { useSession } from "next-auth/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,8 +22,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { data: session } = useSession();
-
   return (
     <html lang="en">
       <Script
@@ -43,7 +40,7 @@ export default function RootLayout({
         <SessionProvider>
           <Header />
           <main className="pt-20">{children}</main>
-          {session && session.accessToken && <Footer />}
+          <Footer />
           <Button
             size="icon"
             className="fixed bottom-8 right-8 rounded-full shadow-lg z-20"

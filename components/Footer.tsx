@@ -6,7 +6,7 @@ import Link from "next/link";
 const Footer = () => {
   const { data: session } = useSession();
 
-  if (!session || !session.user?.name) {
+  if (!session || !session.user?.name || !session.accessToken) {
     return null;
   }
 
