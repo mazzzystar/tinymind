@@ -1,5 +1,8 @@
 import { Octokit } from '@octokit/rest'
 
+// Add this type definition at the top of the file
+type UpdateFileParams = Parameters<Octokit['repos']['createOrUpdateFileContents']>[0];
+
 export interface BlogPost {
   id: string;
   title: string;
@@ -48,16 +51,25 @@ async function ensureRepoExists(octokit: Octokit, owner: string, repo: string) {
         auto_init: true,
       })
       console.log(`Created new repository: ${repo}`)
+    } else {
+      throw error
+    }
+  }
 
-      // Add "https://tinymind.me" to README.md
+  // Check if README.md exists
+  try {
+    await octokit.repos.getContent({ owner, repo, path: 'README.md' });
+  } catch (error) {
+    if (error instanceof Error && 'status' in error && error.status === 404) {
+      // Create README.md if it doesn't exist
+      const content = Buffer.from('Write blog posts and thoughts at https://tinymind.me with data stored on GitHub.').toString('base64');
       await octokit.repos.createOrUpdateFileContents({
         owner,
         repo,
         path: 'README.md',
-        message: 'Add TinyMind link to README',
-        content: Buffer.from('Write blog posts and thoughts at https://tinymind.me with data stored on GitHub.\n').toString('base64'),
-      })
-      console.log('Added TinyMind link to README.md')
+        message: 'Initial commit: Add README.md',
+        content,
+      });
     } else {
       throw error
     }
@@ -328,14 +340,19 @@ export async function createThought(content: string, image: string | undefined, 
 
     console.log('Updating thoughts file...');
     // Create or update the file with all thoughts
-    await octokit.repos.createOrUpdateFileContents({
+    const updateParams: UpdateFileParams = {
       owner,
       repo,
       path: 'content/thoughts.json',
       message: 'Add new thought',
       content: Buffer.from(JSON.stringify(thoughts, null, 2)).toString('base64'),
-      sha: existingSha,
-    });
+    };
+
+    if (existingSha) {
+      updateParams.sha = existingSha;
+    }
+
+    await octokit.repos.createOrUpdateFileContents(updateParams);
 
     console.log('Thought created successfully');
   } catch (error) {
