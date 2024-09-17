@@ -55,7 +55,7 @@ async function ensureRepoExists(octokit: Octokit, owner: string, repo: string) {
         repo,
         path: 'README.md',
         message: 'Add TinyMind link to README',
-        content: Buffer.from('Write blog posts and thoughts at https://tinymind.me\n').toString('base64'),
+        content: Buffer.from('Write blog posts and thoughts at https://tinymind.me with data stored on GitHub.\n').toString('base64'),
       })
       console.log('Added TinyMind link to README.md')
     } else {
