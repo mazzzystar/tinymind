@@ -1,8 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Github } from "lucide-react";
-import { signIn } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { getThoughts, Thought } from "@/lib/githubApi";
