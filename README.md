@@ -4,8 +4,6 @@ Write and sync your blog posts, thoughts, and memos with one-click GitHub sign-i
 
 https://github.com/user-attachments/assets/4c9f590e-dd1e-4e9f-95a0-45b236752494
 
-
-
 ## How it works
 
 1. We create a public repo called `tinymind-blog` in your GitHub account.
@@ -23,7 +21,7 @@ We only have write access to your public repositories. Your privacy matters:
 ## TODO
 
 - [ ] Create a page to showcase all public writers using TinyMind (creator list)
-- [ ] Implement shareable user main pages (like https://tinywind.me/mazzzystar)
+- [ ] Implement shareable user main pages (like https://tinymind.me/mazzzystar)
 
 ## Tech Stack
 
@@ -32,4 +30,3 @@ Built with Next.js, React, TypeScript, NextAuth.js, and Tailwind CSS.
 ## Contribute
 
 Contributions are welcome! Feel free to submit a Pull Request.
-
