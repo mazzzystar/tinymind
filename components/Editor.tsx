@@ -104,7 +104,7 @@ export default function Editor() {
           <Button type="submit" disabled={isLoading}>
             {isLoading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="m-2 h-4 w-6 animate-spin" />
                 Publishing...
               </>
             ) : (

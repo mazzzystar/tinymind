@@ -10,7 +10,7 @@ const Footer = () => {
     return null;
   }
 
-  const owner = session.user.username;
+  const owner = session.user.name;
   const repo = "tinymind-blog";
 
   return (
