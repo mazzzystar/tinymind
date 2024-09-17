@@ -13,7 +13,7 @@ import { Loader2 } from "lucide-react"; // Import Loader2 icon
 export default function Editor() {
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
-  const [type, setType] = useState("thoughts");
+  const [type, setType] = useState("thought");
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -77,7 +77,7 @@ export default function Editor() {
               <RadioGroupItem
                 value="thought"
                 id="thought"
-                className={type === "thoughts" ? "text-white bg-black" : ""}
+                className={type === "thought" ? "text-white bg-black" : ""}
               />
               <Label htmlFor="thought">Thought</Label>
             </div>

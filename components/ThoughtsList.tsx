@@ -56,10 +56,11 @@ export default function ThoughtsList() {
               We create a public &quot;tinymind-blog&quot; repo in your GitHub.
             </li>
             <li>
-              Your blogs & thoughts are automatically committed to this repo.
+              Your new blog & thoughts will be automatically committed to this
+              repo.
             </li>
             <li>
-              Your data is stored only on your GitHub, independent of this site.
+              Your data is stored only on GitHub, independent of this site.
             </li>
           </ol>
         </div>

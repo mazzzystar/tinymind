@@ -28,7 +28,7 @@ export default function Header() {
           <Button
             variant="ghost"
             className={`text-lg font-light ${
-              activeTab === "thoughts" ? "text-black" : "text-gray-500"
+              activeTab === "thoughts" ? "text-black" : "text-gray-300"
             }`}
             onClick={() => setActiveTab("thoughts")}
             asChild
