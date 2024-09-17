@@ -12,9 +12,9 @@ import Footer from "@/components/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "TinyMind - Write and sync your blog & memo data with GitHub",
+  title: "TinyMind - Write and sync your blog posts & memos with GitHub",
   description:
-    "Create a GitHub account and write blogs, thoughts, and notes using this website. Your data will be automatically saved in a GitHub repository, which means your data will never be lost as long as GitHub exists.p",
+    "Write and preserve your blogs, thoughts, and notes effortlessly. Sign in with GitHub to automatically sync your content to your own repository, ensuring your ideas are safely stored as long as GitHub exists.",
 };
 
 export default function RootLayout({
