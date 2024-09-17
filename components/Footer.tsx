@@ -10,16 +10,19 @@ const Footer = () => {
     return null;
   }
 
+  const owner = session.user.username;
+  const repo = "tinymind-blog";
+
   return (
     <footer className="fixed bottom-2 left-0 w-full py-2 text-center text-sm">
       Data stored in:{" "}
       <Link
-        href={"https://github.com/" + session.user?.name + "/tinymind-blog"}
+        href={`https://github.com/${owner}/${repo}`}
         target="_blank"
         rel="noopener noreferrer"
         className="text-gray-500 hover:underline"
       >
-        {session.user?.name + "/tinymind-blog"}
+        {`${owner}/${repo}`}
       </Link>
     </footer>
   );

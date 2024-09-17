@@ -8,6 +8,9 @@ declare module "next-auth" {
     accessToken?: string
     expires: string
   }
+  interface User {
+    username?: string
+  }
 }
 
 export async function getSession(): Promise<Session | null> {
@@ -33,18 +36,33 @@ export const authOptions: NextAuthOptions = {
         params: {
           scope: 'public_repo workflow'
         }
-      }
+      },
+      profile(profile) {
+        return {
+          id: profile.id.toString(),
+          name: profile.name || profile.login,
+          email: profile.email,
+          image: profile.avatar_url,
+          username: profile.login, // Add this line
+        }
+      },
     }),
   ],
   callbacks: {
-    async jwt({ token, account }) {
+    async jwt({ token, account, user }) {
       if (account && account.access_token) {
         token.accessToken = account.access_token
+      }
+      if (user) {
+        token.username = user.username
       }
       return token
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken as string
+      if (session.user) {
+        session.user.username = token.username as string
+      }
       return session
     }
   },
