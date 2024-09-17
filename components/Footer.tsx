@@ -11,15 +11,15 @@ const Footer = () => {
   }
 
   return (
-    <footer className="fixed bottom-0 left-0 w-full bg-gray-100 py-2 text-center text-sm">
+    <footer className="fixed bottom-2 left-0 w-full py-2 text-center text-sm">
       Data stored in:{" "}
       <Link
-        href={session.user?.name}
+        href={"https://github.com/" + session.user?.name + "/tinymind-blog"}
         target="_blank"
         rel="noopener noreferrer"
         className="text-gray-500 hover:underline"
       >
-        {session.user?.name}
+        {session.user?.name + "/tinymind-blog"}
       </Link>
     </footer>
   );
