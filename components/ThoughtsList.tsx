@@ -60,9 +60,9 @@ export default function ThoughtsList() {
         <div className="flex justify-center mt-8">
           <button
             onClick={() => router.push("/editor")}
-            className="text-gray-500 hover:text-gray-700 underline underline-offset-1"
+            className="text-gray-500 hover:text-black"
           >
-            Create a thought
+            No thoughts yet, create one.
           </button>
         </div>
       ) : (
