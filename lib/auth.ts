@@ -38,7 +38,6 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, account }) {
-      console.log('jwt callback', token, account)
       if (account && account.access_token) {
         token.accessToken = account.access_token
       }
