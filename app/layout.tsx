@@ -40,7 +40,7 @@ export default function RootLayout({
         <SessionProvider>
           <Header />
           <main className="pt-20">{children}</main>
-          <Footer />
+          if (session && session.accessToken) {<Footer />}
           <Button
             size="icon"
             className="fixed bottom-8 right-8 rounded-full shadow-lg z-20"

@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TinyMind
 
-## Getting Started
+TinyMind is a website that lets you write and sync your blog posts, short thoughts, and memos by signing in with GitHub. Here's how it works:
 
-First, run the development server:
+1. We create a public repo called "tinymind-blog" in your GitHub account.
+2. When you write anything on our webpage, it automatically commits to your `yourname/tinymind-blog` repo.
+3. This ensures a seamless way to create content and maintain data persistence.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Data Privacy & Permissions
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+We only have write access to your public repositories. Your privacy matters:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Content stored only in your GitHub repo
+- No data kept on our servers
+- You have full control through your GitHub account
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## TODO
 
-## Learn More
+- [ ] Create a page to showcase all public writers using TinyMind (creator list)
+- [ ] Implement shareable user main pages (like https://tinywind.me/mazzzystar)
 
-To learn more about Next.js, take a look at the following resources:
+## Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Built with Next.js, React, TypeScript, NextAuth.js, and Tailwind CSS.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Contribute
 
-## Deploy on Vercel
+Contributions are welcome! Feel free to submit a Pull Request.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[Your chosen license here]
