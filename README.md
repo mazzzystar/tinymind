@@ -8,7 +8,7 @@ https://github.com/user-attachments/assets/4c9f590e-dd1e-4e9f-95a0-45b236752494
 
 ## How it works
 
-1. We create a public repo called "tinymind-blog" in your GitHub account.
+1. We create a public repo called `tinymind-blog` in your GitHub account.
 2. When you write anything on our webpage, it automatically commits to your `yourname/tinymind-blog` repo.
 3. This ensures a seamless way to create content and maintain data persistence.
 
