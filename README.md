@@ -1,6 +1,12 @@
 # TinyMind
 
-TinyMind is a website that lets you write and sync your blog posts, short thoughts, and memos by signing in with GitHub. Here's how it works:
+Write and sync your blog posts, thoughts, and memos with one-click GitHub sign-in. No server needed - every input automatically syncs to your GitHub repository.
+
+https://github.com/user-attachments/assets/4c9f590e-dd1e-4e9f-95a0-45b236752494
+
+
+
+## How it works
 
 1. We create a public repo called "tinymind-blog" in your GitHub account.
 2. When you write anything on our webpage, it automatically commits to your `yourname/tinymind-blog` repo.
@@ -27,6 +33,3 @@ Built with Next.js, React, TypeScript, NextAuth.js, and Tailwind CSS.
 
 Contributions are welcome! Feel free to submit a Pull Request.
 
-## License
-
-[Your chosen license here]
