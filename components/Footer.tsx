@@ -1,16 +1,25 @@
 "use client";
 
+import { getUserLogin } from "@/lib/githubApi";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const Footer = () => {
   const { data: session } = useSession();
+  const [userLogin, setUserLogin] = useState<string | null>(null);
 
-  if (!session || !session.user?.name || !session.accessToken) {
+  useEffect(() => {
+    if (session?.accessToken) {
+      getUserLogin(session.accessToken).then(setUserLogin);
+    }
+  }, [session]);
+
+  if (!session || !session.user?.name || !userLogin) {
     return null;
   }
 
-  const owner = session.user.name;
+  const owner = userLogin;
   const repo = "tinymind-blog";
 
   return (

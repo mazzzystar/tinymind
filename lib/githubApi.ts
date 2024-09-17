@@ -333,3 +333,9 @@ export async function createThought(content: string, image: string | undefined, 
     throw error;
   }
 }
+
+export async function getUserLogin(accessToken: string): Promise<string> {
+  const octokit = getOctokit(accessToken);
+  const { data: user } = await octokit.users.getAuthenticated();
+  return user.login;
+}
