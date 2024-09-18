@@ -56,23 +56,24 @@ async function ensureRepoExists(octokit: Octokit, owner: string, repo: string) {
     }
   }
 
-  // Check if README.md exists and is not empty
+  // Check if README.md exists and needs updating
   try {
     const { data: readmeContent } = await octokit.repos.getContent({ owner, repo, path: 'README.md' });
     console.log('README content:', readmeContent);
     if ('content' in readmeContent) {
       const decodedContent = Buffer.from(readmeContent.content, 'base64').toString('utf-8');
       console.log('README Decoded content:', decodedContent.trim());
-      if (decodedContent.trim() === '') {
-        // README.md exists but is empty, update it
+      if (decodedContent.trim() === '' || decodedContent.trim() === '# tinymind-blog') {
+        // README.md is empty or contains only the default repo name, update it
         await octokit.repos.createOrUpdateFileContents({
           owner,
           repo,
           path: 'README.md',
           message: 'Update README.md with default content',
-          content: Buffer.from('Write blog posts and thoughts at https://tinymind.me with data stored on GitHub.').toString('base64'),
+          content: Buffer.from('# TinyMind Blog\n\nWrite blog posts and thoughts at https://tinymind.me with data stored on GitHub.').toString('base64'),
           sha: readmeContent.sha,
         });
+        console.log('README.md updated with default content');
       }
     }
   } catch (error) {
