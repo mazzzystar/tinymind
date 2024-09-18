@@ -3,7 +3,7 @@
     "blog": "блог",
     "thoughts": "мысли",
     "noThoughtsYet": "Пока нет мыслей",
-    "createThought": "Создать",
+    "createThought": "Создать мысль",
     "publish": "Опубликовать",
     "dataStoredIn": "Данные хранятся в:",
     "writeContent": "Напишите свой контент здесь...(поддерживается Markdown)",
@@ -12,6 +12,7 @@
     "howItWorksStep1": "Мы создаем публичный репозиторий \"tinymind-blog\" в вашем GitHub.",
     "howItWorksStep2": "Ваш новый блог и мысли будут автоматически коммитится в этот репозиторий.",
     "howItWorksStep3": "Ваши данные хранятся только на GitHub, независимо от этого сайта.",
-    "signInWithGitHub": "Войти через GitHub"
+    "signInWithGitHub": "Войти через GitHub",
+    "createBlogPost": "Создать пост"
   }
 }

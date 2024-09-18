@@ -3,7 +3,7 @@
     "blog": "blog",
     "thoughts": "pensées",
     "noThoughtsYet": "Pas encore de pensées",
-    "createThought": "Créer une",
+    "createThought": "Créer pensée",
     "publish": "Publier",
     "dataStoredIn": "Données stockées dans :",
     "writeContent": "Écrivez votre contenu ici...(Markdown pris en charge)",
@@ -12,6 +12,7 @@
     "howItWorksStep1": "Nous créons un dépôt public \"tinymind-blog\" dans votre GitHub.",
     "howItWorksStep2": "Votre nouveau blog et vos pensées seront automatiquement commis à ce dépôt.",
     "howItWorksStep3": "Vos données sont stockées uniquement sur GitHub, indépendamment de ce site.",
-    "signInWithGitHub": "Se connecter avec GitHub"
+    "signInWithGitHub": "Se connecter avec GitHub",
+    "createBlogPost": "Créer article"
   }
 }

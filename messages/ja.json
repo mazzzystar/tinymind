@@ -3,7 +3,7 @@
     "blog": "ブログ",
     "thoughts": "アイデア",
     "noThoughtsYet": "まだアイデアがありません",
-    "createThought": "新規作成",
+    "createThought": "アイデア作成",
     "publish": "公開",
     "dataStoredIn": "データの保存先：",
     "writeContent": "ここに内容を書いてください...(Markdown対応)",
@@ -12,6 +12,7 @@
     "howItWorksStep1": "GitHubに公開の\"tinymind-blog\"リポジトリを作成します。",
     "howItWorksStep2": "新しいブログとアイデアは自動的にこのリポジトリにコミットされます。",
     "howItWorksStep3": "データはGitHubにのみ保存され、このサイトとは独立しています。",
-    "signInWithGitHub": "GitHubでサインイン"
+    "signInWithGitHub": "GitHubでサインイン",
+    "createBlogPost": "ブログ作成"
   }
 }
