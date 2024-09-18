@@ -12,7 +12,8 @@ import Footer from "@/components/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "TinyMind - Write and sync your blog posts & memos with GitHub",
+  title:
+    "TinyMind - Write and sync your blog posts & thoughts with one-click GitHub sign-in",
   description:
     "Write and preserve your blogs, thoughts, and notes effortlessly. Sign in with GitHub to automatically sync your content to your own repository, ensuring your ideas are safely stored as long as GitHub exists.",
   openGraph: {
@@ -31,7 +32,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "TinyMind - Write and sync your blog posts & memos with GitHub",
+    title:
+      "TinyMind - Write and sync your blog posts & thoughts with one-click GitHub sign-in",
     description:
       "Write and preserve your blogs, thoughts, and notes effortlessly. Sync with GitHub for safe storage.",
     images: ["/icon.jpg"],
