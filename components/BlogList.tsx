@@ -57,7 +57,7 @@ export default function BlogList({ posts }: { posts: BlogPost[] }) {
                 href={`/blog/${post.id.replace(".md", "")}`}
                 className="group block"
               >
-                <h2 className="text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors duration-200">
+                <h2 className="text-xl font-semibold text-gray-800 group-hover:text-emerald-500 transition-colors duration-200">
                   {decodeTitle(post.title)}
                 </h2>
                 <p className="text-sm text-gray-500 mt-1">
