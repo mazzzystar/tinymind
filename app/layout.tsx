@@ -71,7 +71,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <SessionProvider>
             <Header />
-            <main className="pt-20">{children}</main>
+            <main className="pt-10">{children}</main>
             <Footer />
             <Button
               size="icon"
