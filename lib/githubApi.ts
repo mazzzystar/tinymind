@@ -173,18 +173,22 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
             if ('content' in contentResponse.data) {
               const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf-8');
               
-              // Parse the date from the content
-              const dateMatch = content.match(/date:\s*(.+)/);
+              // Split content into front matter and markdown body
+              const [frontMatter, ...bodyParts] = content.split('---\n');
+              const markdownContent = bodyParts.join('---\n').trim();
+
+              // Parse the date from the front matter
+              const dateMatch = frontMatter.match(/date:\s*(.+)/);
               const date = dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString();
 
-              // Parse the title from the content
-              const titleMatch = content.match(/title:\s*(.+)/);
+              // Parse the title from the front matter
+              const titleMatch = frontMatter.match(/title:\s*(.+)/);
               const title = titleMatch ? titleMatch[1] : file.name.replace('.md', '');
 
               return {
                 id: file.name.replace('.md', ''),
                 title,
-                content,
+                content: markdownContent, // Use only the markdown content
                 date,
               };
             }
@@ -225,6 +229,20 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
 
     const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf-8');
 
+    // Parse the content
+    const [frontMatter, ...bodyParts] = content.split('---\n');
+    const body = bodyParts.join('---\n').trim();
+
+    // Parse front matter
+    const frontMatterLines = frontMatter.trim().split('\n');
+    const metadata: Record<string, string> = {};
+    frontMatterLines.forEach(line => {
+      const [key, value] = line.split(': ');
+      if (key && value) {
+        metadata[key.trim()] = value.trim();
+      }
+    });
+
     // Fetch the latest commit for this file
     const commitResponse = await octokit.repos.listCommits({
       owner,
@@ -241,9 +259,9 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
 
     return {
       id,
-      title: id,
-      content,
-      date: latestCommit.commit.author?.date ?? new Date().toISOString(),
+      title: metadata.title || id,
+      content: body,
+      date: metadata.date || latestCommit.commit.author?.date || new Date().toISOString(),
     };
   } catch (error) {
     console.error('Error fetching blog post:', error);
