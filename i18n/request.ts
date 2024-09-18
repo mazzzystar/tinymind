@@ -9,7 +9,7 @@ export default getRequestConfig(async () => {
   const browserLocale = acceptLanguage ? acceptLanguage.split(',')[0].split('-')[0] : 'en';
 
   // Use the browser locale if it's supported, otherwise fallback to 'en'
-  const supportedLocales = ['en', 'zh']; // Add all supported locales here
+  const supportedLocales = ['en', 'zh', 'ja', 'ko', 'fr', 'de', 'es', 'pt', 'ru', 'ar', 'hi'];
   const selectedLocale = supportedLocales.includes(browserLocale) ? browserLocale : 'en';
 
   return {
