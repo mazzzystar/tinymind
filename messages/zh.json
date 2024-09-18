@@ -1,0 +1,16 @@
+{
+    "HomePage": {
+      "blog": "博客",
+      "thoughts": "想法",
+      "noThoughtsYet": "还没有想法",
+      "createThought": "创建一个",
+      "publish": "发布",
+      "dataStoredIn": "数据存储在：",
+
+      "howItWorksTitle": "工作原理：",
+      "howItWorksStep1": "我们在您的GitHub中创建一个公开的\"tinymind-blog\"仓库。",
+      "howItWorksStep2": "您的新博客和想法将自动提交到这个仓库。",
+      "howItWorksStep3": "您的数据仅存储在GitHub上，独立于本网站。",
+      "signInWithGitHub": "使用GitHub登录"
+    }
+  }

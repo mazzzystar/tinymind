@@ -4,10 +4,12 @@ import { getUserLogin } from "@/lib/githubApi";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 const Footer = () => {
   const { data: session } = useSession();
   const [userLogin, setUserLogin] = useState<string | null>(null);
+  const t = useTranslations("HomePage");
 
   useEffect(() => {
     if (session?.accessToken) {
@@ -24,7 +26,7 @@ const Footer = () => {
 
   return (
     <footer className="fixed bottom-2 left-0 w-full py-2 text-center text-sm">
-      Data stored in:{" "}
+      {t("dataStoredIn")}{" "}
       <Link
         href={`https://github.com/${owner}/${repo}`}
         target="_blank"

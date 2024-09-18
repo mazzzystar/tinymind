@@ -5,12 +5,15 @@ import { useSession } from "next-auth/react";
 import { getThoughts, Thought } from "@/lib/githubApi";
 import GitHubSignInButton from "./GitHubSignInButton";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
 
 export default function ThoughtsList() {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
   const [error, setError] = useState<string | null>(null);
   const { data: session, status } = useSession();
   const router = useRouter();
+  const t = useTranslations("HomePage");
 
   useEffect(() => {
     async function fetchThoughts() {
@@ -57,13 +60,14 @@ export default function ThoughtsList() {
   return (
     <div className="max-w-2xl mx-auto p-4">
       {thoughts.length === 0 ? (
-        <div className="flex justify-center mt-8">
-          <button
+        <div className="flex flex-col items-center mt-8 space-y-4">
+          <p className="text-gray-500">{t("noThoughtsYet")}</p>
+          <Button
             onClick={() => router.push("/editor")}
-            className="text-gray-500 hover:text-black"
+            className="bg-black hover:bg-gray-800 text-white"
           >
-            No thoughts yet, create one.
-          </button>
+            {t("createThought")}
+          </Button>
         </div>
       ) : (
         <div className="space-y-4">
@@ -87,6 +91,16 @@ export default function ThoughtsList() {
               </small>
             </div>
           ))}
+          <div className="flex justify-end mt-4">
+            <Button
+              onClick={() => {
+                /* Add publish functionality */
+              }}
+              className="bg-green-500 hover:bg-green-600 text-white"
+            >
+              {t("publish")}
+            </Button>
+          </div>
         </div>
       )}
     </div>

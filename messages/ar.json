@@ -1,0 +1,16 @@
+{
+  "HomePage": {
+    "blog": "مدونة",
+    "thoughts": "أفكار",
+    "noThoughtsYet": "لا توجد أفكار بعد",
+    "createThought": "إنشاء فكرة",
+    "publish": "نشر",
+    "dataStoredIn": "البيانات مخزنة في:",
+
+    "howItWorksTitle": "كيف يعمل:",
+    "howItWorksStep1": "نقوم بإنشاء مستودع عام \"tinymind-blog\" في GitHub الخاص بك.",
+    "howItWorksStep2": "سيتم التزام مدونتك الجديدة وأفكارك تلقائيًا في هذا المستودع.",
+    "howItWorksStep3": "يتم تخزين بياناتك فقط على GitHub، بشكل مستقل عن هذا الموقع.",
+    "signInWithGitHub": "تسجيل الدخول باستخدام GitHub"
+  }
+}

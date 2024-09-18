@@ -6,12 +6,15 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { FaGithub } from "react-icons/fa"; // Change this import
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export default function Header() {
   const pathname = usePathname();
   const [activeTab, setActiveTab] = useState(
     pathname === "/blog" ? "blog" : "thoughts"
   );
+
+  const t = useTranslations("HomePage");
 
   return (
     <header className="fixed top-0 left-0 right-0 py-4 bg-card shadow z-10">
@@ -30,7 +33,7 @@ export default function Header() {
                 onClick={() => setActiveTab("blog")}
                 asChild
               >
-                <Link href="/blog">Blog</Link>
+                <Link href="/blog">{t("blog")}</Link>
               </Button>
               <Button
                 variant="ghost"
@@ -40,7 +43,7 @@ export default function Header() {
                 onClick={() => setActiveTab("thoughts")}
                 asChild
               >
-                <Link href="/thoughts">Thoughts</Link>
+                <Link href="/thoughts">{t("thoughts")}</Link>
               </Button>
             </div>
           </div>

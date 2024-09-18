@@ -1,0 +1,16 @@
+{
+  "HomePage": {
+    "blog": "blog",
+    "thoughts": "pensamentos",
+    "noThoughtsYet": "Ainda não há pensamentos",
+    "createThought": "Criar um",
+    "publish": "Publicar",
+    "dataStoredIn": "Dados armazenados em:",
+
+    "howItWorksTitle": "Como funciona:",
+    "howItWorksStep1": "Criamos um repositório público \"tinymind-blog\" no seu GitHub.",
+    "howItWorksStep2": "Seu novo blog e pensamentos serão automaticamente commitados neste repositório.",
+    "howItWorksStep3": "Seus dados são armazenados apenas no GitHub, independentemente deste site.",
+    "signInWithGitHub": "Entrar com GitHub"
+  }
+}

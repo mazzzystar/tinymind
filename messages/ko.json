@@ -1,0 +1,16 @@
+{
+  "HomePage": {
+    "blog": "블로그",
+    "thoughts": "아이디어",
+    "noThoughtsYet": "아직 아이디어가 없습니다",
+    "createThought": "새로 만들기",
+    "publish": "게시",
+    "dataStoredIn": "데이터 저장 위치:",
+
+    "howItWorksTitle": "작동 방식:",
+    "howItWorksStep1": "GitHub에 공개 \"tinymind-blog\" 저장소를 만듭니다.",
+    "howItWorksStep2": "새 블로그와 아이디어가 자동으로 이 저장소에 커밋됩니다.",
+    "howItWorksStep3": "데이터는 GitHub에만 저장되며 이 사이트와 독립적입니다.",
+    "signInWithGitHub": "GitHub로 로그인"
+  }
+}

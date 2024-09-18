@@ -9,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react"; // Import Loader2 icon
+import { useTranslations } from "next-intl";
 
 export default function Editor() {
   const [content, setContent] = useState("");
@@ -17,6 +18,7 @@ export default function Editor() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const t = useTranslations();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +38,7 @@ export default function Editor() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to publish");
+        throw new Error(t("failedPublish"));
       }
 
       setIsSuccess(true);
@@ -45,7 +47,7 @@ export default function Editor() {
       }, 2000); // Redirect after 2 seconds
     } catch (error) {
       console.error("Error publishing:", error);
-      alert("Failed to publish. Please try again.");
+      alert(t("failedPublish"));
     } finally {
       setIsLoading(false);
     }
@@ -55,7 +57,7 @@ export default function Editor() {
     <Card className="max-w-2xl mx-auto">
       <CardHeader>
         <CardTitle>
-          Create {type === "blog" ? "Blog Post" : "Thought"}
+          {type === "blog" ? t("createBlogPost") : t("createThought")}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -71,7 +73,7 @@ export default function Editor() {
                 id="blog"
                 className={type === "blog" ? "text-white bg-black" : ""}
               />
-              <Label htmlFor="blog">Blog</Label>
+              <Label htmlFor="blog">{t("blog")}</Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem
@@ -79,7 +81,7 @@ export default function Editor() {
                 id="thought"
                 className={type === "thought" ? "text-white bg-black" : ""}
               />
-              <Label htmlFor="thought">Thought</Label>
+              <Label htmlFor="thought">{t("thoughts")}</Label>
             </div>
           </RadioGroup>
 
@@ -88,7 +90,7 @@ export default function Editor() {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter title"
+              placeholder={t("enterTitle")}
               required
             />
           )}
@@ -96,7 +98,7 @@ export default function Editor() {
           <Textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Write your content here (Markdown supported)"
+            placeholder={t("writeContent")}
             className="min-h-[200px]"
             required
           />
@@ -106,17 +108,17 @@ export default function Editor() {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Publishing...
+                  {t("publishing")}
                 </>
               ) : (
-                "Publish"
+                t("publish")
               )}
             </Button>
           </div>
 
           {isSuccess && (
             <div className="text-green-500 text-center mt-4">
-              🎉Successfully published! Redirecting...
+              {t("successPublished")}
             </div>
           )}
         </form>

@@ -1,0 +1,16 @@
+{
+  "HomePage": {
+    "blog": "ब्लॉग",
+    "thoughts": "विचार",
+    "noThoughtsYet": "अभी तक कोई विचार नहीं",
+    "createThought": "एक बनाएं",
+    "publish": "प्रकाशित करें",
+    "dataStoredIn": "डेटा यहाँ संग्रहित है:",
+
+    "howItWorksTitle": "यह कैसे काम करता है:",
+    "howItWorksStep1": "हम आपके GitHub में एक सार्वजनिक \"tinymind-blog\" रिपॉजिटरी बनाते हैं।",
+    "howItWorksStep2": "आपका नया ब्लॉग और विचार स्वचालित रूप से इस रिपॉजिटरी में कमिट किए जाएंगे।",
+    "howItWorksStep3": "आपका डेटा केवल GitHub पर संग्रहीत है, इस साइट से स्वतंत्र है।",
+    "signInWithGitHub": "GitHub के साथ साइन इन करें"
+  }
+}

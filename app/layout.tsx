@@ -8,6 +8,8 @@ import { FiPlus } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import Script from "next/script";
 import Footer from "@/components/Footer";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -43,13 +45,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <Script
         async
         src="https://www.googletagmanager.com/gtag/js?id=G-1MF16MH92D"
@@ -63,21 +68,25 @@ export default function RootLayout({
       </Script>
 
       <body className={inter.className}>
-        <SessionProvider>
-          <Header />
-          <main className="pt-20">{children}</main>
-          <Footer />
-          <Button
-            size="icon"
-            className="fixed bottom-8 right-8 rounded-full shadow-lg z-20"
-            asChild
-          >
-            <Link href="/editor?type=thoughts">
-              <FiPlus className="w-6 h-6" />
-              <span className="sr-only">Create new thought</span>
-            </Link>
-          </Button>
-        </SessionProvider>
+        <NextIntlClientProvider messages={messages}>
+          <SessionProvider>
+            <Header />
+            <main className="pt-20">{children}</main>
+            <Footer />
+            <Button
+              size="icon"
+              className="fixed bottom-8 right-8 rounded-full shadow-lg z-20"
+              asChild
+            >
+              <Link href="/editor?type=thoughts">
+                <FiPlus className="w-6 h-6" />
+                <span className="sr-only">
+                  {messages.createNewThought as string}
+                </span>
+              </Link>
+            </Button>
+          </SessionProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );
