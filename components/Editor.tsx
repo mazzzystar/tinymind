@@ -18,7 +18,7 @@ export default function Editor() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const t = useTranslations();
+  const t = useTranslations("HomePage");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
