@@ -45,14 +45,13 @@ export default async function BlogPost({ params }: { params: { id: string } }) {
     );
   }
 
-  const decodedTitle = decodeTitle(post.title);
-  const formattedDate = format(new Date(post.date), "MMMM d, yyyy");
-
   return (
     <Card className="max-w-3xl mx-auto mt-8">
       <CardHeader>
-        <CardTitle className="text-3xl font-bold">{decodedTitle}</CardTitle>
-        <p className="text-sm text-gray-500">{formattedDate}</p>
+        <CardTitle className="text-3xl font-bold">{post.title}</CardTitle>
+        <p className="text-sm text-gray-500">
+          {format(new Date(post.date), "MMMM d, yyyy")}
+        </p>
       </CardHeader>
       <CardContent>
         <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none">
