@@ -6,14 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import ReactMarkdown from "react-markdown";
 
-function decodeTitle(title: string): string {
-  try {
-    return decodeURIComponent(title);
-  } catch {
-    return title;
-  }
-}
-
 export default async function BlogPost({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
 
