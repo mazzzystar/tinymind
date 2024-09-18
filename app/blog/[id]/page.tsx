@@ -4,6 +4,7 @@ import { getBlogPost } from "@/lib/githubApi";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
+import ReactMarkdown from "react-markdown";
 
 function decodeTitle(title: string): string {
   try {
@@ -55,7 +56,7 @@ export default async function BlogPost({ params }: { params: { id: string } }) {
       </CardHeader>
       <CardContent>
         <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none">
-          <div dangerouslySetInnerHTML={{ __html: post.content }} />
+          <ReactMarkdown>{post.content}</ReactMarkdown>
         </div>
       </CardContent>
     </Card>
