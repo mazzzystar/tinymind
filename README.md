@@ -20,7 +20,8 @@ We only have write access to your public repositories. Your privacy matters:
 
 ## TODO
 
-- [ ] Implement shareable user main pages (like https://tinymind.me/mazzzystar) (Help wanted!)
+- [ ] Implement shareable user main pages (like https://tinymind.me/mazzzystar) (🔥Help wanted!)
+- [ ] Fix the blog detail Markdown rendering issue (🔥Help wanted!)
 - [ ] Create a page to showcase all public writers using TinyMind (creator list)
 
 ## Tech Stack
