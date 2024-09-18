@@ -8,15 +8,6 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import rehypeHighlight from "rehype-highlight";
 
-function decodeContent(content: string): string {
-  try {
-    return decodeURIComponent(content);
-  } catch (error) {
-    console.error("Error decoding content:", error);
-    return content;
-  }
-}
-
 export default async function BlogPost({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
 
@@ -48,13 +39,10 @@ export default async function BlogPost({ params }: { params: { id: string } }) {
     );
   }
 
-  const decodedTitle = decodeContent(post.title);
-  const decodedContent = decodeContent(post.content);
-
   return (
     <Card className="max-w-3xl mx-auto mt-8">
       <CardHeader>
-        <CardTitle className="text-3xl font-bold">{decodedTitle}</CardTitle>
+        <CardTitle className="text-3xl font-bold">{post.title}</CardTitle>
         <p className="text-sm text-gray-500">
           {format(new Date(post.date), "MMMM d, yyyy")}
         </p>
@@ -69,7 +57,7 @@ export default async function BlogPost({ params }: { params: { id: string } }) {
               ),
             }}
           >
-            {decodedContent}
+            {post.content}
           </ReactMarkdown>
         </div>
       </CardContent>
