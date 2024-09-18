@@ -152,6 +152,8 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
       path: 'content/blog',
     });
 
+    console.log('GitHub API response:', response);
+
     if (!Array.isArray(response.data)) {
       console.warn('Unexpected response from GitHub API: data is not an array');
       return [];
@@ -171,39 +173,20 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
             if ('content' in contentResponse.data) {
               const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf-8');
               
-              // Parse the frontmatter and content
-              const frontmatterRegex = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
-              const match = content.match(frontmatterRegex);
+              // Parse the date from the content
+              const dateMatch = content.match(/date:\s*(.+)/);
+              const date = dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString();
 
-              if (match) {
-                const [, frontmatter, markdownContent] = match;
-                const titleMatch = frontmatter.match(/title:\s*(.*)/);
-                const dateMatch = frontmatter.match(/date:\s*(.*)/);
+              // Parse the title from the content
+              const titleMatch = content.match(/title:\s*(.+)/);
+              const title = titleMatch ? titleMatch[1] : file.name.replace('.md', '');
 
-                const title = titleMatch ? titleMatch[1].trim() : decodeURIComponent(file.name.replace('.md', ''));
-                const date = dateMatch ? dateMatch[1].trim() : new Date().toISOString();
-
-                return {
-                  id: file.name.replace('.md', ''),
-                  title,
-                  content: markdownContent.trim(),
-                  date,
-                };
-              } else {
-                // Fallback for old format
-                const dateMatch = content.match(/date:\s*(.+)/);
-                const date = dateMatch ? dateMatch[1].trim() : new Date().toISOString();
-
-                const titleMatch = content.match(/title:\s*(.+)/);
-                const title = titleMatch ? titleMatch[1].trim() : decodeURIComponent(file.name.replace('.md', ''));
-
-                return {
-                  id: file.name.replace('.md', ''),
-                  title,
-                  content,
-                  date,
-                };
-              }
+              return {
+                id: file.name.replace('.md', ''),
+                title,
+                content,
+                date,
+              };
             }
           } catch (error) {
             console.error(`Error fetching content for ${file.name}:`, error);
@@ -212,7 +195,8 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
     );
 
     const filteredPosts = posts.filter((post): post is BlogPost => post !== undefined);
-    return filteredPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    console.log('Filtered posts:', filteredPosts);
+    return filteredPosts;
   } catch (error) {
     console.error('Error fetching blog posts:', error);
     throw error;
@@ -228,6 +212,7 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
   await initializeGitHubStructure(octokit, owner, repo);
 
   try {
+    // Fetch the file content
     const contentResponse = await octokit.repos.getContent({
       owner,
       repo,
@@ -240,39 +225,26 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
 
     const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf-8');
 
-    // Parse the frontmatter and content
-    const frontmatterRegex = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
-    const match = content.match(frontmatterRegex);
+    // Fetch the latest commit for this file
+    const commitResponse = await octokit.repos.listCommits({
+      owner,
+      repo,
+      path: `content/blog/${id}.md`,
+      per_page: 1
+    });
 
-    if (match) {
-      const [, frontmatter, markdownContent] = match;
-      const titleMatch = frontmatter.match(/title:\s*(.*)/);
-      const dateMatch = frontmatter.match(/date:\s*(.*)/);
-
-      const title = titleMatch ? titleMatch[1].trim() : decodeURIComponent(id);
-      const date = dateMatch ? dateMatch[1].trim() : new Date().toISOString();
-
-      return {
-        id,
-        title,
-        content: markdownContent.trim(),
-        date,
-      };
-    } else {
-      // Fallback for old format
-      const dateMatch = content.match(/date:\s*(.+)/);
-      const date = dateMatch ? new Date(dateMatch[1].trim()).toISOString() : new Date().toISOString();
-
-      const titleMatch = content.match(/title:\s*(.+)/);
-      const title = titleMatch ? titleMatch[1].trim() : decodeURIComponent(id);
-
-      return {
-        id,
-        title,
-        content,
-        date,
-      };
+    if (commitResponse.data.length === 0) {
+      throw new Error('No commits found for this file');
     }
+
+    const latestCommit = commitResponse.data[0];
+
+    return {
+      id,
+      title: id,
+      content,
+      date: latestCommit.commit.author?.date ?? new Date().toISOString(),
+    };
   } catch (error) {
     console.error('Error fetching blog post:', error);
     return null;
@@ -312,24 +284,14 @@ export async function createBlogPost(title: string, content: string, accessToken
   const { owner, repo } = await getRepoInfo(accessToken);
   await initializeGitHubStructure(octokit, owner, repo);
 
-  // Function to create a URL-friendly filename
-  const createFilename = (str: string) => {
-    return str
-      .replace(/[^a-zA-Z0-9\s]/g, '') // Remove special characters, keep letters, numbers, and spaces
-      .replace(/\s+/g, '-') // Replace spaces with hyphens
-      .toLowerCase()
-      .replace(/^-+|-+$/g, ''); // Remove leading and trailing hyphens
-  };
-
-  const fileName = `${createFilename(title)}.md`;
-  const path = `content/blog/${fileName}`;
-  const date = new Date().toISOString();
+  const path = `content/blog/${encodeURIComponent(title.toLowerCase().replace(/\s+/g, '-'))}.md`
+  const date = new Date().toISOString() // Store full ISO string
   const fullContent = `---
 title: ${title}
 date: ${date}
 ---
 
-${content}`;
+${content}`
 
   await octokit.repos.createOrUpdateFileContents({
     owner,
@@ -337,7 +299,7 @@ ${content}`;
     path,
     message: `Add blog post: ${title}`,
     content: Buffer.from(fullContent).toString('base64'),
-  });
+  })
 }
 
 export async function createThought(content: string, image: string | undefined, accessToken: string): Promise<void> {
