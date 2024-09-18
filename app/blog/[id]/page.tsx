@@ -6,6 +6,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import ReactMarkdown from "react-markdown";
 
+function decodeContent(content: string): string {
+  try {
+    return decodeURIComponent(content);
+  } catch (error) {
+    console.error("Error decoding content:", error);
+    return content;
+  }
+}
+
 export default async function BlogPost({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
 
@@ -37,17 +46,20 @@ export default async function BlogPost({ params }: { params: { id: string } }) {
     );
   }
 
+  const decodedTitle = decodeContent(post.title);
+  const decodedContent = decodeContent(post.content);
+
   return (
     <Card className="max-w-3xl mx-auto mt-8">
       <CardHeader>
-        <CardTitle className="text-3xl font-bold">{post.title}</CardTitle>
+        <CardTitle className="text-3xl font-bold">{decodedTitle}</CardTitle>
         <p className="text-sm text-gray-500">
           {format(new Date(post.date), "MMMM d, yyyy")}
         </p>
       </CardHeader>
       <CardContent>
         <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none">
-          <ReactMarkdown>{post.content}</ReactMarkdown>
+          <ReactMarkdown>{decodedContent}</ReactMarkdown>
         </div>
       </CardContent>
     </Card>
