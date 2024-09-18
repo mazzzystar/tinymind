@@ -262,8 +262,6 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
       throw new Error('No commits found for this file');
     }
 
-    const latestCommit = commitResponse.data[0];
-
     return {
       id,
       title: metadata.title || id,
