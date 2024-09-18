@@ -59,8 +59,10 @@ async function ensureRepoExists(octokit: Octokit, owner: string, repo: string) {
   // Check if README.md exists and is not empty
   try {
     const { data: readmeContent } = await octokit.repos.getContent({ owner, repo, path: 'README.md' });
+    console.log('README content:', readmeContent);
     if ('content' in readmeContent) {
       const decodedContent = Buffer.from(readmeContent.content, 'base64').toString('utf-8');
+      console.log('README Decoded content:', decodedContent.trim());
       if (decodedContent.trim() === '') {
         // README.md exists but is empty, update it
         await octokit.repos.createOrUpdateFileContents({
