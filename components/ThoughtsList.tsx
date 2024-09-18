@@ -70,9 +70,9 @@ export default function ThoughtsList() {
           {thoughts.map((thought) => (
             <div
               key={thought.id}
-              className="bg-[#f9f9f9] shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300"
+              className="bg-[#f9f9f9] shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300 flex flex-col"
             >
-              <p className="text-gray-800 mb-2 whitespace-pre-wrap">
+              <p className="text-gray-800 mb-2 whitespace-pre-wrap flex-grow">
                 {thought.content}
               </p>
               {/* {thought.image && (
@@ -82,7 +82,7 @@ export default function ThoughtsList() {
                   className="w-full h-auto rounded-md mb-2"
                 />
               )} */}
-              <small className="text-gray-500">
+              <small className="text-gray-500 self-end mt-2">
                 {new Date(thought.timestamp).toLocaleString()}
               </small>
             </div>
