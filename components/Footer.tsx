@@ -23,7 +23,7 @@ const Footer = () => {
   const repo = "tinymind-blog";
 
   return (
-    <footer className="fixed bottom-2 left-0 w-full py-2 text-center text-sm">
+    <footer className="bottom-2 left-0 w-full py-2 text-center text-sm">
       Data stored in:{" "}
       <Link
         href={`https://github.com/${owner}/${repo}`}
