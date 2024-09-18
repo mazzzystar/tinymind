@@ -9,7 +9,12 @@ import rehypeRaw from "rehype-raw";
 import rehypeHighlight from "rehype-highlight";
 
 function decodeContent(content: string): string {
-  return decodeURIComponent(escape(atob(content)));
+  try {
+    return decodeURIComponent(content);
+  } catch (error) {
+    console.error("Error decoding content:", error);
+    return content;
+  }
 }
 
 export default async function BlogPost({ params }: { params: { id: string } }) {
@@ -43,14 +48,8 @@ export default async function BlogPost({ params }: { params: { id: string } }) {
     );
   }
 
-  console.log("Original title:", post.title);
-  console.log("Original content:", post.content);
-
   const decodedTitle = decodeContent(post.title);
   const decodedContent = decodeContent(post.content);
-
-  console.log("Decoded title:", decodedTitle);
-  console.log("Decoded content:", decodedContent);
 
   return (
     <Card className="max-w-3xl mx-auto mt-8">
