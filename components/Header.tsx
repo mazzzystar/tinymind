@@ -27,7 +27,7 @@ export default function Header() {
             <div className="flex space-x-2 sm:space-x-4">
               <Button
                 variant="ghost"
-                className={`text-lg font-light ${
+                className={`text-lg font-normal ${
                   activeTab === "blog" ? "text-black" : "text-gray-500"
                 }`}
                 onClick={() => setActiveTab("blog")}
@@ -37,7 +37,7 @@ export default function Header() {
               </Button>
               <Button
                 variant="ghost"
-                className={`text-lg font-light ${
+                className={`text-lg font-normal ${
                   activeTab === "thoughts" ? "text-black" : "text-gray-300"
                 }`}
                 onClick={() => setActiveTab("thoughts")}
