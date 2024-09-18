@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import rehypeHighlight from "rehype-highlight";
 
 function decodeContent(content: string): string {
   try {
@@ -58,8 +60,17 @@ export default async function BlogPost({ params }: { params: { id: string } }) {
         </p>
       </CardHeader>
       <CardContent>
-        <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none">
-          <ReactMarkdown>{decodedContent}</ReactMarkdown>
+        <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none dark:prose-invert">
+          <ReactMarkdown
+            rehypePlugins={[rehypeRaw, rehypeHighlight]}
+            components={{
+              a: ({ ...props }) => (
+                <a {...props} target="_blank" rel="noopener noreferrer" />
+              ),
+            }}
+          >
+            {decodedContent}
+          </ReactMarkdown>
         </div>
       </CardContent>
     </Card>

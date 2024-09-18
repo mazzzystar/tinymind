@@ -188,7 +188,7 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
               return {
                 id: file.name.replace('.md', ''),
                 title,
-                content: markdownContent, // Use only the markdown content
+                content: markdownContent,
                 date,
               };
             }
@@ -199,7 +199,11 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
     );
 
     const filteredPosts = posts.filter((post): post is BlogPost => post !== undefined);
-    console.log('Filtered posts:', filteredPosts);
+    
+    // Sort posts by date, newest first
+    filteredPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    
+    console.log('Filtered and sorted posts:', filteredPosts);
     return filteredPosts;
   } catch (error) {
     console.error('Error fetching blog posts:', error);
@@ -243,6 +247,9 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
       }
     });
 
+    // Ensure date is parsed correctly
+    const date = metadata.date ? new Date(metadata.date).toISOString() : new Date().toISOString();
+
     // Fetch the latest commit for this file
     const commitResponse = await octokit.repos.listCommits({
       owner,
@@ -261,7 +268,7 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
       id,
       title: metadata.title || id,
       content: body,
-      date: metadata.date || latestCommit.commit.author?.date || new Date().toISOString(),
+      date: date,
     };
   } catch (error) {
     console.error('Error fetching blog post:', error);
