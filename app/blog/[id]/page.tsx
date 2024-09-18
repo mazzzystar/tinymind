@@ -1,5 +1,6 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import remarkGfm from "remark-gfm";
 import { getBlogPost } from "@/lib/githubApi";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -62,6 +63,7 @@ export default async function BlogPost({ params }: { params: { id: string } }) {
       <CardContent>
         <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none dark:prose-invert">
           <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeRaw, rehypeHighlight]}
             components={{
               a: ({ ...props }) => (
