@@ -1,4 +1,4 @@
-# TinyMind
+# Tinymind
 
 Turn your GitHub into a blog & memo data storage place with one-click Sign in. No server needed - every input automatically syncs to your GitHub repository.
 
