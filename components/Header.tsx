@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { FaGithub } from "react-icons/fa"; // Change this import
+import Image from "next/image";
 
 export default function Header() {
   const pathname = usePathname();
@@ -16,6 +17,9 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 py-4 bg-card shadow z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
+          <Link href="/" className="mr-4">
+            <Image src="/icon.jpg" alt="Home" width={32} height={32} />
+          </Link>
           <div className="flex space-x-4">
             <Button
               variant="ghost"
