@@ -9,7 +9,10 @@ import { Button } from "@/components/ui/button";
 import Script from "next/script";
 import Footer from "@/components/Footer";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300"],
+});
 
 export const metadata: Metadata = {
   title:

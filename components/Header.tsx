@@ -17,30 +17,32 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 py-4 bg-card shadow z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          <Link href="/" className="mr-4">
+          <Link href="/" className="">
             <Image src="/icon.jpg" alt="Home" width={32} height={32} />
           </Link>
-          <div className="flex space-x-4">
-            <Button
-              variant="ghost"
-              className={`text-lg font-light ${
-                activeTab === "blog" ? "text-black" : "text-gray-500"
-              }`}
-              onClick={() => setActiveTab("blog")}
-              asChild
-            >
-              <Link href="/blog">Blog</Link>
-            </Button>
-            <Button
-              variant="ghost"
-              className={`text-lg font-light ${
-                activeTab === "thoughts" ? "text-black" : "text-gray-300"
-              }`}
-              onClick={() => setActiveTab("thoughts")}
-              asChild
-            >
-              <Link href="/thoughts">Thoughts</Link>
-            </Button>
+          <div className="flex-grow flex justify-center">
+            <div className="flex space-x-2 sm:space-x-4">
+              <Button
+                variant="ghost"
+                className={`text-lg font-light ${
+                  activeTab === "blog" ? "text-black" : "text-gray-500"
+                }`}
+                onClick={() => setActiveTab("blog")}
+                asChild
+              >
+                <Link href="/blog">Blog</Link>
+              </Button>
+              <Button
+                variant="ghost"
+                className={`text-lg font-light ${
+                  activeTab === "thoughts" ? "text-black" : "text-gray-300"
+                }`}
+                onClick={() => setActiveTab("thoughts")}
+                asChild
+              >
+                <Link href="/thoughts">Thoughts</Link>
+              </Button>
+            </div>
           </div>
           <Link
             href="https://github.com/mazzzystar/tinymind"
