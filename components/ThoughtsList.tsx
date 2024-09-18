@@ -72,7 +72,9 @@ export default function ThoughtsList() {
               key={thought.id}
               className="bg-[#f9f9f9] shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300"
             >
-              <p className="text-gray-800 mb-2">{thought.content}</p>
+              <p className="text-gray-800 mb-2 whitespace-pre-wrap">
+                {thought.content}
+              </p>
               {/* {thought.image && (
                 <img
                   src={thought.image}
