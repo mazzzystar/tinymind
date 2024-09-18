@@ -6,7 +6,8 @@
     "createThought": "एक बनाएं",
     "publish": "प्रकाशित करें",
     "dataStoredIn": "डेटा यहाँ संग्रहित है:",
-
+    "writeContent": "अपनी सामग्री यहाँ लिखें...(Markdown समर्थित)",
+    "enterTitle": "अपना शीर्षक यहाँ दर्ज करें...",
     "howItWorksTitle": "यह कैसे काम करता है:",
     "howItWorksStep1": "हम आपके GitHub में एक सार्वजनिक \"tinymind-blog\" रिपॉजिटरी बनाते हैं।",
     "howItWorksStep2": "आपका नया ब्लॉग और विचार स्वचालित रूप से इस रिपॉजिटरी में कमिट किए जाएंगे।",

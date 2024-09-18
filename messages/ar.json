@@ -6,7 +6,8 @@
     "createThought": "إنشاء فكرة",
     "publish": "نشر",
     "dataStoredIn": "البيانات مخزنة في:",
-
+    "writeContent": "اكتب المحتوى الخاص بك هنا...(يدعم Markdown)",
+    "enterTitle": "أدخل العنوان هنا...",
     "howItWorksTitle": "كيف يعمل:",
     "howItWorksStep1": "نقوم بإنشاء مستودع عام \"tinymind-blog\" في GitHub الخاص بك.",
     "howItWorksStep2": "سيتم التزام مدونتك الجديدة وأفكارك تلقائيًا في هذا المستودع.",

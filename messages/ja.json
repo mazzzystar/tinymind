@@ -6,7 +6,8 @@
     "createThought": "新規作成",
     "publish": "公開",
     "dataStoredIn": "データの保存先：",
-
+    "writeContent": "ここに内容を書いてください...(Markdown対応)",
+    "enterTitle": "ここにタイトルを入力してください...",
     "howItWorksTitle": "使い方：",
     "howItWorksStep1": "GitHubに公開の\"tinymind-blog\"リポジトリを作成します。",
     "howItWorksStep2": "新しいブログとアイデアは自動的にこのリポジトリにコミットされます。",

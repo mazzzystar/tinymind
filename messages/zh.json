@@ -6,7 +6,8 @@
       "createThought": "创建一个",
       "publish": "发布",
       "dataStoredIn": "数据存储在：",
-
+      "writeContent": "在这里写下内容...(支持Markdown)",
+      "enterTitle": "在这里输入标题...",
       "howItWorksTitle": "工作原理：",
       "howItWorksStep1": "我们在您的GitHub中创建一个公开的\"tinymind-blog\"仓库。",
       "howItWorksStep2": "您的新博客和想法将自动提交到这个仓库。",

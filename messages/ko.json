@@ -6,7 +6,8 @@
     "createThought": "새로 만들기",
     "publish": "게시",
     "dataStoredIn": "데이터 저장 위치:",
-
+    "writeContent": "여기에 내용을 작성하세요...(Markdown 지원)",
+    "enterTitle": "여기에 제목을 입력하세요...",
     "howItWorksTitle": "작동 방식:",
     "howItWorksStep1": "GitHub에 공개 \"tinymind-blog\" 저장소를 만듭니다.",
     "howItWorksStep2": "새 블로그와 아이디어가 자동으로 이 저장소에 커밋됩니다.",

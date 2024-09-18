@@ -6,7 +6,8 @@
     "createThought": "Crear uno",
     "publish": "Publicar",
     "dataStoredIn": "Datos almacenados en:",
-
+    "writeContent": "Escribe tu contenido aquí...(Markdown soportado)",
+    "enterTitle": "Ingresa tu título aquí...",
     "howItWorksTitle": "Cómo funciona:",
     "howItWorksStep1": "Creamos un repositorio público \"tinymind-blog\" en tu GitHub.",
     "howItWorksStep2": "Tu nuevo blog y pensamientos se comprometerán automáticamente a este repositorio.",

@@ -6,6 +6,8 @@
       "createThought": "Create one",
       "publish": "Publish",
       "dataStoredIn": "Data stored in:",
+      "writeContent": "Write your content here...(Markdown supported)",
+      "enterTitle": "Enter your title here...",
 
       "howItWorksTitle": "How it works:",
       "howItWorksStep1": "We create a public \"tinymind-blog\" repo in your GitHub.",
