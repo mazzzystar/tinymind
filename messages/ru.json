@@ -13,6 +13,10 @@
     "howItWorksStep2": "Ваш новый блог и мысли будут автоматически коммитится в этот репозиторий.",
     "howItWorksStep3": "Ваши данные хранятся только на GitHub, независимо от этого сайта.",
     "signInWithGitHub": "Войти через GitHub",
-    "createBlogPost": "Создать пост"
+    "createBlogPost": "Создать пост",
+    "redirecting": "Перенаправление...",
+    "publishing": "Публикация...",
+    "successPublished": "Успешно опубликовано!",
+    "failedPublish": "Не удалось опубликовать"
   }
 }

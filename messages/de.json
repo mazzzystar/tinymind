@@ -13,6 +13,10 @@
       "howItWorksStep2": "Ihr neuer Blog und Ihre Gedanken werden automatisch in dieses Repository übertragen.",
       "howItWorksStep3": "Ihre Daten werden nur auf GitHub gespeichert, unabhängig von dieser Website.",
       "signInWithGitHub": "Mit GitHub anmelden",
-      "createBlogPost": "Blogbeitrag erstellen"
+      "createBlogPost": "Blogbeitrag erstellen",
+      "redirecting": "Umleitung...",
+      "publishing": "Veröffentlichung...",
+      "successPublished": "Erfolgreich veröffentlicht!",
+      "failedPublish": "Veröffentlichung fehlgeschlagen"
     }
   }

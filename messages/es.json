@@ -13,6 +13,10 @@
     "howItWorksStep1": "Creamos un repositorio público \"tinymind-blog\" en tu GitHub.",
     "howItWorksStep2": "Tu nuevo blog y pensamientos se comprometerán automáticamente a este repositorio.",
     "howItWorksStep3": "Tus datos se almacenan solo en GitHub, independientemente de este sitio.",
-    "signInWithGitHub": "Iniciar sesión con GitHub"
+    "signInWithGitHub": "Iniciar sesión con GitHub",
+    "redirecting": "Redirigiendo...",
+    "publishing": "Publicando...",
+    "successPublished": "¡Publicado con éxito!",
+    "failedPublish": "Error al publicar"
   }
 }

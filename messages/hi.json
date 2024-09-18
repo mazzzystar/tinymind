@@ -13,6 +13,10 @@
     "howItWorksStep1": "हम आपके GitHub में एक सार्वजनिक \"tinymind-blog\" रिपॉजिटरी बनाते हैं।",
     "howItWorksStep2": "आपका नया ब्लॉग और विचार स्वचालित रूप से इस रिपॉजिटरी में कमिट किए जाएंगे।",
     "howItWorksStep3": "आपका डेटा केवल GitHub पर संग्रहीत है, इस साइट से स्वतंत्र है।",
-    "signInWithGitHub": "GitHub के साथ साइन इन करें"
+    "signInWithGitHub": "GitHub के साथ साइन इन करें",
+    "redirecting": "पुनर्निर्देशित कर रहा है...",
+    "publishing": "प्रकाशित हो रहा है...",
+    "successPublished": "सफलतापूर्वक प्रकाशित!",
+    "failedPublish": "प्रकाशन विफल रहा"
   }
 }

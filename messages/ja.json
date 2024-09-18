@@ -13,6 +13,10 @@
     "howItWorksStep2": "新しいブログとアイデアは自動的にこのリポジトリにコミットされます。",
     "howItWorksStep3": "データはGitHubにのみ保存され、このサイトとは独立しています。",
     "signInWithGitHub": "GitHubでサインイン",
-    "createBlogPost": "ブログ作成"
+    "createBlogPost": "ブログ作成",
+    "redirecting": "リダイレクト中...",
+    "publishing": "公開中...",
+    "successPublished": "公開に成功しました！",
+    "failedPublish": "公開に失敗しました"
   }
 }

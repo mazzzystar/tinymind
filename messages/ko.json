@@ -13,6 +13,10 @@
     "howItWorksStep2": "새 블로그와 아이디어가 자동으로 이 저장소에 커밋됩니다.",
     "howItWorksStep3": "데이터는 GitHub에만 저장되며 이 사이트와 독립적입니다.",
     "signInWithGitHub": "GitHub로 로그인",
-    "createBlogPost": "블로그 작성"
+    "createBlogPost": "블로그 작성",
+    "redirecting": "리다이렉팅 중...",
+    "publishing": "게시 중...",
+    "successPublished": "성공적으로 게시되었습니다!",
+    "failedPublish": "게시에 실패했습니다"
   }
 }
