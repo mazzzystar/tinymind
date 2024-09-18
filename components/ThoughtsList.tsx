@@ -91,16 +91,6 @@ export default function ThoughtsList() {
               </small>
             </div>
           ))}
-          <div className="flex justify-end mt-4">
-            <Button
-              onClick={() => {
-                /* Add publish functionality */
-              }}
-              className="bg-green-500 hover:bg-green-600 text-white"
-            >
-              {t("publish")}
-            </Button>
-          </div>
         </div>
       )}
     </div>
