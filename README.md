@@ -1,33 +1,44 @@
 # TinyMind
 
-Write and sync your blog posts, thoughts, and memos with one-click GitHub sign-in. No server needed - every input automatically syncs to your GitHub repository.
+Turn your GitHub into a blog & memo data storage place with one-click Sign in. No server needed - every input automatically syncs to your GitHub repository.
 
 https://github.com/user-attachments/assets/4c9f590e-dd1e-4e9f-95a0-45b236752494
 
-## How it works
+## How It Works
 
-1. We create a public repo called `tinymind-blog` in your GitHub account.
+1. We create a public repository named `tinymind-blog` in your GitHub account.
 2. When you write anything on our webpage, it automatically commits to your `yourname/tinymind-blog` repo.
 3. This ensures a seamless way to create content and maintain data persistence.
 
 ## Data Privacy & Permissions
 
-We only have write access to your public repositories. Your privacy matters:
+Your data remains secure:
 
-- Content stored only in your GitHub repo
-- No data kept on our servers
-- You have full control through your GitHub account
+- Stored directly in your GitHub repository
+- Only write access to public repositories
+- Full control via your GitHub account
 
-## TODO
+## Features in Development
 
-- [ ] Implement shareable user main pages (like https://tinymind.me/mazzzystar) (🔥Help wanted!)
-- [ ] Fix the blog detail Markdown rendering issue (🔥Help wanted!)
-- [ ] Create a page to showcase all public writers using TinyMind (creator list)
+- [ ] Shareable user main pages (e.g., https://tinymind.me/mazzzystar) (🙋 Contributors wanted!)
+- [ ] Fix blog detail Markdown rendering issue (🙋 Contributors wanted!)
+- [ ] Create a showcase page for all public TinyMind writers (creator list)
+- [ ] Add a feature to let writers manage their own blogs (add, delete, edit posts)
 
 ## Tech Stack
 
-Built with Next.js, React, TypeScript, NextAuth.js, and Tailwind CSS.
+Built with cutting-edge technologies:
+
+- Next.js
+- React
+- TypeScript
+- NextAuth.js
+- Tailwind CSS
 
 ## Contribute
 
-Contributions are welcome! Feel free to submit a Pull Request.
+We welcome contributions! Feel free to submit a Pull Request or open an issue for discussion.
+
+## Support
+
+Report issues or suggestions: [New Issue](https://github.com/mazzzystar/tinymind/issues/new).
