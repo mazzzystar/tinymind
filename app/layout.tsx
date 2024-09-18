@@ -15,6 +15,27 @@ export const metadata: Metadata = {
   title: "TinyMind - Write and sync your blog posts & memos with GitHub",
   description:
     "Write and preserve your blogs, thoughts, and notes effortlessly. Sign in with GitHub to automatically sync your content to your own repository, ensuring your ideas are safely stored as long as GitHub exists.",
+  openGraph: {
+    title: "TinyMind - Write and sync your blog posts & memos with GitHub",
+    description:
+      "Write and preserve your blogs, thoughts, and notes effortlessly. Sync with GitHub for safe storage.",
+    images: [
+      {
+        url: "/icon.jpg",
+        width: 512,
+        height: 512,
+        alt: "TinyMind Logo",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TinyMind - Write and sync your blog posts & memos with GitHub",
+    description:
+      "Write and preserve your blogs, thoughts, and notes effortlessly. Sync with GitHub for safe storage.",
+    images: ["/icon.jpg"],
+  },
 };
 
 export default function RootLayout({
