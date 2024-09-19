@@ -1,13 +1,13 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import remarkGfm from "remark-gfm";
 import { getBlogPost } from "@/lib/githubApi";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import ReactMarkdown from "react-markdown";
-import rehypeRaw from "rehype-raw";
-import rehypeHighlight from "rehype-highlight";
+import remarkGfm from "remark-gfm";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 function decodeContent(content: string): string {
   try {
@@ -61,11 +61,35 @@ export default async function BlogPost({ params }: { params: { id: string } }) {
         </p>
       </CardHeader>
       <CardContent>
-        <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none dark:prose-invert">
+        <div className="prose prose-sm max-w-none dark:prose-invert">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeRaw, rehypeHighlight]}
             components={{
+              code({
+                inline,
+                className,
+                children,
+                ...props
+              }: {
+                inline?: boolean;
+                className?: string;
+                children?: React.ReactNode;
+              } & React.HTMLAttributes<HTMLElement>) {
+                const match = /language-(\w+)/.exec(className || "");
+                return !inline && match ? (
+                  <SyntaxHighlighter
+                    style={tomorrow as { [key: string]: React.CSSProperties }}
+                    language={match[1]}
+                    PreTag="div"
+                  >
+                    {String(children).replace(/\n$/, "")}
+                  </SyntaxHighlighter>
+                ) : (
+                  <code className={className} {...props}>
+                    {children}
+                  </code>
+                );
+              },
               a: ({ ...props }) => (
                 <a {...props} target="_blank" rel="noopener noreferrer" />
               ),
