@@ -88,7 +88,7 @@ export default function ThoughtsList() {
               key={thought.id}
               className="bg-[#f9f9f9] shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300 flex flex-col"
             >
-              <div className="text-gray-800 mb-2 prose prose-sm max-w-none">
+              <div className="text-gray-800 mb-2 prose max-w-none">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={{
