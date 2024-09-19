@@ -9,41 +9,47 @@ import { Button } from "@/components/ui/button";
 import Script from "next/script";
 import Footer from "@/components/Footer";
 import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getMessages } from "next-intl/server";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
 
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400"],
 });
 
-export const metadata: Metadata = {
-  title:
-    "TinyMind - Write and sync your blog posts & thoughts with one-click GitHub sign-in",
-  description:
-    "Write and preserve your blogs, thoughts, and notes effortlessly. Sign in with GitHub to automatically sync your content to your own repository, ensuring your ideas are safely stored as long as GitHub exists.",
-  openGraph: {
-    title: "TinyMind - Write and sync your blog posts & memos with GitHub",
-    description:
-      "Write and preserve your blogs, thoughts, and notes effortlessly. Sync with GitHub for safe storage.",
-    images: [
-      {
-        url: "/icon.jpg",
-        width: 512,
-        height: 512,
-        alt: "TinyMind Logo",
-      },
-    ],
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title:
-      "TinyMind - Write and sync your blog posts & thoughts with one-click GitHub sign-in",
-    description:
-      "Write and preserve your blogs, thoughts, and notes effortlessly. Sync with GitHub for safe storage.",
-    images: ["/icon.jpg"],
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata");
+
+  const title =
+    t("title") ||
+    "TinyMind - Write and sync your blog posts & thoughts with one-click GitHub sign-in";
+  const description =
+    t("description") ||
+    "Write and preserve your blogs, thoughts, and notes effortlessly. Sign in with GitHub to automatically sync your content to your own repository, ensuring your ideas are safely stored as long as GitHub exists.";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [
+        {
+          url: "/icon.jpg",
+          width: 512,
+          height: 512,
+          alt: "TinyMind Logo",
+        },
+      ],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/icon.jpg"],
+    },
+  };
+}
 
 export default async function RootLayout({
   children,

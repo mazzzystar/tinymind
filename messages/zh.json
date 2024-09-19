@@ -18,5 +18,9 @@
       "publishing": "发布中...",
       "successPublished": "发布成功！",
       "failedPublish": "发布失败"
+    },
+    "metadata": {
+      "title": "TinyMind - 用GitHub账号一键登录写作并同步你的博客和想法",
+      "description": "轻松写作并保存您的博客、想法和笔记。使用GitHub登录自动将您的内容同步到您自己的仓库。只要Github还活着，您的日记数据就不会丢失。"
     }
   }

@@ -19,5 +19,9 @@
       "howItWorksStep2": "Your new blog & thoughts will be automatically committed to this repo.",
       "howItWorksStep3": "Your data is stored only on GitHub, independent of this site.",
       "signInWithGitHub": "Sign in with GitHub"
+    },
+    "metadata": {
+      "title": "TinyMind - Write and sync your blog posts & thoughts with one-click GitHub sign-in",
+      "description": "Write and preserve your blogs, thoughts, and notes effortlessly. Sign in with GitHub to automatically sync your content to your own repository, ensuring your ideas are safely stored as long as GitHub exists."
     }
   }

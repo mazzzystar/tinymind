@@ -2,21 +2,25 @@
   "HomePage": {
     "blog": "ブログ",
     "thoughts": "アイデア",
-    "noThoughtsYet": "まだアイデアがありません",
-    "createThought": "アイデア作成",
+    "noThoughtsYet": "アイデアはまだありません",
+    "createThought": "アイデアを作成",
+    "createBlogPost": "ブログ記事を作成",
     "publish": "公開",
-    "dataStoredIn": "データの保存先：",
-    "writeContent": "ここに内容を書いてください...(Markdown対応)",
-    "enterTitle": "ここにタイトルを入力してください...",
+    "dataStoredIn": "データ保存先：",
+    "writeContent": "内容を入力...(Markdown対応)",
+    "enterTitle": "タイトルを入力...",
     "howItWorksTitle": "使い方：",
     "howItWorksStep1": "GitHubに公開の\"tinymind-blog\"リポジトリを作成します。",
-    "howItWorksStep2": "新しいブログとアイデアは自動的にこのリポジトリにコミットされます。",
+    "howItWorksStep2": "新しいブログとアイデアは自動的にこのリポジトリに保存されます。",
     "howItWorksStep3": "データはGitHubにのみ保存され、このサイトとは独立しています。",
-    "signInWithGitHub": "GitHubでサインイン",
-    "createBlogPost": "ブログ作成",
+    "signInWithGitHub": "GitHubでログイン",
     "redirecting": "リダイレクト中...",
     "publishing": "公開中...",
-    "successPublished": "公開に成功しました！",
-    "failedPublish": "公開に失敗しました"
+    "successPublished": "公開成功！",
+    "failedPublish": "公開失敗"
+  },
+  "metadata": {
+    "title": "TinyMind - GitHubワンクリックログインでブログ記事とアイデアを書いて同期",
+    "description": "ブログ、アイデア、メモを簡単に書いて保存。GitHubログインで自動的に自分のリポジトリに同期。GitHubが存在する限り、あなたの記録は安全に保管されます。"
   }
 }

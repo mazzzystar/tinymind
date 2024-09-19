@@ -18,5 +18,9 @@
     "publishing": "게시 중...",
     "successPublished": "성공적으로 게시되었습니다!",
     "failedPublish": "게시에 실패했습니다"
+  },
+  "metadata": {
+    "title": "TinyMind - 원클릭 GitHub 로그인으로 블로그 포스트와 생각을 작성하고 동기화하세요",
+    "description": "블로그, 생각, 메모를 쉽게 작성하고 보존하세요. GitHub로 로그인하여 콘텐츠를 자동으로 자신의 저장소에 동기화하고, GitHub가 존재하는 한 아이디어를 안전하게 보관하세요."
   }
 }

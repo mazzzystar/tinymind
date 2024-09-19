@@ -1,22 +1,26 @@
 {
   "HomePage": {
-    "blog": "مدونة",
-    "thoughts": "أفكار",
-    "noThoughtsYet": "لا توجد أفكار بعد",
-    "createThought": "إنشاء فكرة",
-    "createBlogPost": "إنشاء مقال",
-    "publish": "نشر",
-    "dataStoredIn": "البيانات مخزنة في:",
-    "writeContent": "اكتب المحتوى الخاص بك هنا...(يدعم Markdown)",
-    "enterTitle": "أدخل العنوان هنا...",
-    "howItWorksTitle": "كيف يعمل:",
-    "howItWorksStep1": "نقوم بإنشاء مستودع عام \"tinymind-blog\" في GitHub الخاص بك.",
-    "howItWorksStep2": "سيتم التزام مدونتك الجديدة وأفكارك تلقائيًا في هذا المستودع.",
-    "howItWorksStep3": "يتم تخزين بياناتك فقط على GitHub، بشكل مستقل عن هذا الموقع.",
-    "signInWithGitHub": "تسجيل الدخول باستخدام GitHub",
-    "redirecting": "جاري إعادة التوجيه...",
-    "publishing": "جاري النشر...",
-    "successPublished": "تم النشر بنجاح!",
-    "failedPublish": "فشل النشر"
+    "blog": "blog",
+    "thoughts": "thoughts",
+    "noThoughtsYet": "No thoughts yet",
+    "createThought": "Create thought",
+    "createBlogPost": "Create blog post",
+    "publish": "Publish",
+    "dataStoredIn": "Data stored in:",
+    "writeContent": "Write your content here...(Markdown supported)",
+    "enterTitle": "Enter your title here...",
+    "howItWorksTitle": "How it works:",
+    "howItWorksStep1": "We create a public \"tinymind-blog\" repository in your GitHub.",
+    "howItWorksStep2": "Your new blog and thoughts will be automatically saved in this repository.",
+    "howItWorksStep3": "Your data is stored only on GitHub, independently of this site.",
+    "signInWithGitHub": "Sign in with GitHub",
+    "redirecting": "Redirecting...",
+    "publishing": "Publishing...",
+    "successPublished": "Successfully published!",
+    "failedPublish": "Failed to publish"
+  },
+  "metadata": {
+    "title": "TinyMind - Write and synchronize your blog posts and thoughts with GitHub one-click login",
+    "description": "Write and preserve your blogs, thoughts, and notes easily. Sign in with GitHub to automatically synchronize your content with your own repository. Your ideas are stored safely as long as GitHub exists."
   }
 }

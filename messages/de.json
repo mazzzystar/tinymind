@@ -4,19 +4,23 @@
       "thoughts": "Gedanken",
       "noThoughtsYet": "Noch keine Gedanken",
       "createThought": "Gedanke erstellen",
+      "createBlogPost": "Blogbeitrag erstellen",
       "publish": "Veröffentlichen",
       "dataStoredIn": "Daten gespeichert in:",
-      "writeContent": "Schreiben Sie Ihren Inhalt hier...(Markdown unterstützt)",
-      "enterTitle": "Geben Sie hier Ihren Titel ein...",
+      "writeContent": "Inhalt hier eingeben...(Markdown unterstützt)",
+      "enterTitle": "Titel hier eingeben...",
       "howItWorksTitle": "So funktioniert es:",
       "howItWorksStep1": "Wir erstellen ein öffentliches \"tinymind-blog\"-Repository in Ihrem GitHub.",
-      "howItWorksStep2": "Ihr neuer Blog und Ihre Gedanken werden automatisch in dieses Repository übertragen.",
+      "howItWorksStep2": "Ihr neuer Blog und Ihre Gedanken werden automatisch in diesem Repository gespeichert.",
       "howItWorksStep3": "Ihre Daten werden nur auf GitHub gespeichert, unabhängig von dieser Website.",
       "signInWithGitHub": "Mit GitHub anmelden",
-      "createBlogPost": "Blogbeitrag erstellen",
-      "redirecting": "Umleitung...",
+      "redirecting": "Weiterleitung...",
       "publishing": "Veröffentlichung...",
       "successPublished": "Erfolgreich veröffentlicht!",
       "failedPublish": "Veröffentlichung fehlgeschlagen"
+    },
+    "metadata": {
+      "title": "TinyMind - Schreiben und synchronisieren Sie Ihre Blogbeiträge und Gedanken mit einmaligem GitHub-Login",
+      "description": "Schreiben und bewahren Sie mühelos Ihre Blogs, Gedanken und Notizen. Melden Sie sich mit GitHub an, um Ihre Inhalte automatisch in Ihrem eigenen Repository zu synchronisieren. Ihre Ideen bleiben sicher gespeichert, solange GitHub existiert."
     }
   }
