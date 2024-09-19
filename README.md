@@ -20,10 +20,11 @@ Your data remains secure:
 
 ## Features in Development
 
-- [x] Fix blog detail Markdown rendering issue
-- [ ] Shareable user main pages (e.g., https://tinymind.me/mazzzystar)
-- [ ] Create a showcase page for all public TinyMind writers (creator list)
-- [ ] Add a feature to let writers manage their own blogs (add, delete, edit posts)
+- [x] Blog and Thoughts support Markdown.
+- [ ] Shareable user main pages (e.g., [tinymind.me/mazzzystar](https://www.tinymind.me/mazzzystar).
+- [ ] Create a showcase page for all public TinyMind writers (creator list).
+- [ ] Add a feature to let writers manage their own blogs (add, delete, edit posts).
+- [ ] Supports user drag-and-drop image uploads.
 
 🙋 Contributors wanted!
 
