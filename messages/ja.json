@@ -18,7 +18,8 @@
     "publishing": "公開中...",
     "successPublished": "公開成功！",
     "failedPublish": "公開失敗",
-    "readingFromGithub": "GitHubからデータを読み込んでいます..."
+    "readingFromGithub": "GitHubからデータを読み込んでいます...",
+    "publicContentWarning": "すべてのコンテンツは公開されます。"
   },
   "metadata": {
     "title": "TinyMind - GitHubワンクリックログインでブログ記事とアイデアを書いて同期",

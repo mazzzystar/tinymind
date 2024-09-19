@@ -1,27 +1,28 @@
 {
   "HomePage": {
     "blog": "blog",
-    "thoughts": "pensamentos",
-    "noThoughtsYet": "Ainda não há pensamentos",
-    "createThought": "Criar pensamento",
-    "createBlogPost": "Criar post de blog",
-    "publish": "Publicar",
-    "dataStoredIn": "Dados armazenados em:",
-    "writeContent": "Escreva seu conteúdo aqui...(Markdown suportado)",
-    "enterTitle": "Digite seu título aqui...",
-    "howItWorksTitle": "Como funciona:",
-    "howItWorksStep1": "Criamos um repositório público \"tinymind-blog\" no seu GitHub.",
-    "howItWorksStep2": "Seu novo blog e pensamentos serão automaticamente salvos neste repositório.",
-    "howItWorksStep3": "Seus dados são armazenados apenas no GitHub, independentemente deste site.",
-    "signInWithGitHub": "Entrar com GitHub",
-    "redirecting": "Redirecionando...",
-    "publishing": "Publicando...",
-    "successPublished": "Publicado com sucesso!",
-    "failedPublish": "Falha ao publicar",
-    "readingFromGithub": "Lendo dados do GitHub..."
+    "thoughts": "thoughts",
+    "noThoughtsYet": "No thoughts yet",
+    "createThought": "Create a thought",
+    "createBlogPost": "Create a blog post",
+    "publish": "Publish",
+    "dataStoredIn": "Data stored in:",
+    "writeContent": "Write your content here...(Markdown supported)",
+    "enterTitle": "Enter your title here...",
+    "howItWorksTitle": "How it works:",
+    "howItWorksStep1": "We create a public \"tinymind-blog\" repo in your GitHub.",
+    "howItWorksStep2": "Your new blog & thoughts will be automatically committed to this repo.",
+    "howItWorksStep3": "Your data is stored only on GitHub, independent of this site.",
+    "signInWithGitHub": "Sign in with GitHub",
+    "redirecting": "Redirecting...",
+    "publishing": "Publishing...",
+    "successPublished": "Successfully published!",
+    "failedPublish": "Failed to publish",
+    "readingFromGithub": "Reading data from GitHub...",
+    "publicContentWarning": "All content is public."
   },
   "metadata": {
-    "title": "TinyMind - Escreva e sincronize suas postagens de blog e pensamentos com login no GitHub em um clique",
-    "description": "Escreva e preserve seus blogs, pensamentos e notas sem esforço. Faça login com o GitHub para sincronizar automaticamente seu conteúdo em seu próprio repositório. Suas ideias ficam armazenadas com segurança enquanto o GitHub existir."
+    "title": "TinyMind - Write and sync your blog posts & thoughts with one-click GitHub sign-in",
+    "description": "Write and preserve your blogs, thoughts, and notes effortlessly. Sign in with GitHub to automatically sync your content to your own repository, ensuring your ideas are safely stored as long as GitHub exists."
   }
 }

@@ -18,7 +18,8 @@
       "publishing": "发布中...",
       "successPublished": "发布成功！",
       "failedPublish": "发布失败",
-      "readingFromGithub": "正在从GitHub读取数据..."
+      "readingFromGithub": "正在从GitHub读取数据...",
+      "publicContentWarning": "所有内容都是公开的。"
     },
     "metadata": {
       "title": "TinyMind - 用GitHub账号一键登录写作并同步你的博客和想法",

@@ -19,7 +19,8 @@
       "howItWorksStep1": "We create a public \"tinymind-blog\" repo in your GitHub.",
       "howItWorksStep2": "Your new blog & thoughts will be automatically committed to this repo.",
       "howItWorksStep3": "Your data is stored only on GitHub, independent of this site.",
-      "signInWithGitHub": "Sign in with GitHub"
+      "signInWithGitHub": "Sign in with GitHub",
+      "publicContentWarning": "All content is public."
     },
     "metadata": {
       "title": "TinyMind - Write and sync your blog posts & thoughts with one-click GitHub sign-in",

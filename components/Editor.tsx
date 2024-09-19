@@ -56,9 +56,14 @@ export default function Editor() {
   return (
     <Card className="max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle>
-          {type === "blog" ? t("createBlogPost") : t("createThought")}
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex flex-col items-start">
+            {type === "blog" ? t("createBlogPost") : t("createThought")}
+            <span className="mt-1 text-xs font-normal text-gray-500">
+              {t("publicContentWarning")}
+            </span>
+          </CardTitle>
+        </div>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -104,7 +109,7 @@ export default function Editor() {
           />
 
           <div className="flex justify-center">
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={isLoading} className="px-12 py-5">
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

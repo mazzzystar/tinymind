@@ -1,27 +1,28 @@
 {
   "HomePage": {
-    "blog": "博客",
-    "thoughts": "想法",
-    "noThoughtsYet": "还没有想法",
-    "createThought": "创建想法",
-    "createBlogPost": "创建博客",
-    "publish": "发布",
-    "dataStoredIn": "数据存储在：",
-    "writeContent": "在这里写入内容...(支持Markdown)",
-    "enterTitle": "在这里输入标题...",
-    "howItWorksTitle": "工作原理：",
-    "howItWorksStep1": "我们在您的GitHub上创建一个公共的\"tinymind-blog\"仓库。",
-    "howItWorksStep2": "您的新博客和想法将自动保存在此仓库中。",
-    "howItWorksStep3": "您的数据仅存储在GitHub上，与此网站无关。",
-    "signInWithGitHub": "使用GitHub登录",
-    "redirecting": "重定向中...",
-    "publishing": "发布中...",
-    "successPublished": "发布成功！",
-    "failedPublish": "发布失败",
-    "readingFromGithub": "Чтение данных из GitHub..."
+    "blog": "Блог",
+    "thoughts": "Мысли",
+    "noThoughtsYet": "Пока нет мыслей",
+    "createThought": "Создать мысль",
+    "createBlogPost": "Создать запись в блоге",
+    "publish": "Опубликовать",
+    "dataStoredIn": "Данные хранятся в:",
+    "writeContent": "Напишите ваш контент здесь...(поддерживается Markdown)",
+    "enterTitle": "Введите ваш заголовок здесь...",
+    "howItWorksTitle": "Как это работает:",
+    "howItWorksStep1": "Мы создаем публичный репозиторий \"tinymind-blog\" в вашем GitHub.",
+    "howItWorksStep2": "Ваши новые записи в блоге и мысли будут автоматически сохранены в этом репозитории.",
+    "howItWorksStep3": "Ваши данные хранятся только на GitHub, независимо от этого сайта.",
+    "signInWithGitHub": "Войти с GitHub",
+    "redirecting": "Перенаправление...",
+    "publishing": "Публикация...",
+    "successPublished": "Успешно опубликовано!",
+    "failedPublish": "Не удалось опубликовать",
+    "readingFromGithub": "Чтение данных из GitHub...",
+    "publicContentWarning": "Весь контент является публичным."
   },
   "metadata": {
-    "title": "TinyMind - 使用GitHub一键登录写作并同步您的博客文章和想法",
-    "description": "轻松写作并保存您的博客、想法和笔记。使用GitHub登录，自动将您的内容同步到您自己的仓库中。只要GitHub存在，您的想法就安全存储。"
+    "title": "TinyMind - Пишите и синхронизируйте свои записи в блоге и мысли с помощью одноразового входа в GitHub",
+    "description": "Легко пишите и сохраняйте свои блоги, мысли и заметки. Войдите с помощью GitHub, чтобы автоматически синхронизировать ваш контент с вашим собственным репозиторием. Ваши идеи будут надежно сохранены, пока существует GitHub."
   }
 }

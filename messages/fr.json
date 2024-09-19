@@ -18,7 +18,8 @@
     "publishing": "Publication...",
     "successPublished": "Publié avec succès !",
     "failedPublish": "Échec de la publication",
-    "readingFromGithub": "Lecture des données depuis GitHub..."
+    "readingFromGithub": "Lecture des données depuis GitHub...",
+    "publicContentWarning": "Tout le contenu est public."
   },
   "metadata": {
     "title": "TinyMind - Écrivez et synchronisez vos articles de blog et pensées avec connexion GitHub en un clic",

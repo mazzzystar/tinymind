@@ -18,10 +18,11 @@
     "publishing": "Publishing...",
     "successPublished": "Successfully published!",
     "failedPublish": "Failed to publish",
-    "readingFromGithub": "قراءة البيانات من GitHub..."
+    "readingFromGithub": "Reading data from GitHub...",
+    "publicContentWarning": "All content is public."
   },
   "metadata": {
-    "title": "TinyMind - Write and synchronize your blog posts and thoughts with GitHub one-click login",
-    "description": "Write and preserve your blogs, thoughts, and notes easily. Sign in with GitHub to automatically synchronize your content with your own repository. Your ideas are stored safely as long as GitHub exists."
+    "title": "TinyMind - Write and sync your blog posts & thoughts with one-click GitHub sign-in",
+    "description": "Write and preserve your blogs, thoughts, and notes effortlessly. Sign in with GitHub to automatically sync your content to your own repository, ensuring your ideas are safely stored as long as GitHub exists."
   }
 }

@@ -4,6 +4,7 @@
     "thoughts": "아이디어",
     "noThoughtsYet": "아직 아이디어가 없습니다",
     "createThought": "아이디어 작성",
+    "createBlogPost": "블로그 작성",
     "publish": "게시",
     "dataStoredIn": "데이터 저장 위치:",
     "writeContent": "여기에 내용을 작성하세요...(Markdown 지원)",
@@ -13,12 +14,12 @@
     "howItWorksStep2": "새 블로그와 아이디어가 자동으로 이 저장소에 커밋됩니다.",
     "howItWorksStep3": "데이터는 GitHub에만 저장되며 이 사이트와 독립적입니다.",
     "signInWithGitHub": "GitHub로 로그인",
-    "createBlogPost": "블로그 작성",
     "redirecting": "리다이렉팅 중...",
     "publishing": "게시 중...",
     "successPublished": "성공적으로 게시되었습니다!",
     "failedPublish": "게시에 실패했습니다",
-    "readingFromGithub": "GitHub에서 데이터를 읽는 중..."
+    "readingFromGithub": "GitHub에서 데이터를 읽는 중...",
+    "publicContentWarning": "모든 내용은 공개됩니다."
   },
   "metadata": {
     "title": "TinyMind - 원클릭 GitHub 로그인으로 블로그 포스트와 생각을 작성하고 동기화하세요",
