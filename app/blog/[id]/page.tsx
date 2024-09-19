@@ -18,6 +18,11 @@ function decodeContent(content: string): string {
   }
 }
 
+function removeFrontmatter(content: string): string {
+  const frontmatterRegex = /^---\n([\s\S]*?)\n---\n/;
+  return content.replace(frontmatterRegex, "");
+}
+
 export default async function BlogPost({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
 
@@ -51,6 +56,7 @@ export default async function BlogPost({ params }: { params: { id: string } }) {
 
   const decodedTitle = decodeContent(post.title);
   const decodedContent = decodeContent(post.content);
+  const contentWithoutFrontmatter = removeFrontmatter(decodedContent);
 
   return (
     <Card className="max-w-3xl mx-auto mt-8">
@@ -95,7 +101,7 @@ export default async function BlogPost({ params }: { params: { id: string } }) {
               ),
             }}
           >
-            {decodedContent}
+            {contentWithoutFrontmatter}
           </ReactMarkdown>
         </div>
       </CardContent>
