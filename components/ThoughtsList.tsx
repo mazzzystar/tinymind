@@ -7,6 +7,10 @@ import GitHubSignInButton from "./GitHubSignInButton";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 export default function ThoughtsList() {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
@@ -76,16 +80,43 @@ export default function ThoughtsList() {
               key={thought.id}
               className="bg-[#f9f9f9] shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300 flex flex-col"
             >
-              <p className="text-gray-800 mb-2 whitespace-pre-wrap flex-grow">
-                {thought.content}
-              </p>
-              {/* {thought.image && (
-                <img
-                  src={thought.image}
-                  alt="Thought image"
-                  className="w-full h-auto rounded-md mb-2"
-                />
-              )} */}
+              <div className="text-gray-800 mb-2 prose prose-sm max-w-none">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    code({
+                      inline,
+                      className,
+                      children,
+                      ...props
+                    }: {
+                      inline?: boolean;
+                      className?: string;
+                      children?: React.ReactNode;
+                    } & React.HTMLAttributes<HTMLElement>) {
+                      const match = /language-(\w+)/.exec(className || "");
+                      return !inline && match ? (
+                        <SyntaxHighlighter
+                          style={
+                            tomorrow as { [key: string]: React.CSSProperties }
+                          }
+                          language={match[1]}
+                          PreTag="div"
+                          // {...props}
+                        >
+                          {String(children).replace(/\n$/, "")}
+                        </SyntaxHighlighter>
+                      ) : (
+                        <code className={className} {...props}>
+                          {children}
+                        </code>
+                      );
+                    },
+                  }}
+                >
+                  {thought.content}
+                </ReactMarkdown>
+              </div>
               <small className="text-gray-500 self-end mt-2">
                 {new Date(thought.timestamp).toLocaleString()}
               </small>
