@@ -20,10 +20,12 @@ Your data remains secure:
 
 ## Features in Development
 
-- [ ] Shareable user main pages (e.g., https://tinymind.me/mazzzystar) (🙋 Contributors wanted!)
-- [ ] Fix blog detail Markdown rendering issue (🙋 Contributors wanted!)
+- [x] Fix blog detail Markdown rendering issue
+- [ ] Shareable user main pages (e.g., https://tinymind.me/mazzzystar)
 - [ ] Create a showcase page for all public TinyMind writers (creator list)
 - [ ] Add a feature to let writers manage their own blogs (add, delete, edit posts)
+
+🙋 Contributors wanted!
 
 ## Tech Stack
 
