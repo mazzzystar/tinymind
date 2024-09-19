@@ -104,7 +104,7 @@ export default function Editor() {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder={t("writeContent")}
-            className="min-h-[200px]"
+            className="min-h-[300px]"
             required
           />
 
