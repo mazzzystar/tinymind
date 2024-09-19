@@ -25,16 +25,17 @@ const Footer = () => {
   const repo = "tinymind-blog";
 
   return (
-    <footer className="fixed bottom-2 left-0 w-full py-2 text-center text-sm">
-      {t("dataStoredIn")}{" "}
-      <Link
-        href={`https://github.com/${owner}/${repo}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-gray-500 hover:underline"
-      >
-        {`${owner}/${repo}`}
-      </Link>
+    <footer className="fixed bottom-0 left-0 w-full border-t border-gray-200 bg-white py-3 text-center text-sm">
+      <div className="container mx-auto px-4 text-gray-400 hover:text-black transition-colors duration-200">
+        {t("dataStoredIn")}
+        <Link
+          href={`https://github.com/${owner}/${repo}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {`${owner}/${repo}`}
+        </Link>
+      </div>
     </footer>
   );
 };
