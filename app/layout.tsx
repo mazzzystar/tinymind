@@ -5,7 +5,6 @@ import Header from "@/components/Header";
 import { SessionProvider } from "../components/SessionProvider";
 import Link from "next/link";
 import { FiPlus } from "react-icons/fi";
-import { Button } from "@/components/ui/button";
 import Script from "next/script";
 import Footer from "@/components/Footer";
 import { NextIntlClientProvider } from "next-intl";
@@ -79,18 +78,15 @@ export default async function RootLayout({
             <Header />
             <main className="pt-20 pb-20">{children}</main>
             <Footer />
-            <Button
-              size="icon"
-              className="fixed bottom-8 right-8 rounded-full shadow-lg z-20"
-              asChild
+            <Link
+              href="/editor?type=thoughts"
+              className="fixed bottom-9 right-9 p-4 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full shadow-lg z-20 flex items-center justify-center"
             >
-              <Link href="/editor?type=thoughts">
-                <FiPlus className="w-6 h-6" />
-                <span className="sr-only">
-                  {messages.createNewThought as string}
-                </span>
-              </Link>
-            </Button>
+              <FiPlus className="w-7 h-7" />
+              <span className="sr-only">
+                {messages.createNewThought as string}
+              </span>
+            </Link>
           </SessionProvider>
         </NextIntlClientProvider>
       </body>
