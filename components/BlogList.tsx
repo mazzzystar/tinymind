@@ -11,30 +11,9 @@ function decodeTitle(title: string): string {
   }
 }
 
-function extractContentPreview(content: string): string {
-  const contentWithoutFrontmatter = content
-    .replace(/^---[\s\S]*?---/, "")
-    .trim();
-  return (
-    contentWithoutFrontmatter.slice(0, 150) +
-    (contentWithoutFrontmatter.length > 150 ? "..." : "")
-  );
-}
-
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  return date
-    .toLocaleString("en-GB", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    })
-    .replace(/\//g, "/")
-    .replace(",", "");
+  return date.toISOString().split("T")[0]; // Returns YYYY-MM-DD format
 }
 
 export default function BlogList({ posts }: { posts: BlogPost[] }) {
@@ -42,35 +21,42 @@ export default function BlogList({ posts }: { posts: BlogPost[] }) {
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 
+  const groupedPosts = sortedPosts.reduce((acc, post) => {
+    const year = new Date(post.date).getFullYear();
+    if (!acc[year]) acc[year] = [];
+    acc[year].push(post);
+    return acc;
+  }, {} as Record<number, BlogPost[]>);
+
+  const sortedYears = Object.keys(groupedPosts).sort(
+    (a, b) => Number(b) - Number(a)
+  );
+
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
-      {sortedPosts.length === 0 ? (
-        <p className="text-gray-600 italic">No blog posts found.</p>
-      ) : (
-        <ul className="space-y-6">
-          {sortedPosts.map((post) => (
-            <li
-              key={post.id}
-              className="border-b border-gray-200 pb-4 last:border-b-0"
-            >
-              <Link
-                href={`/blog/${post.id.replace(".md", "")}`}
-                className="group block"
-              >
-                <h2 className="text-xl font-semibold text-gray-800 group-hover:text-emerald-500 transition-colors duration-200">
+    <div className="max-w-2xl mx-auto px-4 py-12">
+      {sortedYears.map((year) => (
+        <div key={year} className="mb-16">
+          <h2 className="text-2xl font-serif font-light text-gray-400 mb-6">
+            {year}
+          </h2>
+          <ul className="space-y-4">
+            {groupedPosts[Number(year)].map((post) => (
+              <li key={post.id} className="flex items-center">
+                <Link
+                  href={`/blog/${post.id.replace(".md", "")}`}
+                  className="text-gray-700 hover:text-gray-400 transition-colors duration-200"
+                >
                   {decodeTitle(post.title)}
-                </h2>
-                <p className="text-sm text-gray-500 mt-1">
+                </Link>
+                <span className="flex-grow border-b border-dotted border-gray-300 mx-2" />{" "}
+                <span className="text-sm text-gray-400 font-light whitespace-nowrap">
                   {formatDate(post.date)}
-                </p>
-                <p className="text-gray-600 mt-2 line-clamp-2">
-                  {extractContentPreview(post.content)}
-                </p>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
   );
 }
