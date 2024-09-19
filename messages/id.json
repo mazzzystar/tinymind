@@ -1,0 +1,28 @@
+{
+  "HomePage": {
+    "blog": "blog",
+    "thoughts": "pemikiran",
+    "noThoughtsYet": "Belum ada pemikiran",
+    "createThought": "Buat pemikiran",
+    "createBlogPost": "Buat postingan blog",
+    "publish": "Terbitkan",
+    "dataStoredIn": "Data disimpan di:",
+    "writeContent": "Tulis konten Anda di sini...(mendukung Markdown)",
+    "enterTitle": "Masukkan judul Anda di sini...",
+    "howItWorksTitle": "Cara kerjanya:",
+    "howItWorksStep1": "Kami membuat repositori publik \"tinymind-blog\" di GitHub Anda.",
+    "howItWorksStep2": "Postingan blog dan pemikiran baru Anda akan otomatis disimpan di repositori ini.",
+    "howItWorksStep3": "Data Anda hanya disimpan di GitHub, terpisah dari situs ini.",
+    "signInWithGitHub": "Masuk dengan GitHub",
+    "redirecting": "Mengalihkan...",
+    "publishing": "Sedang menerbitkan...",
+    "successPublished": "Berhasil diterbitkan!",
+    "failedPublish": "Gagal menerbitkan",
+    "readingFromGithub": "Membaca data dari GitHub...",
+    "publicContentWarning": "Semua konten bersifat publik."
+  },
+  "metadata": {
+    "title": "TinyMind - Tulis dan sinkronkan postingan blog dan pemikiran Anda dengan login satu klik GitHub",
+    "description": "Tulis dan simpan blog, pemikiran, dan catatan Anda dengan mudah. Masuk dengan GitHub untuk secara otomatis menyinkronkan konten Anda dengan repositori Anda sendiri, memastikan ide-ide Anda disimpan dengan aman selama GitHub ada."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "HomePage": {
+    "blog": "blog",
+    "thoughts": "düşünceler",
+    "noThoughtsYet": "Henüz düşünce yok",
+    "createThought": "Bir düşünce oluştur",
+    "createBlogPost": "Bir blog yazısı oluştur",
+    "publish": "Yayınla",
+    "dataStoredIn": "Veriler şurada saklanır:",
+    "writeContent": "İçeriğinizi buraya yazın...(Markdown desteklenir)",
+    "enterTitle": "Başlığınızı buraya girin...",
+    "howItWorksTitle": "Nasıl çalışır:",
+    "howItWorksStep1": "GitHub'ınızda bir genel \"tinymind-blog\" deposu oluşturuyoruz.",
+    "howItWorksStep2": "Yeni blog yazılarınız ve düşünceleriniz otomatik olarak bu depoya kaydedilecektir.",
+    "howItWorksStep3": "Verileriniz yalnızca GitHub'da saklanır, bu siteden bağımsız olarak.",
+    "signInWithGitHub": "GitHub ile giriş yap",
+    "redirecting": "Yönlendiriliyor...",
+    "publishing": "Yayınlanıyor...",
+    "successPublished": "Başarıyla yayınlandı!",
+    "failedPublish": "Yayınlama başarısız oldu",
+    "readingFromGithub": "GitHub'dan veri okunuyor...",
+    "publicContentWarning": "Tüm içerik herkese açıktır."
+  },
+  "metadata": {
+    "title": "TinyMind - Tek tıklamayla GitHub girişi ile blog yazılarınızı ve düşüncelerinizi yazın ve senkronize edin",
+    "description": "Bloglarınızı, düşüncelerinizi ve notlarınızı kolayca yazın ve saklayın. İçeriğinizi otomatik olarak kendi deponuza senkronize etmek için GitHub ile giriş yapın, böylece GitHub var olduğu sürece fikirleriniz güvenli bir şekilde saklanır."
+  }
+}

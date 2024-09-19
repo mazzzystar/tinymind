@@ -1,0 +1,28 @@
+{
+  "HomePage": {
+    "blog": "blog",
+    "thoughts": "suy nghĩ",
+    "noThoughtsYet": "Chưa có suy nghĩ nào",
+    "createThought": "Tạo suy nghĩ",
+    "createBlogPost": "Tạo bài viết blog",
+    "publish": "Xuất bản",
+    "dataStoredIn": "Dữ liệu được lưu trữ tại:",
+    "writeContent": "Viết nội dung của bạn ở đây...(hỗ trợ Markdown)",
+    "enterTitle": "Nhập tiêu đề của bạn ở đây...",
+    "howItWorksTitle": "Cách hoạt động:",
+    "howItWorksStep1": "Chúng tôi tạo một kho lưu trữ công khai \"tinymind-blog\" trong GitHub của bạn.",
+    "howItWorksStep2": "Bài viết blog và suy nghĩ mới của bạn sẽ tự động được lưu vào kho lưu trữ này.",
+    "howItWorksStep3": "Dữ liệu của bạn chỉ được lưu trữ trên GitHub, độc lập với trang web này.",
+    "signInWithGitHub": "Đăng nhập bằng GitHub",
+    "redirecting": "Đang chuyển hướng...",
+    "publishing": "Đang xuất bản...",
+    "successPublished": "Xuất bản thành công!",
+    "failedPublish": "Xuất bản thất bại",
+    "readingFromGithub": "Đang đọc dữ liệu từ GitHub...",
+    "publicContentWarning": "Tất cả nội dung đều công khai."
+  },
+  "metadata": {
+    "title": "TinyMind - Viết và đồng bộ hóa bài viết blog và suy nghĩ của bạn với đăng nhập GitHub một lần nhấp",
+    "description": "Dễ dàng viết và lưu trữ blog, suy nghĩ và ghi chú của bạn. Đăng nhập bằng GitHub để tự động đồng bộ hóa nội dung của bạn với kho lưu trữ của riêng bạn, đảm bảo rằng ý tưởng của bạn được lưu trữ an toàn miễn là GitHub tồn tại."
+  }
+}

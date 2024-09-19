@@ -1,0 +1,28 @@
+{
+"HomePage": {
+    "blog": "blog",
+    "thoughts": "gedachten",
+    "noThoughtsYet": "Nog geen gedachten",
+    "createThought": "Maak een gedachte",
+    "createBlogPost": "Maak een blogpost",
+    "publish": "Publiceren",
+    "dataStoredIn": "Gegevens opgeslagen in:",
+    "writeContent": "Schrijf je inhoud hier...(Markdown ondersteund)",
+    "enterTitle": "Voer hier je titel in...",
+    "howItWorksTitle": "Hoe het werkt:",
+    "howItWorksStep1": "We maken een openbaar \"tinymind-blog\"-repository in je GitHub.",
+    "howItWorksStep2": "Je nieuwe blogposts en gedachten worden automatisch opgeslagen in deze repository.",
+    "howItWorksStep3": "Je gegevens worden alleen opgeslagen op GitHub, onafhankelijk van deze site.",
+    "signInWithGitHub": "Inloggen met GitHub",
+    "redirecting": "Doorverwijzen...",
+    "publishing": "Publiceren...",
+    "successPublished": "Succesvol gepubliceerd!",
+    "failedPublish": "Publiceren mislukt",
+    "readingFromGithub": "Gegevens lezen van GitHub...",
+    "publicContentWarning": "Alle inhoud is openbaar."
+  },
+  "metadata": {
+    "title": "TinyMind - Schrijf en synchroniseer je blogposts en gedachten met eenmalige GitHub-login",
+    "description": "Schrijf en bewaar je blogs, gedachten en notities moeiteloos. Log in met GitHub om je inhoud automatisch te synchroniseren met je eigen repository, zodat je ideeën veilig worden opgeslagen zolang GitHub bestaat."
+  }
+}
