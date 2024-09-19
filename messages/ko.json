@@ -17,7 +17,8 @@
     "redirecting": "리다이렉팅 중...",
     "publishing": "게시 중...",
     "successPublished": "성공적으로 게시되었습니다!",
-    "failedPublish": "게시에 실패했습니다"
+    "failedPublish": "게시에 실패했습니다",
+    "readingFromGithub": "GitHub에서 데이터를 읽는 중..."
   },
   "metadata": {
     "title": "TinyMind - 원클릭 GitHub 로그인으로 블로그 포스트와 생각을 작성하고 동기화하세요",

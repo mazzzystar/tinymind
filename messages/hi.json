@@ -17,7 +17,8 @@
     "redirecting": "पुनर्निर्देशित कर रहा है...",
     "publishing": "प्रकाशित हो रहा है...",
     "successPublished": "सफलतापूर्वक प्रकाशित!",
-    "failedPublish": "प्रकाशन विफल रहा"
+    "failedPublish": "प्रकाशन विफल रहा",
+    "readingFromGithub": "GitHub से डेटा पढ़ रहा है..."
   },
   "metadata": {
     "title": "TinyMind - एक-क्लिक GitHub साइन-इन के साथ अपने ब्लॉग पोस्ट और विचारों को लिखें और सिंक करें",

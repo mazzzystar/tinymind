@@ -17,7 +17,8 @@
     "redirecting": "Redirecting...",
     "publishing": "Publishing...",
     "successPublished": "Successfully published!",
-    "failedPublish": "Failed to publish"
+    "failedPublish": "Failed to publish",
+    "readingFromGithub": "قراءة البيانات من GitHub..."
   },
   "metadata": {
     "title": "TinyMind - Write and synchronize your blog posts and thoughts with GitHub one-click login",

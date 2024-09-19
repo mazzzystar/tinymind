@@ -3,6 +3,7 @@
       "blog": "blog",
       "thoughts": "thoughts",
       "noThoughtsYet": "No thoughts yet",
+      "readingFromGithub": "Reading data from GitHub...",
       "createThought": "Create a thought",
       "createBlogPost": "Create a blog post",
       "publish": "Publish",

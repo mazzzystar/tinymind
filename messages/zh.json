@@ -17,7 +17,8 @@
       "redirecting": "重定向中...",
       "publishing": "发布中...",
       "successPublished": "发布成功！",
-      "failedPublish": "发布失败"
+      "failedPublish": "发布失败",
+      "readingFromGithub": "正在从GitHub读取数据..."
     },
     "metadata": {
       "title": "TinyMind - 用GitHub账号一键登录写作并同步你的博客和想法",
