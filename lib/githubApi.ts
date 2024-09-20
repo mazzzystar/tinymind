@@ -213,7 +213,8 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
   await initializeGitHubStructure(octokit, owner, repo);
 
   try {
-    const decodedId = decodeURIComponent(id);
+    // Remove the unused variable
+    // const decodedId = decodeURIComponent(id);
     // Fetch the file content
     const contentResponse = await octokit.repos.getContent({
       owner,
