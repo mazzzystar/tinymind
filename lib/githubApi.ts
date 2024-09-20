@@ -378,6 +378,75 @@ export async function createThought(content: string, image: string | undefined, 
   }
 }
 
+export async function deleteThought(id: string, accessToken: string): Promise<void> {
+  console.log('Deleting thought...');
+  if (!accessToken) {
+    throw new Error('Access token is required');
+  }
+  const octokit = getOctokit(accessToken);
+  console.log('Octokit instance created');
+  
+  try {
+    const { owner, repo } = await getRepoInfo(accessToken);
+    console.log('Repo info:', { owner, repo });
+
+    await initializeGitHubStructure(octokit, owner, repo);
+    console.log('GitHub structure initialized');
+
+    let thoughts: Thought[] = [];
+    let existingSha: string | undefined;
+
+    // Try to fetch existing thoughts
+    try {
+      console.log('Fetching existing thoughts...');
+      const response = await octokit.repos.getContent({
+        owner,
+        repo,
+        path: 'content/thoughts.json',
+      });
+
+      if (!Array.isArray(response.data) && 'content' in response.data) {
+        const existingContent = Buffer.from(response.data.content, 'base64').toString('utf-8');
+        thoughts = JSON.parse(existingContent) as Thought[];
+        existingSha = response.data.sha;
+        console.log('Existing thoughts fetched');
+      }
+    } catch (error) {
+      if (error instanceof Error && 'status' in error && (error as any).status === 404) {
+        console.log('thoughts.json does not exist, creating a new file');
+      } else {
+        console.error('Error fetching existing thoughts:', error);
+        throw error;
+      }
+    }
+  
+    console.log(thoughts)
+    const newThoughts = thoughts.filter((t) => t.id !== id)
+    console.log(newThoughts)
+
+    console.log('Updating thoughts file...');
+    // Create or update the file with all thoughts
+    const updateParams: UpdateFileParams = {
+      owner,
+      repo,
+      path: 'content/thoughts.json',
+      message: 'Delete a thought',
+      content: Buffer.from(JSON.stringify(newThoughts, null, 2)).toString('base64'),
+    };
+
+    if (existingSha) {
+      updateParams.sha = existingSha;
+    }
+
+    await octokit.repos.createOrUpdateFileContents(updateParams);
+
+    console.log('Thought deleted successfully');
+  } catch (error) {
+    console.error('Error deleting thought:', error);
+    throw error;
+  }
+}
+
 export async function getUserLogin(accessToken: string): Promise<string> {
   const octokit = getOctokit(accessToken);
   const { data: user } = await octokit.users.getAuthenticated();

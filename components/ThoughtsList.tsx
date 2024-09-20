@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { getThoughts, Thought } from "@/lib/githubApi";
+import { getThoughts, deleteThought, Thought } from "@/lib/githubApi";
 import GitHubSignInButton from "./GitHubSignInButton";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -96,6 +96,16 @@ export default function ThoughtsList() {
             className="bg-[#f9f9f9] shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300 flex flex-col"
           >
             <div className="text-gray-800 mb-2 prose max-w-none">
+              <Button 
+                onClick={async () => {
+                  await deleteThought(thought.id, session?.accessToken ?? "");
+                  router.push("/editor?type=thought");
+                }}
+                type="button" 
+                className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg px-3 py-2 text-xs me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 float-right"
+              >
+                X
+              </Button>
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{

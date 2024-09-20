@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import { createBlogPost, createThought, getBlogPosts, getThoughts } from '@/lib/githubApi';
+import { deleteThought, createBlogPost, createThought, getBlogPosts, getThoughts } from '@/lib/githubApi';
 
 export async function POST(request: NextRequest) {
   try {
