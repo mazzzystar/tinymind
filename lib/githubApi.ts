@@ -213,13 +213,12 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
   await initializeGitHubStructure(octokit, owner, repo);
 
   try {
-    // Remove the unused variable
-    // const decodedId = decodeURIComponent(id);
-    // Fetch the file content
+    // First attempt to fetch the file using the encoded filename
+    const encodedId = encodeURIComponent(id);
     const contentResponse = await octokit.repos.getContent({
       owner,
       repo,
-      path: `content/blog/${id}.md`, // Use the original file name
+      path: `content/blog/${encodedId}.md`,
     });
 
     if (Array.isArray(contentResponse.data) || !('content' in contentResponse.data)) {
@@ -232,7 +231,7 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
     const commitResponse = await octokit.repos.listCommits({
       owner,
       repo,
-      path: `content/blog/${id}.md`, // Use the original file name
+      path: `content/blog/${encodedId}.md`,
       per_page: 1
     });
 
@@ -248,9 +247,47 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
       content,
       date: latestCommit.commit.author?.date ?? new Date().toISOString(),
     };
-  } catch (error) {
-    console.error('Error fetching blog post:', error);
-    return null;
+  } catch (encodedError) {
+    console.error(`Error fetching content for ${encodeURIComponent(id)}.md:`, encodedError);
+
+    // If the encoded filename fetch fails, attempt to fetch using the original filename
+    try {
+      const contentResponse = await octokit.repos.getContent({
+        owner,
+        repo,
+        path: `content/blog/${id}.md`,
+      });
+
+      if (Array.isArray(contentResponse.data) || !('content' in contentResponse.data)) {
+        throw new Error('Unexpected response from GitHub API');
+      }
+
+      const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf-8');
+
+      // Fetch the latest commit for this file
+      const commitResponse = await octokit.repos.listCommits({
+        owner,
+        repo,
+        path: `content/blog/${id}.md`,
+        per_page: 1
+      });
+
+      if (commitResponse.data.length === 0) {
+        throw new Error('No commits found for this file');
+      }
+
+      const latestCommit = commitResponse.data[0];
+
+      return {
+        id,
+        title: id,
+        content,
+        date: latestCommit.commit.author?.date ?? new Date().toISOString(),
+      };
+    } catch (error) {
+      console.error(`Error fetching content for ${id}.md:`, error);
+      return null;
+    }
   }
 }
 

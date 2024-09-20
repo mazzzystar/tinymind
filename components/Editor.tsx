@@ -150,6 +150,12 @@ export default function Editor({
             )}
           </div>
 
+          {isSuccess && (
+            <div className="text-xs font-normal text-gray-400 text-center m-2">
+              {t("successPublished")}
+            </div>
+          )}
+
           <div className="flex justify-center">
             <Button
               type="submit"
@@ -166,12 +172,6 @@ export default function Editor({
               )}
             </Button>
           </div>
-
-          {isSuccess && (
-            <div className="text-xs font-normal text-gray-400 text-center mt-4">
-              {t("successPublished")}
-            </div>
-          )}
         </form>
       </CardContent>
     </Card>
