@@ -16,7 +16,7 @@
     "signInWithGitHub": "ลงชื่อเข้าใช้ด้วย GitHub",
     "redirecting": "กำลังเปลี่ยนเส้นทาง...",
     "publishing": "กำลังเผยแพร่...",
-    "successPublished": "เผยแพร่สำเร็จ!",
+    "successPublished": "เผยแพร่สำเร็จ! อาจใช้เวลาถึง 30 วินาทีในการปรากฏ หากไม่เห็นทันทีให้รีเฟรช",
     "failedPublish": "การเผยแพร่ล้มเหลว",
     "readingFromGithub": "กำลังอ่านข้อมูลจาก GitHub...",
     "publicContentWarning": "เนื้อหาทั้งหมดเป็นสาธารณะ",

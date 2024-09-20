@@ -16,7 +16,7 @@
     "signInWithGitHub": "Masuk dengan GitHub",
     "redirecting": "Mengalihkan...",
     "publishing": "Sedang menerbitkan...",
-    "successPublished": "Berhasil diterbitkan!",
+    "successPublished": "Berhasil diterbitkan! Mungkin perlu waktu hingga 30 detik untuk muncul. Segarkan jika Anda tidak melihatnya segera.",
     "failedPublish": "Gagal menerbitkan",
     "readingFromGithub": "Membaca data dari GitHub...",
     "publicContentWarning": "Semua konten bersifat publik.",

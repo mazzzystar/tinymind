@@ -16,7 +16,7 @@
     "signInWithGitHub": "GitHub ile giriş yap",
     "redirecting": "Yönlendiriliyor...",
     "publishing": "Yayınlanıyor...",
-    "successPublished": "Başarıyla yayınlandı!",
+    "successPublished": "Başarıyla yayınlandı! Görünmesi 30 saniyeye kadar sürebilir. Hemen görmezseniz yenileyin.",
     "failedPublish": "Yayınlama başarısız oldu",
     "readingFromGithub": "GitHub'dan veri okunuyor...",
     "publicContentWarning": "Tüm içerik herkese açıktır.",

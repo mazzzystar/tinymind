@@ -16,7 +16,7 @@
     "signInWithGitHub": "Войти с GitHub",
     "redirecting": "Перенаправление...",
     "publishing": "Публикация...",
-    "successPublished": "Успешно опубликовано!",
+    "successPublished": "Успешно опубликовано! Это может занять до 30 секунд, чтобы появиться. Обновите страницу, если не видите его сразу.",
     "failedPublish": "Не удалось опубликовать",
     "readingFromGithub": "Чтение данных из GitHub...",
     "publicContentWarning": "Весь контент является публичным.",

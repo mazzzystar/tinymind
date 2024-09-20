@@ -16,7 +16,7 @@
     "signInWithGitHub": "Sign in with GitHub",
     "redirecting": "Redirecting...",
     "publishing": "Publishing...",
-    "successPublished": "Successfully published!",
+    "successPublished": "تم النشر بنجاح! قد يستغرق الأمر ما يصل إلى 30 ثانية للظهور. قم بالتحديث إذا لم تره على الفور.",
     "failedPublish": "Failed to publish",
     "readingFromGithub": "Reading data from GitHub...",
     "publicContentWarning": "All content is public.",

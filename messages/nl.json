@@ -16,7 +16,7 @@
     "signInWithGitHub": "Inloggen met GitHub",
     "redirecting": "Doorverwijzen...",
     "publishing": "Publiceren...",
-    "successPublished": "Succesvol gepubliceerd!",
+    "successPublished": "Succesvol gepubliceerd! Het kan tot 30 seconden duren voordat het verschijnt. Ververs als je het niet meteen ziet.",
     "failedPublish": "Publiceren mislukt",
     "readingFromGithub": "Gegevens lezen van GitHub...",
     "publicContentWarning": "Alle inhoud is openbaar.",

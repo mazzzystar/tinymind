@@ -16,7 +16,7 @@
     "signInWithGitHub": "GitHubでログイン",
     "redirecting": "リダイレクト中...",
     "publishing": "公開中...",
-    "successPublished": "公開成功！",
+    "successPublished": "公開成功！表示されるまで最大30秒かかる場合があります。すぐに表示されない場合はリフレッシュしてください。",
     "failedPublish": "公開失敗",
     "readingFromGithub": "GitHubからデータを読み込んでいます...",
     "publicContentWarning": "すべてのコンテンツは公開されます。",

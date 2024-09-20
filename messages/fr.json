@@ -16,7 +16,7 @@
     "signInWithGitHub": "Connexion avec GitHub",
     "redirecting": "Redirection...",
     "publishing": "Publication...",
-    "successPublished": "Publié avec succès !",
+    "successPublished": "Publié avec succès ! Cela peut prendre jusqu'à 30 secondes pour apparaître. Actualisez si vous ne le voyez pas immédiatement.",
     "failedPublish": "Échec de la publication",
     "readingFromGithub": "Lecture des données depuis GitHub...",
     "publicContentWarning": "Tout le contenu est public.",

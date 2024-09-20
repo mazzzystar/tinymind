@@ -168,7 +168,7 @@ export default function Editor({
           </div>
 
           {isSuccess && (
-            <div className="text-green-500 text-center mt-4">
+            <div className="text-xs font-normal text-gray-400 text-center mt-4">
               {t("successPublished")}
             </div>
           )}

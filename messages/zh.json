@@ -16,7 +16,7 @@
       "signInWithGitHub": "使用GitHub登录",
       "redirecting": "重定向中...",
       "publishing": "发布中...",
-      "successPublished": "发布成功！",
+      "successPublished": "发布成功！可能需要长达30秒的时间才能显示。如果没有立即看到，请刷新。",
       "failedPublish": "发布失败",
       "readingFromGithub": "正在从GitHub读取数据...",
       "publicContentWarning": "所有内容都是公开的。",
