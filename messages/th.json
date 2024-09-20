@@ -19,7 +19,9 @@
     "successPublished": "เผยแพร่สำเร็จ!",
     "failedPublish": "การเผยแพร่ล้มเหลว",
     "readingFromGithub": "กำลังอ่านข้อมูลจาก GitHub...",
-    "publicContentWarning": "เนื้อหาทั้งหมดเป็นสาธารณะ"
+    "publicContentWarning": "เนื้อหาทั้งหมดเป็นสาธารณะ",
+    "write": "เขียน",
+    "preview": "ดูตัวอย่าง"
   },
   "metadata": {
     "title": "TinyMind - เขียนและซิงค์โพสต์บล็อกและความคิดของคุณด้วยการลงชื่อเข้าใช้ GitHub เพียงคลิกเดียว",

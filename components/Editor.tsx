@@ -113,18 +113,20 @@ export default function Editor() {
               <button
                 type="button"
                 onClick={() => setIsPreview(false)}
-                className={`px-4 py-2 ${!isPreview ? "bg-gray-100" : ""}`}
+                className={`text-sm px-4 py-2 ${
+                  !isPreview ? "bg-gray-100" : ""
+                }`}
               >
-                Write
+                {t("write")}
               </button>
               <button
                 type="button"
                 onClick={() => setIsPreview(true)}
-                className={`px-4 py-2 ${
+                className={`text-sm px-4 py-2 ${
                   isPreview ? "bg-gray-100 border-b-2 border-black" : ""
                 }`}
               >
-                Preview
+                {t("preview")}
               </button>
             </div>
             {isPreview ? (

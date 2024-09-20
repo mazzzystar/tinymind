@@ -19,7 +19,9 @@
     "successPublished": "Успешно опубликовано!",
     "failedPublish": "Не удалось опубликовать",
     "readingFromGithub": "Чтение данных из GitHub...",
-    "publicContentWarning": "Весь контент является публичным."
+    "publicContentWarning": "Весь контент является публичным.",
+    "write": "Писать",
+    "preview": "Предпросмотр"
   },
   "metadata": {
     "title": "TinyMind - Пишите и синхронизируйте свои записи в блоге и мысли с помощью одноразового входа в GitHub",

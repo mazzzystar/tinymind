@@ -19,7 +19,9 @@
     "successPublished": "Pomyślnie opublikowano!",
     "failedPublish": "Nie udało się opublikować",
     "readingFromGithub": "Odczytywanie danych z GitHub...",
-    "publicContentWarning": "Wszystkie treści są publiczne."
+    "publicContentWarning": "Wszystkie treści są publiczne.",
+    "write": "Pisz",
+    "preview": "Podgląd"
   },
   "metadata": {
     "title": "TinyMind - Pisz i synchronizuj swoje posty na blogu i myśli za pomocą jednorazowego logowania do GitHub",

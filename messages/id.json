@@ -19,7 +19,9 @@
     "successPublished": "Berhasil diterbitkan!",
     "failedPublish": "Gagal menerbitkan",
     "readingFromGithub": "Membaca data dari GitHub...",
-    "publicContentWarning": "Semua konten bersifat publik."
+    "publicContentWarning": "Semua konten bersifat publik.",
+    "write": "Tulis",
+    "preview": "Pratinjau"
   },
   "metadata": {
     "title": "TinyMind - Tulis dan sinkronkan postingan blog dan pemikiran Anda dengan login satu klik GitHub",

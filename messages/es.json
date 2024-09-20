@@ -19,7 +19,9 @@
     "successPublished": "Successfully published!",
     "failedPublish": "Failed to publish",
     "readingFromGithub": "Reading data from GitHub...",
-    "publicContentWarning": "All content is public."
+    "publicContentWarning": "All content is public.",
+    "write": "Escribir",
+    "preview": "Vista previa"
   },
   "metadata": {
     "title": "TinyMind - Write and sync your blog posts & thoughts with one-click GitHub sign-in",

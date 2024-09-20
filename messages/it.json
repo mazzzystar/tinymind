@@ -19,7 +19,9 @@
     "successPublished": "Pubblicato con successo!",
     "failedPublish": "Pubblicazione fallita",
     "readingFromGithub": "Lettura dei dati da GitHub...",
-    "publicContentWarning": "Tutti i contenuti sono pubblici."
+    "publicContentWarning": "Tutti i contenuti sono pubblici.",
+    "write": "Scrivi",
+    "preview": "Anteprima"
   },
   "metadata": {
     "title": "TinyMind - Scrivi e sincronizza i tuoi post sul blog e pensieri con l'accesso a GitHub con un clic",

@@ -19,7 +19,9 @@
     "successPublished": "सफलतापूर्वक प्रकाशित!",
     "failedPublish": "प्रकाशन विफल रहा",
     "readingFromGithub": "GitHub से डेटा पढ़ रहा है...",
-    "publicContentWarning": "सभी सामग्री सार्वजनिक है।"
+    "publicContentWarning": "सभी सामग्री सार्वजनिक है।",
+    "write": "लिखें",
+    "preview": "पूर्वावलोकन"
   },
   "metadata": {
     "title": "TinyMind - एक-क्लिक GitHub साइन-इन के साथ अपने ब्लॉग पोस्ट और विचारों को लिखें और सिंक करें",

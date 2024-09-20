@@ -19,7 +19,9 @@
     "successPublished": "Başarıyla yayınlandı!",
     "failedPublish": "Yayınlama başarısız oldu",
     "readingFromGithub": "GitHub'dan veri okunuyor...",
-    "publicContentWarning": "Tüm içerik herkese açıktır."
+    "publicContentWarning": "Tüm içerik herkese açıktır.",
+    "write": "Yaz",
+    "preview": "Önizleme"
   },
   "metadata": {
     "title": "TinyMind - Tek tıklamayla GitHub girişi ile blog yazılarınızı ve düşüncelerinizi yazın ve senkronize edin",
