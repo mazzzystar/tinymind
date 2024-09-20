@@ -179,7 +179,7 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
 
               // Parse the title from the content
               const titleMatch = content.match(/title:\s*(.+)/);
-              const title = titleMatch ? titleMatch[1] : file.name.replace('.md', '');
+              const title = titleMatch ? titleMatch[1] : decodeURIComponent(file.name.replace('.md', ''));
 
               return {
                 id: file.name.replace('.md', ''),
