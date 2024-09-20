@@ -3,8 +3,13 @@ import { authOptions } from "@/lib/auth";
 import EditorComponent from "@/components/Editor";
 import GitHubSignInButton from "@/components/GitHubSignInButton";
 
-export default async function EditorPage() {
+export default async function EditorPage({
+  searchParams,
+}: {
+  searchParams: { type?: string };
+}) {
   const session = await getServerSession(authOptions);
+  const defaultType = searchParams.type === "blog" ? "blog" : "thought";
 
   if (!session) {
     return <GitHubSignInButton />;
@@ -12,7 +17,7 @@ export default async function EditorPage() {
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
-      <EditorComponent />
+      <EditorComponent defaultType={defaultType} />
     </div>
   );
 }

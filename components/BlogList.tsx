@@ -43,7 +43,7 @@ export default function BlogList({ posts }: { posts: BlogPost[] }) {
       <div className="flex flex-col items-center mt-8 space-y-4">
         <p className="text-gray-500">{t("noBlogPostsYet")}</p>
         <Button
-          onClick={() => router.push("/editor")}
+          onClick={() => router.push("/editor?type=blog")}
           className="bg-black hover:bg-gray-800 text-white"
         >
           {t("createBlogPost")}

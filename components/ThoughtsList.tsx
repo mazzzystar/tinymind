@@ -65,73 +65,78 @@ export default function ThoughtsList() {
     return <div className="error-message">{error}</div>;
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center mt-8 space-y-4">
+        <p className="text-gray-500">{t("readingFromGithub")}</p>
+      </div>
+    );
+  }
+
+  if (thoughts.length === 0) {
+    return (
+      <div className="flex flex-col items-center mt-8 space-y-4">
+        <p className="text-gray-500">{t("noThoughtsYet")}</p>
+        <Button
+          onClick={() => router.push("/editor?type=thought")}
+          className="bg-black hover:bg-gray-800 text-white"
+        >
+          {t("createThought")}
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-2xl mx-auto p-4">
-      {isLoading ? (
-        <div className="flex flex-col items-center mt-8 space-y-4">
-          <p className="text-gray-500">{t("readingFromGithub")}</p>
-        </div>
-      ) : thoughts.length === 0 ? (
-        <div className="flex flex-col items-center mt-8 space-y-4">
-          <p className="text-gray-500">{t("noThoughtsYet")}</p>
-          <Button
-            onClick={() => router.push("/editor")}
-            className="bg-black hover:bg-gray-800 text-white"
+      <div className="space-y-4">
+        {thoughts.map((thought) => (
+          <div
+            key={thought.id}
+            className="bg-[#f9f9f9] shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300 flex flex-col"
           >
-            {t("createThought")}
-          </Button>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {thoughts.map((thought) => (
-            <div
-              key={thought.id}
-              className="bg-[#f9f9f9] shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300 flex flex-col"
-            >
-              <div className="text-gray-800 mb-2 prose max-w-none">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  components={{
-                    code({
-                      inline,
-                      className,
-                      children,
-                      ...props
-                    }: {
-                      inline?: boolean;
-                      className?: string;
-                      children?: React.ReactNode;
-                    } & React.HTMLAttributes<HTMLElement>) {
-                      const match = /language-(\w+)/.exec(className || "");
-                      return !inline && match ? (
-                        <SyntaxHighlighter
-                          style={
-                            tomorrow as { [key: string]: React.CSSProperties }
-                          }
-                          language={match[1]}
-                          PreTag="div"
-                          // {...props}
-                        >
-                          {String(children).replace(/\n$/, "")}
-                        </SyntaxHighlighter>
-                      ) : (
-                        <code className={className} {...props}>
-                          {children}
-                        </code>
-                      );
-                    },
-                  }}
-                >
-                  {thought.content}
-                </ReactMarkdown>
-              </div>
-              <small className="text-gray-500 self-end mt-2">
-                {new Date(thought.timestamp).toLocaleString()}
-              </small>
+            <div className="text-gray-800 mb-2 prose max-w-none">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  code({
+                    inline,
+                    className,
+                    children,
+                    ...props
+                  }: {
+                    inline?: boolean;
+                    className?: string;
+                    children?: React.ReactNode;
+                  } & React.HTMLAttributes<HTMLElement>) {
+                    const match = /language-(\w+)/.exec(className || "");
+                    return !inline && match ? (
+                      <SyntaxHighlighter
+                        style={
+                          tomorrow as { [key: string]: React.CSSProperties }
+                        }
+                        language={match[1]}
+                        PreTag="div"
+                      >
+                        {String(children).replace(/\n$/, "")}
+                      </SyntaxHighlighter>
+                    ) : (
+                      <code className={className} {...props}>
+                        {children}
+                      </code>
+                    );
+                  },
+                }}
+              >
+                {thought.content}
+              </ReactMarkdown>
             </div>
-          ))}
-        </div>
-      )}
+            <small className="text-gray-500 self-end mt-2">
+              {new Date(thought.timestamp).toLocaleString()}
+            </small>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -13,10 +13,14 @@ import { useTranslations } from "next-intl";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-export default function Editor() {
+export default function Editor({
+  defaultType = "thought",
+}: {
+  defaultType?: "thought" | "blog";
+}) {
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
-  const [type, setType] = useState("thought");
+  const [type, setType] = useState(defaultType);
   const [isPreview, setIsPreview] = useState(false);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -72,7 +76,7 @@ export default function Editor() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <RadioGroup
             defaultValue={type}
-            onValueChange={(value) => setType(value)}
+            onValueChange={(value: "blog" | "thought") => setType(value)}
             className="flex space-x-4"
           >
             <div className="flex items-center space-x-2">
