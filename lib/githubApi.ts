@@ -229,7 +229,7 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
     const commitResponse = await octokit.repos.listCommits({
       owner,
       repo,
-      path: `content/blog/${id}.md`,
+      path: `content/blog/${decodeURIComponent(id)}.mdd`,
       per_page: 1
     });
 
