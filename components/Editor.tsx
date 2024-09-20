@@ -54,18 +54,18 @@ export default function Editor() {
   };
 
   return (
-    <Card className="max-w-2xl mx-auto">
-      <CardHeader>
+    <Card className="max-w-2xl mx-auto shadow-md border border-gray-100">
+      <CardHeader className="border-b border-gray-100">
         <div className="flex items-center justify-between">
           <CardTitle className="flex flex-col items-start">
             {type === "blog" ? t("createBlogPost") : t("createThought")}
-            <span className="mt-1 text-xs font-normal text-gray-500">
+            <span className="mt-1 text-xs font-normal text-gray-400">
               {t("publicContentWarning")}
             </span>
           </CardTitle>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           <RadioGroup
             defaultValue={type}
@@ -78,7 +78,9 @@ export default function Editor() {
                 id="blog"
                 className={type === "blog" ? "text-white bg-black" : ""}
               />
-              <Label htmlFor="blog">{t("blog")}</Label>
+              <Label htmlFor="blog" className="text-sm">
+                {t("blog")}
+              </Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem
@@ -86,7 +88,9 @@ export default function Editor() {
                 id="thought"
                 className={type === "thought" ? "text-white bg-black" : ""}
               />
-              <Label htmlFor="thought">{t("thoughts")}</Label>
+              <Label htmlFor="thought" className="text-sm">
+                {t("thoughts")}
+              </Label>
             </div>
           </RadioGroup>
 
@@ -97,6 +101,7 @@ export default function Editor() {
               onChange={(e) => setTitle(e.target.value)}
               placeholder={t("enterTitle")}
               required
+              className="border-gray-200 focus:border-gray-300 focus:ring-gray-300"
             />
           )}
 
@@ -104,12 +109,16 @@ export default function Editor() {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder={t("writeContent")}
-            className="min-h-[300px]"
+            className="min-h-[300px] border-gray-100 focus:border-gray-200 focus:ring-gray-200"
             required
           />
 
           <div className="flex justify-center">
-            <Button type="submit" disabled={isLoading} className="px-12 py-5">
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="px-12 py-5 bg-black hover:bg-gray-800"
+            >
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

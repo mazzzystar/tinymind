@@ -10,5 +10,9 @@ export default async function EditorPage() {
     return <GitHubSignInButton />;
   }
 
-  return <EditorComponent />;
+  return (
+    <div className="px-4 sm:px-6 lg:px-8">
+      <EditorComponent />
+    </div>
+  );
 }
