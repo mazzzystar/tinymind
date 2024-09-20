@@ -33,7 +33,7 @@ export default function Header() {
               <Button
                 variant="ghost"
                 className={`text-lg font-normal ${
-                  activeTab === "blog" ? "text-black" : "text-gray-500"
+                  activeTab === "blog" ? "text-black" : "text-gray-300"
                 }`}
                 asChild
               >
