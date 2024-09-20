@@ -54,26 +54,14 @@ export default async function BlogPost({ params }: { params: { id: string } }) {
     );
   }
 
-  // Log the raw title to check its value
-  console.log("Raw title:", post.title);
-
   const decodedTitle = decodeContent(post.title);
-
-  // Log the decoded title to check if decoding is working correctly
-  console.log("Decoded title:", decodedTitle);
-
   const decodedContent = decodeContent(post.content);
   const contentWithoutFrontmatter = removeFrontmatter(decodedContent);
-
-  // Extract title from frontmatter
-  const frontmatterTitle = extractTitleFromFrontmatter(decodedContent);
 
   return (
     <Card className="max-w-3xl mx-auto mt-8">
       <CardHeader>
-        <CardTitle className="text-3xl font-bold">
-          {frontmatterTitle || decodedTitle}
-        </CardTitle>
+        <CardTitle className="text-3xl font-bold">{decodedTitle}</CardTitle>
         <p className="text-sm text-gray-500">
           {format(new Date(post.date), "MMMM d, yyyy")}
         </p>
@@ -119,18 +107,4 @@ export default async function BlogPost({ params }: { params: { id: string } }) {
       </CardContent>
     </Card>
   );
-}
-
-// Add this function to extract the title from frontmatter
-function extractTitleFromFrontmatter(content: string): string | null {
-  const frontmatterRegex = /^---\n([\s\S]*?)\n---\n/;
-  const match = content.match(frontmatterRegex);
-  if (match) {
-    const frontmatter = match[1];
-    const titleMatch = frontmatter.match(/title:\s*(.+)/);
-    if (titleMatch) {
-      return titleMatch[1].trim();
-    }
-  }
-  return null;
 }
