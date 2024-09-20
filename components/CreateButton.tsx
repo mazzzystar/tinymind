@@ -19,7 +19,7 @@ export default function CreateButton({
   return (
     <Link
       href={createLink}
-      className="fixed bottom-9 right-9 p-4 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full shadow-lg z-20 flex items-center justify-center"
+      className="fixed bottom-9 right-9 p-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full shadow-lg z-20 flex items-center justify-center"
     >
       <FiPlus className="w-6 h-6" />
       <span className="sr-only">

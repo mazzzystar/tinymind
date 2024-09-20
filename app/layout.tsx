@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { gowun_wodum } from "@/components/ui/font";
+// import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import { SessionProvider } from "../components/SessionProvider";
@@ -8,10 +9,10 @@ import Footer from "@/components/Footer";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400"],
-});
+// const inter = Inter({
+//   subsets: ["latin"],
+//   weight: ["400"],
+// });
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("metadata");
@@ -72,7 +73,7 @@ export default async function RootLayout({
         gtag('config', 'G-1MF16MH92D');`}
       </Script>
 
-      <body className={inter.className}>
+      <body className={gowun_wodum.className}>
         <NextIntlClientProvider messages={messages}>
           <SessionProvider>
             <Header />
