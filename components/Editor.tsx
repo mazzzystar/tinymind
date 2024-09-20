@@ -55,17 +55,17 @@ export default function Editor() {
 
   return (
     <Card className="max-w-2xl mx-auto shadow-md border border-gray-100">
-      <CardHeader className="border-b border-gray-100">
+      <CardHeader className="border-b border-gray-100 pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="flex flex-col items-start">
             {type === "blog" ? t("createBlogPost") : t("createThought")}
-            <span className="mt-1 text-xs font-normal text-gray-400">
+            <span className="mt-2 text-xs font-normal text-gray-400">
               {t("publicContentWarning")}
             </span>
           </CardTitle>
         </div>
       </CardHeader>
-      <CardContent className="pt-6">
+      <CardContent className="pt-4">
         <form onSubmit={handleSubmit} className="space-y-6">
           <RadioGroup
             defaultValue={type}
