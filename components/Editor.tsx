@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,14 +18,28 @@ export default function Editor({
 }: {
   defaultType?: "thought" | "blog";
 }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
-  const [type, setType] = useState(defaultType);
+  const [type, setType] = useState(
+    (searchParams.get("type") as "thought" | "blog") || defaultType
+  );
   const [isPreview, setIsPreview] = useState(false);
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const t = useTranslations("HomePage");
+
+  useEffect(() => {
+    // Update URL when type changes
+    const params = new URLSearchParams(window.location.search);
+    params.set("type", type);
+    router.push(`/editor?${params.toString()}`);
+  }, [type, router]);
+
+  const handleTypeChange = (value: "blog" | "thought") => {
+    setType(value);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,8 +94,8 @@ export default function Editor({
       <CardContent className="pt-4">
         <form onSubmit={handleSubmit} className="space-y-6">
           <RadioGroup
-            defaultValue={type}
-            onValueChange={(value: "blog" | "thought") => setType(value)}
+            value={type}
+            onValueChange={handleTypeChange}
             className="flex space-x-4"
           >
             <div className="flex items-center space-x-2">

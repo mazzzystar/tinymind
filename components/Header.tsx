@@ -2,19 +2,24 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { FaGithub } from "react-icons/fa"; // Change this import
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 
 export default function Header() {
   const pathname = usePathname();
-  const [activeTab, setActiveTab] = useState(
-    pathname === "/blog" ? "blog" : "thoughts"
-  );
-
+  const searchParams = useSearchParams();
   const t = useTranslations("HomePage");
+
+  // Determine the active tab based on the current pathname and search params
+  const activeTab =
+    pathname.startsWith("/blog") || searchParams.get("type") === "blog"
+      ? "blog"
+      : pathname.startsWith("/thoughts") ||
+        searchParams.get("type") === "thought"
+      ? "thoughts"
+      : "thoughts";
 
   return (
     <header className="fixed top-0 left-0 right-0 py-4 bg-card shadow z-10">
@@ -30,7 +35,6 @@ export default function Header() {
                 className={`text-lg font-normal ${
                   activeTab === "blog" ? "text-black" : "text-gray-500"
                 }`}
-                onClick={() => setActiveTab("blog")}
                 asChild
               >
                 <Link href="/blog">{t("blog")}</Link>
@@ -40,7 +44,6 @@ export default function Header() {
                 className={`text-lg font-normal ${
                   activeTab === "thoughts" ? "text-black" : "text-gray-300"
                 }`}
-                onClick={() => setActiveTab("thoughts")}
                 asChild
               >
                 <Link href="/thoughts">{t("thoughts")}</Link>
