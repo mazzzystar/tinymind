@@ -164,10 +164,11 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
         .filter(file => file.type === 'file' && file.name !== '.gitkeep' && file.name.endsWith('.md'))
         .map(async (file) => {
           try {
+            const decodedFileName = decodeURIComponent(file.name);
             const contentResponse = await octokit.repos.getContent({
               owner,
               repo,
-              path: `content/blog/${decodeURIComponent(file.name)}`, // Decode the file name
+              path: `content/blog/${file.name}`, // Use the original file name
             });
 
             if ('content' in contentResponse.data) {
@@ -179,7 +180,7 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
 
               // Parse the title from the content
               const titleMatch = content.match(/title:\s*(.+)/);
-              const title = titleMatch ? titleMatch[1] : decodeURIComponent(file.name.replace('.md', ''));
+              const title = titleMatch ? titleMatch[1] : decodedFileName.replace('.md', '');
 
               return {
                 id: file.name.replace('.md', ''),
@@ -212,11 +213,12 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
   await initializeGitHubStructure(octokit, owner, repo);
 
   try {
+    const decodedId = decodeURIComponent(id);
     // Fetch the file content
     const contentResponse = await octokit.repos.getContent({
       owner,
       repo,
-      path: `content/blog/${decodeURIComponent(id)}.md`, // Decode the file name
+      path: `content/blog/${id}.md`, // Use the original file name
     });
 
     if (Array.isArray(contentResponse.data) || !('content' in contentResponse.data)) {
@@ -229,7 +231,7 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
     const commitResponse = await octokit.repos.listCommits({
       owner,
       repo,
-      path: `content/blog/${decodeURIComponent(id)}.md`, // Decode the file name
+      path: `content/blog/${id}.md`, // Use the original file name
       per_page: 1
     });
 
