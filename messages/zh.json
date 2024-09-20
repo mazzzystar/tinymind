@@ -21,7 +21,8 @@
       "readingFromGithub": "正在从GitHub读取数据...",
       "publicContentWarning": "所有内容都是公开的。",
       "write": "写作",
-      "preview": "预览"
+      "preview": "预览",
+      "noBlogPostsYet": "还没有博客文章"
     },
     "metadata": {
       "title": "TinyMind - 用GitHub账号一键登录写作并同步你的博客和想法",

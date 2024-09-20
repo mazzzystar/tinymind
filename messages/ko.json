@@ -21,7 +21,8 @@
     "readingFromGithub": "GitHub에서 데이터를 읽는 중...",
     "publicContentWarning": "모든 내용은 공개됩니다.",
     "write": "작성",
-    "preview": "미리보기"
+    "preview": "미리보기",
+    "noBlogPostsYet": "아직 블로그 게시물이 없습니다"
   },
   "metadata": {
     "title": "TinyMind - 원클릭 GitHub 로그인으로 블로그 포스트와 생각을 작성하고 동기화하세요",

@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { BlogPost } from "@/lib/githubApi";
+import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 function decodeTitle(title: string): string {
   try {
@@ -17,6 +20,9 @@ function formatDate(dateString: string): string {
 }
 
 export default function BlogList({ posts }: { posts: BlogPost[] }) {
+  const router = useRouter();
+  const t = useTranslations("HomePage");
+
   const sortedPosts = [...posts].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
@@ -31,6 +37,20 @@ export default function BlogList({ posts }: { posts: BlogPost[] }) {
   const sortedYears = Object.keys(groupedPosts).sort(
     (a, b) => Number(b) - Number(a)
   );
+
+  if (posts.length === 0) {
+    return (
+      <div className="flex flex-col items-center mt-8 space-y-4">
+        <p className="text-gray-500">{t("noBlogPostsYet")}</p>
+        <Button
+          onClick={() => router.push("/editor")}
+          className="bg-black hover:bg-gray-800 text-white"
+        >
+          {t("createBlogPost")}
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-12">

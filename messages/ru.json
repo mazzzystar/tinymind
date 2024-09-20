@@ -21,7 +21,8 @@
     "readingFromGithub": "Чтение данных из GitHub...",
     "publicContentWarning": "Весь контент является публичным.",
     "write": "Писать",
-    "preview": "Предпросмотр"
+    "preview": "Предпросмотр",
+    "noBlogPostsYet": "Пока нет записей в блоге"
   },
   "metadata": {
     "title": "TinyMind - Пишите и синхронизируйте свои записи в блоге и мысли с помощью одноразового входа в GitHub",

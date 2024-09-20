@@ -21,7 +21,8 @@
     "readingFromGithub": "GitHub से डेटा पढ़ रहा है...",
     "publicContentWarning": "सभी सामग्री सार्वजनिक है।",
     "write": "लिखें",
-    "preview": "पूर्वावलोकन"
+    "preview": "पूर्वावलोकन",
+    "noBlogPostsYet": "अभी तक कोई ब्लॉग पोस्ट नहीं"
   },
   "metadata": {
     "title": "TinyMind - एक-क्लिक GitHub साइन-इन के साथ अपने ब्लॉग पोस्ट और विचारों को लिखें और सिंक करें",

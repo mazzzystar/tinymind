@@ -21,7 +21,8 @@
     "readingFromGithub": "Đang đọc dữ liệu từ GitHub...",
     "publicContentWarning": "Tất cả nội dung đều công khai.",
     "write": "Viết",
-    "preview": "Xem trước"
+    "preview": "Xem trước",
+    "noBlogPostsYet": "Chưa có bài viết blog nào"
   },
   "metadata": {
     "title": "TinyMind - Viết và đồng bộ hóa bài viết blog và suy nghĩ của bạn với đăng nhập GitHub một lần nhấp",

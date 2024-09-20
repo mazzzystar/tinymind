@@ -21,7 +21,8 @@
     "readingFromGithub": "Gegevens lezen van GitHub...",
     "publicContentWarning": "Alle inhoud is openbaar.",
     "write": "Schrijven",
-    "preview": "Voorbeeld"
+    "preview": "Voorbeeld",
+    "noBlogPostsYet": "Nog geen blogberichten"
   },
   "metadata": {
     "title": "TinyMind - Schrijf en synchroniseer je blogposts en gedachten met eenmalige GitHub-login",

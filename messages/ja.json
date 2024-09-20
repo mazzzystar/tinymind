@@ -21,7 +21,8 @@
     "readingFromGithub": "GitHubからデータを読み込んでいます...",
     "publicContentWarning": "すべてのコンテンツは公開されます。",
     "write": "書く",
-    "preview": "プレビュー"
+    "preview": "プレビュー",
+    "noBlogPostsYet": "まだブログ記事がありません"
   },
   "metadata": {
     "title": "TinyMind - GitHubワンクリックログインでブログ記事とアイデアを書いて同期",

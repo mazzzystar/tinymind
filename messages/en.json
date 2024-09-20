@@ -22,7 +22,8 @@
       "signInWithGitHub": "Sign in with GitHub",
       "publicContentWarning": "All content is public.",
       "write": "Write",
-      "preview": "Preview"
+      "preview": "Preview",
+      "noBlogPostsYet": "No blog posts yet"
     },
     "metadata": {
       "title": "TinyMind - Write and sync your blog posts & thoughts with one-click GitHub sign-in",

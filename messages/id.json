@@ -21,7 +21,8 @@
     "readingFromGithub": "Membaca data dari GitHub...",
     "publicContentWarning": "Semua konten bersifat publik.",
     "write": "Tulis",
-    "preview": "Pratinjau"
+    "preview": "Pratinjau",
+    "noBlogPostsYet": "Belum ada postingan blog"
   },
   "metadata": {
     "title": "TinyMind - Tulis dan sinkronkan postingan blog dan pemikiran Anda dengan login satu klik GitHub",

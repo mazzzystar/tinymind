@@ -21,7 +21,8 @@
     "readingFromGithub": "Lettura dei dati da GitHub...",
     "publicContentWarning": "Tutti i contenuti sono pubblici.",
     "write": "Scrivi",
-    "preview": "Anteprima"
+    "preview": "Anteprima",
+    "noBlogPostsYet": "Ancora nessun post sul blog"
   },
   "metadata": {
     "title": "TinyMind - Scrivi e sincronizza i tuoi post sul blog e pensieri con l'accesso a GitHub con un clic",

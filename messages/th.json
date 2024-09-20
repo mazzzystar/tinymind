@@ -21,7 +21,8 @@
     "readingFromGithub": "กำลังอ่านข้อมูลจาก GitHub...",
     "publicContentWarning": "เนื้อหาทั้งหมดเป็นสาธารณะ",
     "write": "เขียน",
-    "preview": "ดูตัวอย่าง"
+    "preview": "ดูตัวอย่าง",
+    "noBlogPostsYet": "ยังไม่มีโพสต์บล็อก"
   },
   "metadata": {
     "title": "TinyMind - เขียนและซิงค์โพสต์บล็อกและความคิดของคุณด้วยการลงชื่อเข้าใช้ GitHub เพียงคลิกเดียว",
