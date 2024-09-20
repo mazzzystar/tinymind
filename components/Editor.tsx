@@ -10,11 +10,14 @@ import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react"; // Import Loader2 icon
 import { useTranslations } from "next-intl";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function Editor() {
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
   const [type, setType] = useState("thought");
+  const [isPreview, setIsPreview] = useState(false);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -105,13 +108,41 @@ export default function Editor() {
             />
           )}
 
-          <Textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder={t("writeContent")}
-            className="min-h-[300px] border-gray-100 focus:border-gray-200 focus:ring-gray-200"
-            required
-          />
+          <div className="border rounded-md">
+            <div className="flex border-b">
+              <button
+                type="button"
+                onClick={() => setIsPreview(false)}
+                className={`px-4 py-2 ${!isPreview ? "bg-gray-100" : ""}`}
+              >
+                Write
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsPreview(true)}
+                className={`px-4 py-2 ${
+                  isPreview ? "bg-gray-100 border-b-2 border-black" : ""
+                }`}
+              >
+                Preview
+              </button>
+            </div>
+            {isPreview ? (
+              <div className="p-4 prose max-w-none">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {content}
+                </ReactMarkdown>
+              </div>
+            ) : (
+              <Textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder={t("writeContent")}
+                className="min-h-[300px] border-0 focus:ring-0"
+                required
+              />
+            )}
+          </div>
 
           <div className="flex justify-center">
             <Button
