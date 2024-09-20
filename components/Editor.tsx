@@ -50,7 +50,12 @@ export default function Editor({
 
       setIsSuccess(true);
       setTimeout(() => {
-        router.push("/");
+        // Redirect based on the type of content published
+        if (type === "blog") {
+          router.push("/blog");
+        } else {
+          router.push("/thoughts");
+        }
       }, 2000); // Redirect after 2 seconds
     } catch (error) {
       console.error("Error publishing:", error);
