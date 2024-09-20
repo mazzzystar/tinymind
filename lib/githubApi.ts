@@ -212,11 +212,17 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
   await initializeGitHubStructure(octokit, owner, repo);
 
   try {
+    // Decode the id first to handle any URL-encoded characters
+    const decodedId = decodeURIComponent(id);
+    
+    // Then sanitize the decoded id
+    const sanitizedId = decodedId.replace(/[^a-zA-Z0-9-_#]/g, '');
+
     // Fetch the file content
     const contentResponse = await octokit.repos.getContent({
       owner,
       repo,
-      path: `content/blog/${decodeURIComponent(id)}.md`,
+      path: `content/blog/${sanitizedId}.md`,
     });
 
     if (Array.isArray(contentResponse.data) || !('content' in contentResponse.data)) {
@@ -229,7 +235,7 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
     const commitResponse = await octokit.repos.listCommits({
       owner,
       repo,
-      path: `content/blog/${decodeURIComponent(id)}.md`,
+      path: `content/blog/${sanitizedId}.md`,
       per_page: 1
     });
 
@@ -240,8 +246,8 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
     const latestCommit = commitResponse.data[0];
 
     return {
-      id,
-      title: id,
+      id: sanitizedId,
+      title: sanitizedId,
       content,
       date: latestCommit.commit.author?.date ?? new Date().toISOString(),
     };
@@ -284,8 +290,9 @@ export async function createBlogPost(title: string, content: string, accessToken
   const { owner, repo } = await getRepoInfo(accessToken);
   await initializeGitHubStructure(octokit, owner, repo);
 
-  const path = `content/blog/${title.toLowerCase().replace(/\s+/g, '-')}.md`;
-  const date = new Date().toISOString() // Store full ISO string
+  const sanitizedTitle = title.replace(/[^a-zA-Z0-9-_#]/g, '-').toLowerCase();
+  const path = `content/blog/${sanitizedTitle}.md`;
+  const date = new Date().toISOString()
   const fullContent = `---
 title: ${title}
 date: ${date}
