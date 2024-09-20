@@ -284,7 +284,7 @@ export async function createBlogPost(title: string, content: string, accessToken
   const { owner, repo } = await getRepoInfo(accessToken);
   await initializeGitHubStructure(octokit, owner, repo);
 
-  const path = `content/blog/${encodeURIComponent(title.toLowerCase().replace(/\s+/g, '-'))}.md`
+  const path = `content/blog/${title.toLowerCase().replace(/\s+/g, '-')}.md`;
   const date = new Date().toISOString() // Store full ISO string
   const fullContent = `---
 title: ${title}
@@ -299,7 +299,7 @@ ${content}`
     path,
     message: `Add blog post: ${title}`,
     content: Buffer.from(fullContent).toString('base64'),
-  })
+  });
 }
 
 export async function createThought(content: string, image: string | undefined, accessToken: string): Promise<void> {
