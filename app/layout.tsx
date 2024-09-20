@@ -82,7 +82,7 @@ export default async function RootLayout({
               href="/editor?type=thoughts"
               className="fixed bottom-9 right-9 p-4 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full shadow-lg z-20 flex items-center justify-center"
             >
-              <FiPlus className="sm:w-7 sm:h-7 w-6 h-6" />
+              <FiPlus className="w-6 h-6" />
               <span className="sr-only">
                 {messages.createNewThought as string}
               </span>
