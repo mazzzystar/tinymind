@@ -167,7 +167,7 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
             const contentResponse = await octokit.repos.getContent({
               owner,
               repo,
-              path: `content/blog/${file.name}`,
+              path: `content/blog/${decodeURIComponent(file.name)}`, // Decode the file name
             });
 
             if ('content' in contentResponse.data) {
@@ -216,7 +216,7 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
     const contentResponse = await octokit.repos.getContent({
       owner,
       repo,
-      path: `content/blog/${id}.md`,
+      path: `content/blog/${decodeURIComponent(id)}.md`, // Decode the file name
     });
 
     if (Array.isArray(contentResponse.data) || !('content' in contentResponse.data)) {
@@ -229,7 +229,7 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
     const commitResponse = await octokit.repos.listCommits({
       owner,
       repo,
-      path: `content/blog/${id}.md`,
+      path: `content/blog/${decodeURIComponent(id)}.md`, // Decode the file name
       per_page: 1
     });
 
