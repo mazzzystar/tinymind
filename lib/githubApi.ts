@@ -225,6 +225,14 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
 
     const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf-8');
 
+    // Parse the title from the content
+    const titleMatch = content.match(/title:\s*(.+)/);
+    const title = titleMatch ? titleMatch[1] : id;
+
+    // Parse the date from the content
+    const dateMatch = content.match(/date:\s*(.+)/);
+    const creationDate = dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString();
+
     // Fetch the latest commit for this file
     const commitResponse = await octokit.repos.listCommits({
       owner,
@@ -237,13 +245,12 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
       throw new Error('No commits found for this file');
     }
 
-    const latestCommit = commitResponse.data[0];
 
     return {
       id,
-      title: id,
+      title,
       content,
-      date: latestCommit.commit.author?.date ?? new Date().toISOString(),
+      date: creationDate,
     };
   } catch (error) {
     console.error('Error fetching blog post:', error);
