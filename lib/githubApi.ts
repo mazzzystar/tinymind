@@ -216,7 +216,7 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
     const contentResponse = await octokit.repos.getContent({
       owner,
       repo,
-      path: `content/blog/${id}.md`,
+      path: `content/blog/${decodeURIComponent(id)}.md`,
     });
 
     if (Array.isArray(contentResponse.data) || !('content' in contentResponse.data)) {
@@ -229,7 +229,7 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
     const commitResponse = await octokit.repos.listCommits({
       owner,
       repo,
-      path: `content/blog/${decodeURIComponent(id)}.mdd`,
+      path: `content/blog/${decodeURIComponent(id)}.md`,
       per_page: 1
     });
 
