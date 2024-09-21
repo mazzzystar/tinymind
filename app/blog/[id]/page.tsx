@@ -157,10 +157,10 @@ export default function BlogPost({ params }: { params: { id: string } }) {
             <DropdownMenuItem
               onSelect={() => router.push(`/editor?type=blog&id=${params.id}`)}
             >
-              Edit
+              {t("edit")}
             </DropdownMenuItem>
             <DropdownMenuItem onSelect={() => setIsDeleteDialogOpen(true)}>
-              Delete
+              {t("delete")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
