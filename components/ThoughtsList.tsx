@@ -26,6 +26,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogClose,
 } from "@/components/ui/dialog";
 
 export default function ThoughtsList() {
@@ -201,12 +202,9 @@ export default function ThoughtsList() {
                     </DialogDescription>
                   </DialogHeader>
                   <DialogFooter>
-                    <Button
-                      variant="outline"
-                      onClick={() => setIsDeleteDialogOpen(false)}
-                    >
-                      Cancel
-                    </Button>
+                    <DialogClose asChild>
+                      <Button variant="outline">Cancel</Button>
+                    </DialogClose>
                     <Button
                       variant="destructive"
                       onClick={() => {
