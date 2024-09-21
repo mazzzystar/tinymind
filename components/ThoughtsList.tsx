@@ -192,12 +192,8 @@ export default function ThoughtsList() {
               >
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>
-                      {t("confirmDelete")}
-                    </DialogTitle>
-                    <DialogDescription>
-                      {t("undoAction")}
-                    </DialogDescription>
+                    <DialogTitle>{t("confirmDelete")}</DialogTitle>
+                    <DialogDescription>{t("undoAction")}</DialogDescription>
                   </DialogHeader>
                   <DialogFooter>
                     <DialogClose asChild>

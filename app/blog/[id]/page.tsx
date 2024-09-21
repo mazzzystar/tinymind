@@ -71,7 +71,7 @@ export default function BlogPost({ params }: { params: { id: string } }) {
       } catch (error) {
         console.error("Error fetching blog post:", error);
         toast({
-          title: "Error",
+          title: t("error"),
           description: "Failed to fetch blog post",
           variant: "destructive",
         });
@@ -104,8 +104,8 @@ export default function BlogPost({ params }: { params: { id: string } }) {
       }
 
       toast({
-        title: "Success",
-        description: "Blog post deleted successfully",
+        title: t("success"),
+        description: t("blogPostDeleted"),
         duration: 3000,
       });
 
@@ -115,8 +115,8 @@ export default function BlogPost({ params }: { params: { id: string } }) {
     } catch (error) {
       console.error("Error deleting blog post:", error);
       toast({
-        title: "Error",
-        description: "Failed to delete blog post",
+        title: t("error"),
+        description: t("blogPostDeleteFailed"),
         variant: "destructive",
         duration: 3000,
       });
