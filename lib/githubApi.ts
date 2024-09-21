@@ -501,7 +501,7 @@ export async function updateThought(id: string, content: string, accessToken: st
     thoughts[thoughtIndex] = {
       ...thoughts[thoughtIndex],
       content,
-      timestamp: new Date().toISOString(),
+      // Removed the timestamp update to keep the original timestamp
     };
 
     console.log('Updating thoughts file...');
