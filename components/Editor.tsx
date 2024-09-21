@@ -77,12 +77,16 @@ export default function Editor({
     router.push(`/editor?${params.toString()}`);
 
     const id = searchParams.get("id");
+    const initialTitle = searchParams.get("title");
+    const initialContent = searchParams.get("content");
+
     if (id) {
-      if (type === "thought") {
-        setEditingThoughtId(id);
+      setEditingThoughtId(id);
+      if (type === "blog" && initialTitle && initialContent) {
+        setTitle(decodeURIComponent(initialTitle));
+        setContent(decodeURIComponent(initialContent));
+      } else if (type === "thought") {
         fetchThought(id);
-      } else if (type === "blog") {
-        fetchBlogPost(id);
       }
     }
   }, [type, router, searchParams, fetchThought, fetchBlogPost]);

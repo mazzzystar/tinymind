@@ -1,7 +1,7 @@
 "use client";
 
 import { getBlogPost } from "@/lib/githubApi";
-import type { BlogPost } from "@/lib/githubApi"; // 使用 type 关键字只导入类型
+import type { BlogPost } from "@/lib/githubApi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import ReactMarkdown from "react-markdown";
@@ -49,7 +49,7 @@ export default function BlogPost({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { toast } = useToast();
   const [post, setPost] = useState<BlogPost | null>(null);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -124,8 +124,22 @@ export default function BlogPost({ params }: { params: { id: string } }) {
     }
   };
 
+  const handleEditBlogPost = () => {
+    if (post) {
+      router.push(
+        `/editor?type=blog&id=${params.id}&title=${encodeURIComponent(
+          post.title
+        )}&content=${encodeURIComponent(post.content)}`
+      );
+    }
+  };
+
   if (status === "loading" || !post) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div>Loading...</div>
+      </div>
+    );
   }
 
   const decodedTitle = decodeContent(post.title);
@@ -148,9 +162,7 @@ export default function BlogPost({ params }: { params: { id: string } }) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onSelect={() => router.push(`/editor?type=blog&id=${params.id}`)}
-            >
+            <DropdownMenuItem onSelect={handleEditBlogPost}>
               Edit
             </DropdownMenuItem>
             <DropdownMenuItem onSelect={() => setIsDeleteDialogOpen(true)}>
