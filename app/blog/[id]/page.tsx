@@ -105,7 +105,11 @@ export default function BlogPost({ params }: { params: { id: string } }) {
         description: "Blog post deleted successfully",
         duration: 3000,
       });
-      router.push("/blog");
+
+      // Add a small delay before redirecting
+      setTimeout(() => {
+        router.push("/blog");
+      }, 500);
     } catch (error) {
       console.error("Error deleting blog post:", error);
       toast({

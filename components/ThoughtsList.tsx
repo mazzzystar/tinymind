@@ -209,9 +209,12 @@ export default function ThoughtsList() {
                     </Button>
                     <Button
                       variant="destructive"
-                      onClick={() =>
-                        thoughtToDelete && handleDeleteThought(thoughtToDelete)
-                      }
+                      onClick={() => {
+                        if (thoughtToDelete) {
+                          handleDeleteThought(thoughtToDelete);
+                        }
+                        setIsDeleteDialogOpen(false);
+                      }}
                     >
                       Delete
                     </Button>
