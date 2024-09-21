@@ -24,6 +24,9 @@ export async function POST(request: NextRequest) {
       case 'createThought':
         await createThought(data.content, data.image, session.accessToken);
         return NextResponse.json({ message: 'Thought created successfully' });
+      case 'deleteThought':
+        await deleteThought(data.id, session.accessToken);
+        return NextResponse.json({ message: 'Thought deleted successfully' });
       default:
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }

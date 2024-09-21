@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { getThoughts, deleteThought, Thought } from "@/lib/githubApi";
+import { getThoughts, Thought } from "@/lib/githubApi";
 import GitHubSignInButton from "./GitHubSignInButton";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -64,6 +64,36 @@ export default function ThoughtsList() {
     fetchThoughts();
   }, [session, status]);
 
+  const handleDeleteThought = async (id: string) => {
+    if (!session?.accessToken) {
+      console.error("No access token available");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/github", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "deleteThought",
+          id: id,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete thought");
+      }
+
+      // Remove the deleted thought from the state
+      setThoughts(thoughts.filter((thought) => thought.id !== id));
+    } catch (error) {
+      console.error("Error deleting thought:", error);
+      alert("Failed to delete thought");
+    }
+  };
+
   if (status === "unauthenticated" || error === "authentication_failed") {
     return <GitHubSignInButton />;
   }
@@ -114,13 +144,7 @@ export default function ThoughtsList() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem
-                    onClick={async () => {
-                      await deleteThought(
-                        thought.id,
-                        session?.accessToken ?? ""
-                      );
-                      router.push("/editor?type=thought");
-                    }}
+                    onClick={() => handleDeleteThought(thought.id)}
                   >
                     Delete
                   </DropdownMenuItem>
