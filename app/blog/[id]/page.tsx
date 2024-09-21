@@ -30,6 +30,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { useSession } from "next-auth/react";
 
 function decodeContent(content: string): string {
   try {
@@ -50,19 +51,33 @@ export default function BlogPost({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { toast } = useToast();
   const [post, setPost] = useState<BlogPost | null>(null);
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     const fetchPost = async () => {
-      const session = await getServerSession(authOptions);
+      if (status === "loading") return;
       if (!session || !session.accessToken) {
         router.push("/api/auth/signin");
         return;
       }
-      const fetchedPost = await getBlogPost(params.id, session.accessToken);
-      setPost(fetchedPost);
+      try {
+        const fetchedPost = await getBlogPost(params.id, session.accessToken);
+        if (fetchedPost) {
+          setPost(fetchedPost);
+        } else {
+          throw new Error("Failed to fetch blog post");
+        }
+      } catch (error) {
+        console.error("Error fetching blog post:", error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch blog post",
+          variant: "destructive",
+        });
+      }
     };
     fetchPost();
-  }, [params.id, router]);
+  }, [params.id, router, session, status, toast]);
 
   const handleDeleteBlogPost = async () => {
     setIsDeleting(true);
@@ -92,7 +107,7 @@ export default function BlogPost({ params }: { params: { id: string } }) {
     }
   };
 
-  if (!post) {
+  if (status === "loading" || !post) {
     return <div>Loading...</div>;
   }
 
