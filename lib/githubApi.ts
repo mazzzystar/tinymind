@@ -419,7 +419,7 @@ export async function deleteThought(id: string, accessToken: string): Promise<vo
         console.log('Existing thoughts fetched');
       }
     } catch (error) {
-      if (error instanceof Error && 'status' in error && (error as any).status === 404) {
+      if (error instanceof Error && 'status' in error && error.status === 404) {
         console.log('thoughts.json does not exist, creating a new file');
       } else {
         console.error('Error fetching existing thoughts:', error);
