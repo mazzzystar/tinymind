@@ -99,7 +99,6 @@ export default function ThoughtsList() {
         throw new Error("Failed to delete thought");
       }
 
-      // Remove the deleted thought from the state
       setThoughts(thoughts.filter((thought) => thought.id !== id));
 
       toast({

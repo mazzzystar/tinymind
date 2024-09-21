@@ -1,7 +1,7 @@
 "use client";
 
 import { getBlogPost } from "@/lib/githubApi";
-import type { BlogPost } from "@/lib/githubApi"; // 使用 type 关键字只导入类型
+import type { BlogPost } from "@/lib/githubApi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import ReactMarkdown from "react-markdown";
@@ -106,7 +106,6 @@ export default function BlogPost({ params }: { params: { id: string } }) {
         duration: 3000,
       });
 
-      // Add a small delay before redirecting
       setTimeout(() => {
         router.push("/blog");
       }, 500);
