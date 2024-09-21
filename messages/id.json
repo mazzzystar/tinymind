@@ -1,7 +1,7 @@
 {
   "HomePage": {
-    "blog": "blog",
-    "thoughts": "pemikiran",
+    "blog": "Blog",
+    "thoughts": "Pemikiran",
     "noThoughtsYet": "Belum ada pemikiran",
     "createThought": "Buat pemikiran",
     "createBlogPost": "Buat postingan blog",

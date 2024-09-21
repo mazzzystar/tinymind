@@ -1,7 +1,7 @@
 {
   "HomePage": {
-    "blog": "blog",
-    "thoughts": "pensées",
+    "blog": "Blog",
+    "thoughts": "Pensées",
     "noThoughtsYet": "Pas encore de pensées",
     "createThought": "Créer une pensée",
     "createBlogPost": "Créer un article",

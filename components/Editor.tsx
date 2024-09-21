@@ -16,6 +16,11 @@ import { getThoughts } from "@/lib/githubApi";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/components/ui/use-toast";
 
+function removeFrontmatter(content: string): string {
+  const frontmatterRegex = /^---\n([\s\S]*?)\n---\n/;
+  return content.replace(frontmatterRegex, "");
+}
+
 export default function Editor({
   defaultType = "thought",
 }: {
@@ -62,7 +67,7 @@ export default function Editor({
         }
         const blogPost = await response.json();
         setTitle(blogPost.title);
-        setContent(blogPost.content);
+        setContent(removeFrontmatter(blogPost.content));
         setEditingThoughtId(id);
       } catch (error) {
         console.error("Error fetching blog post:", error);

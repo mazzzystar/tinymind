@@ -57,10 +57,9 @@ export default function BlogPost({ params }: { params: { id: string } }) {
   useEffect(() => {
     const fetchPost = async () => {
       if (!session || !session.accessToken) {
-        return (
-          <GitHubSignInButton />
-        );
+        return <GitHubSignInButton />;
       }
+
       try {
         const response = await fetch(
           `/api/github?action=getBlogPost&id=${params.id}`
