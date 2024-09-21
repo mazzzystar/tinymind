@@ -28,6 +28,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 function decodeContent(content: string): string {
   try {
@@ -50,6 +51,7 @@ export default function BlogPost({ params }: { params: { id: string } }) {
   const { toast } = useToast();
   const [post, setPost] = useState<BlogPost | null>(null);
   const { data: session } = useSession();
+  const t = useTranslations("HomePage");
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -161,12 +163,8 @@ export default function BlogPost({ params }: { params: { id: string } }) {
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
-              Confirm Delete
-            </DialogTitle>
-            <DialogDescription>
-              This action can be undone thanks to Git. Check your GitHub commit history to restore your post.
-            </DialogDescription>
+            <DialogTitle>{t("confirmDelete")}</DialogTitle>
+            <DialogDescription>{t("undoAction")}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button
