@@ -14,6 +14,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getThoughts } from "@/lib/githubApi";
 import { useSession } from "next-auth/react";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Editor({
   defaultType = "thought",
@@ -33,6 +34,7 @@ export default function Editor({
   const t = useTranslations("HomePage");
   const { data: session } = useSession();
   const [editingThoughtId, setEditingThoughtId] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -116,6 +118,13 @@ export default function Editor({
       }
 
       setIsSuccess(true);
+      toast({
+        title: "Success",
+        description: editingThoughtId
+          ? `${type === "blog" ? "Blog post" : "Thought"} updated successfully`
+          : `${type === "blog" ? "Blog post" : "Thought"} created successfully`,
+        duration: 3000,
+      });
       setTimeout(() => {
         if (type === "blog") {
           router.push("/blog");
@@ -125,7 +134,12 @@ export default function Editor({
       }, 2000);
     } catch (error) {
       console.error("Error publishing:", error);
-      alert(t("failedPublish"));
+      toast({
+        title: "Error",
+        description: t("failedPublish"),
+        variant: "destructive",
+        duration: 3000,
+      });
     } finally {
       setIsLoading(false);
     }

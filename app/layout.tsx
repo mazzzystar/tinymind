@@ -8,6 +8,7 @@ import Script from "next/script";
 import Footer from "@/components/Footer";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
+import { Toaster } from "@/components/ui/toaster";
 
 // const inter = Inter({
 //   subsets: ["latin"],
@@ -80,6 +81,7 @@ export default async function RootLayout({
             <main className="pt-20 pb-20">{children}</main>
             <Footer />
             <CreateButton messages={messages} />
+            <Toaster />
           </SessionProvider>
         </NextIntlClientProvider>
       </body>

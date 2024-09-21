@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AiOutlineEllipsis } from "react-icons/ai";
+import { useToast } from "@/components/ui/use-toast";
 
 function decodeTitle(title: string): string {
   try {
@@ -31,6 +32,7 @@ export default function BlogList({ posts }: { posts: BlogPost[] }) {
   const router = useRouter();
   const t = useTranslations("HomePage");
   const [blogPosts, setBlogPosts] = useState(posts);
+  const { toast } = useToast();
 
   const handleDeleteBlogPost = async (id: string) => {
     try {
@@ -51,9 +53,21 @@ export default function BlogList({ posts }: { posts: BlogPost[] }) {
 
       // Remove the deleted blog post from the state
       setBlogPosts(blogPosts.filter((post) => post.id !== id));
+
+      // Show success toast
+      toast({
+        title: "Success",
+        description: "Blog post deleted successfully",
+        duration: 3000,
+      });
     } catch (error) {
       console.error("Error deleting blog post:", error);
-      alert("Failed to delete blog post");
+      toast({
+        title: "Error",
+        description: "Failed to delete blog post",
+        variant: "destructive",
+        duration: 3000,
+      });
     }
   };
 

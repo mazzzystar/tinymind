@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AiOutlineEllipsis } from "react-icons/ai";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function ThoughtsList() {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
@@ -26,6 +27,7 @@ export default function ThoughtsList() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const t = useTranslations("HomePage");
+  const { toast } = useToast();
 
   useEffect(() => {
     async function fetchThoughts() {
@@ -88,9 +90,20 @@ export default function ThoughtsList() {
 
       // Remove the deleted thought from the state
       setThoughts(thoughts.filter((thought) => thought.id !== id));
+
+      toast({
+        title: "Success",
+        description: "Thought deleted successfully",
+        duration: 3000,
+      });
     } catch (error) {
       console.error("Error deleting thought:", error);
-      alert("Failed to delete thought");
+      toast({
+        title: "Error",
+        description: "Failed to delete thought",
+        variant: "destructive",
+        duration: 3000,
+      });
     }
   };
 
