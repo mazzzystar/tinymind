@@ -45,3 +45,7 @@ We welcome contributions! Feel free to submit a Pull Request or open an issue fo
 ## Support
 
 Report issues or suggestions: [New Issue](https://github.com/mazzzystar/tinymind/issues/new).
+
+## LICENSE
+
+MIT License
