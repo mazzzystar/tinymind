@@ -1,7 +1,7 @@
 "use client";
 
-import { getBlogPost } from "@/lib/githubApi";
-import type { BlogPost } from "@/lib/githubApi";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import ReactMarkdown from "react-markdown";
@@ -9,8 +9,6 @@ import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import {
   DropdownMenu,
@@ -30,6 +28,8 @@ import {
 } from "@/components/ui/dialog";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
+import type { BlogPost } from "@/lib/githubApi";
+import GitHubSignInButton from "@/components/GitHubSignInButton";
 
 function decodeContent(content: string): string {
   try {
@@ -56,18 +56,20 @@ export default function BlogPost({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     const fetchPost = async () => {
-      if (status === "loading") return;
       if (!session || !session.accessToken) {
-        router.push("/api/auth/signin");
-        return;
+        return (
+          <GitHubSignInButton />
+        );
       }
       try {
-        const fetchedPost = await getBlogPost(params.id, session.accessToken);
-        if (fetchedPost) {
-          setPost(fetchedPost);
-        } else {
+        const response = await fetch(
+          `/api/github?action=getBlogPost&id=${params.id}`
+        );
+        if (!response.ok) {
           throw new Error("Failed to fetch blog post");
         }
+        const fetchedPost = await response.json();
+        setPost(fetchedPost);
       } catch (error) {
         console.error("Error fetching blog post:", error);
         toast({
@@ -176,14 +178,14 @@ export default function BlogPost({ params }: { params: { id: string } }) {
               variant="outline"
               onClick={() => setIsDeleteDialogOpen(false)}
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <Button
               variant="destructive"
               onClick={handleDeleteBlogPost}
               disabled={isDeleting}
             >
-              {isDeleting ? "Deleting..." : "Delete"}
+              {isDeleting ? "Deleting..." : t("delete")}
             </Button>
           </DialogFooter>
         </DialogContent>

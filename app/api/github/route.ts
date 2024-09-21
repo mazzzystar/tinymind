@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import { deleteThought, createBlogPost, createThought, getBlogPosts, getThoughts, updateThought, deleteBlogPost, updateBlogPost } from '@/lib/githubApi';
+import { deleteThought, createBlogPost, createThought, getBlogPosts, getThoughts, updateThought, deleteBlogPost, updateBlogPost, getBlogPost } from '@/lib/githubApi';
 
 export async function POST(request: NextRequest) {
   try {
@@ -60,11 +60,18 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action');
+    const id = searchParams.get('id');
 
     switch (action) {
       case 'getBlogPosts':
         const posts = await getBlogPosts(session.accessToken);
         return NextResponse.json(posts);
+      case 'getBlogPost':
+        if (!id) {
+          return NextResponse.json({ error: 'Missing id parameter' }, { status: 400 });
+        }
+        const post = await getBlogPost(id, session.accessToken);
+        return NextResponse.json(post);
       case 'getThoughts':
         const thoughts = await getThoughts(session.accessToken);
         return NextResponse.json(thoughts);
