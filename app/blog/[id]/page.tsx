@@ -1,8 +1,6 @@
 "use client";
 
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
-import { getBlogPost, deleteBlogPost } from "@/lib/githubApi";
+import { getBlogPost } from "@/lib/githubApi";
 import type { BlogPost } from "@/lib/githubApi"; // 使用 type 关键字只导入类型
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
@@ -51,7 +49,7 @@ export default function BlogPost({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { toast } = useToast();
   const [post, setPost] = useState<BlogPost | null>(null);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -80,14 +78,28 @@ export default function BlogPost({ params }: { params: { id: string } }) {
   }, [params.id, router, session, status, toast]);
 
   const handleDeleteBlogPost = async () => {
+    if (!session?.accessToken) {
+      console.error("No access token available");
+      return;
+    }
+
     setIsDeleting(true);
     try {
-      const session = await getServerSession(authOptions);
-      if (!session || !session.accessToken) {
-        throw new Error("Unauthorized");
+      const response = await fetch("/api/github", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "deleteBlogPost",
+          id: params.id,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete blog post");
       }
 
-      await deleteBlogPost(params.id, session.accessToken);
       toast({
         title: "Success",
         description: "Blog post deleted successfully",
