@@ -1,7 +1,7 @@
 {
   "HomePage": {
-    "blog": "blog",
-    "thoughts": "suy nghĩ",
+    "blog": "Blog",
+    "thoughts": "Suy nghĩ",
     "noThoughtsYet": "Chưa có suy nghĩ nào",
     "createThought": "Tạo suy nghĩ",
     "createBlogPost": "Tạo bài viết blog",
@@ -22,7 +22,22 @@
     "publicContentWarning": "Tất cả nội dung đều công khai.",
     "write": "Viết",
     "preview": "Xem trước",
-    "noBlogPostsYet": "Chưa có bài viết blog nào"
+    "noBlogPostsYet": "Chưa có bài viết blog nào",
+    "edit": "Chỉnh sửa",
+    "delete": "Xóa",
+    "confirmDelete": "Xác nhận xóa",
+    "undoAction": "Hành động này có thể được hoàn tác nhờ Git. Kiểm tra lịch sử commit của GitHub để khôi phục suy nghĩ của bạn.",
+    "success": "Thành công",
+    "error": "Lỗi",
+    "thoughtDeleted": "Suy nghĩ đã được xóa thành công",
+    "thoughtDeleteFailed": "Xóa suy nghĩ thất bại",
+    "blogPostDeleted": "Bài viết blog đã được xóa thành công",
+    "blogPostDeleteFailed": "Xóa bài viết blog thất bại",
+    "thoughtCreated": "Suy nghĩ đã được tạo thành công",
+    "thoughtUpdated": "Suy nghĩ đã được cập nhật thành công",
+    "blogPostCreated": "Bài viết blog đã được tạo thành công",
+    "blogPostUpdated": "Bài viết blog đã được cập nhật thành công",
+    "cancel": "Hủy"
   },
   "metadata": {
     "title": "TinyMind - Viết và đồng bộ hóa bài viết blog và suy nghĩ của bạn với đăng nhập GitHub một lần nhấp",

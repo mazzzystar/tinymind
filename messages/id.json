@@ -22,7 +22,22 @@
     "publicContentWarning": "Semua konten bersifat publik.",
     "write": "Tulis",
     "preview": "Pratinjau",
-    "noBlogPostsYet": "Belum ada postingan blog"
+    "noBlogPostsYet": "Belum ada postingan blog",
+    "edit": "Edit",
+    "delete": "Hapus",
+    "confirmDelete": "Konfirmasi Hapus",
+    "undoAction": "Tindakan ini dapat dibatalkan berkat Git. Periksa riwayat commit GitHub Anda untuk memulihkan pemikiran Anda.",
+    "success": "Sukses",
+    "error": "Kesalahan",
+    "thoughtDeleted": "Pemikiran berhasil dihapus",
+    "thoughtDeleteFailed": "Gagal menghapus pemikiran",
+    "blogPostDeleted": "Postingan blog berhasil dihapus",
+    "blogPostDeleteFailed": "Gagal menghapus postingan blog",
+    "thoughtCreated": "Pemikiran berhasil dibuat",
+    "thoughtUpdated": "Pemikiran berhasil diperbarui",
+    "blogPostCreated": "Postingan blog berhasil dibuat",
+    "blogPostUpdated": "Postingan blog berhasil diperbarui",
+    "cancel": "Batal"
   },
   "metadata": {
     "title": "TinyMind - Tulis dan sinkronkan postingan blog dan pemikiran Anda dengan login satu klik GitHub",

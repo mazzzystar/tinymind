@@ -22,7 +22,22 @@
       "publicContentWarning": "Alle Inhalte sind öffentlich.",
       "write": "Schreiben",
       "preview": "Vorschau",
-      "noBlogPostsYet": "Noch keine Blogbeiträge"
+      "noBlogPostsYet": "Noch keine Blogbeiträge",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "confirmDelete": "Löschen bestätigen",
+      "undoAction": "Diese Aktion kann dank Git rückgängig gemacht werden. Überprüfen Sie Ihren GitHub-Commit-Verlauf, um Ihre Idee wiederherzustellen.",
+      "success": "Erfolg",
+      "error": "Fehler",
+      "thoughtDeleted": "Gedanke erfolgreich gelöscht",
+      "thoughtDeleteFailed": "Löschen des Gedankens fehlgeschlagen",
+      "blogPostDeleted": "Blogbeitrag erfolgreich gelöscht",
+      "blogPostDeleteFailed": "Löschen des Blogbeitrags fehlgeschlagen",
+      "thoughtCreated": "Gedanke erfolgreich erstellt",
+      "thoughtUpdated": "Gedanke erfolgreich aktualisiert",
+      "blogPostCreated": "Blogbeitrag erfolgreich erstellt",
+      "blogPostUpdated": "Blogbeitrag erfolgreich aktualisiert",
+      "cancel": "Abbrechen"
     },
     "metadata": {
       "title": "TinyMind - Schreiben und synchronisieren Sie Ihre Blogbeiträge und Gedanken mit einmaligem GitHub-Login",

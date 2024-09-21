@@ -22,7 +22,22 @@
       "publicContentWarning": "所有内容都是公开的。",
       "write": "写作",
       "preview": "预览",
-      "noBlogPostsYet": "还没有博客文章"
+      "noBlogPostsYet": "还没有博客文章",
+      "edit": "编辑",
+      "delete": "删除",
+      "confirmDelete": "确认删除",
+      "undoAction": "由于Git的存在，此操作可以撤销。检查您的GitHub提交历史以恢复您的想法。",
+      "success": "成功",
+      "error": "错误",
+      "thoughtDeleted": "想法已成功删除",
+      "thoughtDeleteFailed": "删除想法失败",
+      "blogPostDeleted": "博客文章已成功删除",
+      "blogPostDeleteFailed": "删除博客文章失败",
+      "thoughtCreated": "想法已成功创建",
+      "thoughtUpdated": "想法已成功更新",
+      "blogPostCreated": "博客文章已成功创建",
+      "blogPostUpdated": "博客文章已成功更新",
+      "cancel": "取消"
     },
     "metadata": {
       "title": "TinyMind - 用GitHub账号一键登录写作并同步你的博客和想法",

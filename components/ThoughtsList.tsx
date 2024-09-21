@@ -102,15 +102,15 @@ export default function ThoughtsList() {
       setThoughts(thoughts.filter((thought) => thought.id !== id));
 
       toast({
-        title: "Success",
-        description: "Thought deleted successfully",
+        title: t("success"),
+        description: t("thoughtDeleted"),
         duration: 3000,
       });
     } catch (error) {
       console.error("Error deleting thought:", error);
       toast({
-        title: "Error",
-        description: "Failed to delete thought",
+        title: t("error"),
+        description: t("thoughtDeleteFailed"),
         variant: "destructive",
         duration: 3000,
       });
@@ -175,14 +175,14 @@ export default function ThoughtsList() {
                       setIsDeleteDialogOpen(true);
                     }}
                   >
-                    Delete
+                    {t("delete")}
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
                       router.push(`/editor?type=thought&id=${thought.id}`);
                     }}
                   >
-                    Edit
+                    {t("edit")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -193,16 +193,15 @@ export default function ThoughtsList() {
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>
-                      Are you sure you want to delete this thought?
+                      {t("confirmDelete")}
                     </DialogTitle>
                     <DialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      your thought.
+                      {t("undoAction")}
                     </DialogDescription>
                   </DialogHeader>
                   <DialogFooter>
                     <DialogClose asChild>
-                      <Button variant="outline">Cancel</Button>
+                      <Button variant="outline">{t("cancel")}</Button>
                     </DialogClose>
                     <Button
                       variant="destructive"
@@ -213,7 +212,7 @@ export default function ThoughtsList() {
                         setIsDeleteDialogOpen(false);
                       }}
                     >
-                      Delete
+                      {t("delete")}
                     </Button>
                   </DialogFooter>
                 </DialogContent>

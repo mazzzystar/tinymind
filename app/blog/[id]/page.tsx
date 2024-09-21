@@ -162,11 +162,10 @@ export default function BlogPost({ params }: { params: { id: string } }) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              Are you sure you want to delete this blog post?
+              Confirm Delete
             </DialogTitle>
             <DialogDescription>
-              This action cannot be undone. This will permanently delete your
-              blog post.
+              This action can be undone thanks to Git. Check your GitHub commit history to restore your post.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

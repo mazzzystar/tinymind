@@ -129,10 +129,10 @@ export default function Editor({
 
       setIsSuccess(true);
       toast({
-        title: "Success",
+        title: t("success"),
         description: editingThoughtId
-          ? `${type === "blog" ? "Blog post" : "Thought"} updated successfully`
-          : `${type === "blog" ? "Blog post" : "Thought"} created successfully`,
+          ? `${type === "blog" ? t("blogPostUpdated") : t("thoughtUpdated")}`
+          : `${type === "blog" ? t("blogPostCreated") : t("thoughtCreated")}`,
         duration: 3000,
       });
       setTimeout(() => {
@@ -145,7 +145,7 @@ export default function Editor({
     } catch (error) {
       console.error("Error publishing:", error);
       toast({
-        title: "Error",
+        title: t("error"),
         description: t("failedPublish"),
         variant: "destructive",
         duration: 3000,

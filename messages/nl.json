@@ -22,7 +22,22 @@
     "publicContentWarning": "Alle inhoud is openbaar.",
     "write": "Schrijven",
     "preview": "Voorbeeld",
-    "noBlogPostsYet": "Nog geen blogberichten"
+    "noBlogPostsYet": "Nog geen blogberichten",
+    "edit": "Bewerken",
+    "delete": "Verwijderen",
+    "confirmDelete": "Verwijdering bevestigen",
+    "undoAction": "Deze actie kan ongedaan worden gemaakt dankzij Git. Controleer je GitHub-commitgeschiedenis om je gedachte te herstellen.",
+    "success": "Succes",
+    "error": "Fout",
+    "thoughtDeleted": "Gedachte succesvol verwijderd",
+    "thoughtDeleteFailed": "Verwijderen van gedachte mislukt",
+    "blogPostDeleted": "Blogpost succesvol verwijderd",
+    "blogPostDeleteFailed": "Verwijderen van blogpost mislukt",
+    "thoughtCreated": "Gedachte succesvol aangemaakt",
+    "thoughtUpdated": "Gedachte succesvol bijgewerkt",
+    "blogPostCreated": "Blogpost succesvol aangemaakt",
+    "blogPostUpdated": "Blogpost succesvol bijgewerkt",
+    "cancel": "Annuleren"
   },
   "metadata": {
     "title": "TinyMind - Schrijf en synchroniseer je blogposts en gedachten met eenmalige GitHub-login",

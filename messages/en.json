@@ -1,7 +1,7 @@
 {
     "HomePage": {
-      "blog": "blog",
-      "thoughts": "thoughts",
+      "blog": "Blog",
+      "thoughts": "Thoughts",
       "noThoughtsYet": "No thoughts yet",
       "readingFromGithub": "Reading data from GitHub...",
       "createThought": "Create a thought",
@@ -23,7 +23,22 @@
       "publicContentWarning": "All content is public.",
       "write": "Write",
       "preview": "Preview",
-      "noBlogPostsYet": "No blog posts yet"
+      "noBlogPostsYet": "No blog posts yet",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Confirm Delete",
+      "undoAction": "This action can be undone thanks to Git. Check your GitHub commit history to restore your thought.",
+      "success": "Success",
+      "error": "Error",
+      "thoughtDeleted": "Thought deleted successfully",
+      "thoughtDeleteFailed": "Failed to delete thought",
+      "blogPostDeleted": "Blog post deleted successfully",
+      "blogPostDeleteFailed": "Failed to delete blog post",
+      "thoughtCreated": "Thought created successfully",
+      "thoughtUpdated": "Thought updated successfully",
+      "blogPostCreated": "Blog post created successfully",
+      "blogPostUpdated": "Blog post updated successfully",
+      "cancel": "Cancel"
     },
     "metadata": {
       "title": "TinyMind - Write and sync your blog posts & thoughts with one-click GitHub sign-in",

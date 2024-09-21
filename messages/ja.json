@@ -22,7 +22,22 @@
     "publicContentWarning": "すべてのコンテンツは公開されます。",
     "write": "書く",
     "preview": "プレビュー",
-    "noBlogPostsYet": "まだブログ記事がありません"
+    "noBlogPostsYet": "まだブログ記事がありません",
+    "edit": "編集",
+    "delete": "削除",
+    "confirmDelete": "削除の確認",
+    "undoAction": "この操作はGitのおかげで元に戻すことができます。アイデアを復元するには、GitHubのコミット履歴を確認してください。",
+    "success": "成功",
+    "error": "エラー",
+    "thoughtDeleted": "アイデアが正常に削除されました",
+    "thoughtDeleteFailed": "アイデアの削除に失敗しました",
+    "blogPostDeleted": "ブログ記事が正常に削除されました",
+    "blogPostDeleteFailed": "ブログ記事の削除に失敗しました",
+    "thoughtCreated": "アイデアが正常に作成されました",
+    "thoughtUpdated": "アイデアが正常に更新されました",
+    "blogPostCreated": "ブログ記事が正常に作成されました",
+    "blogPostUpdated": "ブログ記事が正常に更新されました",
+    "cancel": "キャンセル"
   },
   "metadata": {
     "title": "TinyMind - GitHubワンクリックログインでブログ記事とアイデアを書いて同期",

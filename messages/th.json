@@ -22,7 +22,22 @@
     "publicContentWarning": "เนื้อหาทั้งหมดเป็นสาธารณะ",
     "write": "เขียน",
     "preview": "ดูตัวอย่าง",
-    "noBlogPostsYet": "ยังไม่มีโพสต์บล็อก"
+    "noBlogPostsYet": "ยังไม่มีโพสต์บล็อก",
+    "edit": "แก้ไข",
+    "delete": "ลบ",
+    "confirmDelete": "ยืนยันการลบ",
+    "undoAction": "การกระทำนี้สามารถยกเลิกได้ด้วย Git ตรวจสอบประวัติการคอมมิตของ GitHub เพื่อกู้คืนความคิดของคุณ",
+    "success": "สำเร็จ",
+    "error": "ข้อผิดพลาด",
+    "thoughtDeleted": "ลบความคิดสำเร็จ",
+    "thoughtDeleteFailed": "ลบความคิดล้มเหลว",
+    "blogPostDeleted": "ลบโพสต์บล็อกสำเร็จ",
+    "blogPostDeleteFailed": "ลบโพสต์บล็อกล้มเหลว",
+    "thoughtCreated": "สร้างความคิดสำเร็จ",
+    "thoughtUpdated": "อัปเดตความคิดสำเร็จ",
+    "blogPostCreated": "สร้างโพสต์บล็อกสำเร็จ",
+    "blogPostUpdated": "อัปเดตโพสต์บล็อกสำเร็จ",
+    "cancel": "ยกเลิก"
   },
   "metadata": {
     "title": "TinyMind - เขียนและซิงค์โพสต์บล็อกและความคิดของคุณด้วยการลงชื่อเข้าใช้ GitHub เพียงคลิกเดียว",

@@ -1,7 +1,7 @@
 {
   "HomePage": {
-    "blog": "blog",
-    "thoughts": "pensieri",
+    "blog": "Blog",
+    "thoughts": "Pensieri",
     "noThoughtsYet": "Ancora nessun pensiero",
     "createThought": "Crea un pensiero",
     "createBlogPost": "Crea un post sul blog",
@@ -22,7 +22,22 @@
     "publicContentWarning": "Tutti i contenuti sono pubblici.",
     "write": "Scrivi",
     "preview": "Anteprima",
-    "noBlogPostsYet": "Ancora nessun post sul blog"
+    "noBlogPostsYet": "Ancora nessun post sul blog",
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "confirmDelete": "Conferma eliminazione",
+    "undoAction": "Questa azione può essere annullata grazie a Git. Controlla la cronologia dei commit di GitHub per ripristinare il tuo pensiero.",
+    "success": "Successo",
+    "error": "Errore",
+    "thoughtDeleted": "Pensiero eliminato con successo",
+    "thoughtDeleteFailed": "Eliminazione del pensiero fallita",
+    "blogPostDeleted": "Post sul blog eliminato con successo",
+    "blogPostDeleteFailed": "Eliminazione del post sul blog fallita",
+    "thoughtCreated": "Pensiero creato con successo",
+    "thoughtUpdated": "Pensiero aggiornato con successo",
+    "blogPostCreated": "Post sul blog creato con successo",
+    "blogPostUpdated": "Post sul blog aggiornato con successo",
+    "cancel": "Annulla"
   },
   "metadata": {
     "title": "TinyMind - Scrivi e sincronizza i tuoi post sul blog e pensieri con l'accesso a GitHub con un clic",

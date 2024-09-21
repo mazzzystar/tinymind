@@ -22,7 +22,22 @@
     "publicContentWarning": "Tout le contenu est public.",
     "write": "Écrire",
     "preview": "Aperçu",
-    "noBlogPostsYet": "Pas encore d'articles de blog"
+    "noBlogPostsYet": "Pas encore d'articles de blog",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "confirmDelete": "Confirmer la suppression",
+    "undoAction": "Cette action peut être annulée grâce à Git. Consultez l'historique des commits de GitHub pour restaurer votre pensée.",
+    "success": "Succès",
+    "error": "Erreur",
+    "thoughtDeleted": "Pensée supprimée avec succès",
+    "thoughtDeleteFailed": "Échec de la suppression de la pensée",
+    "blogPostDeleted": "Article supprimé avec succès",
+    "blogPostDeleteFailed": "Échec de la suppression de l'article",
+    "thoughtCreated": "Pensée créée avec succès",
+    "thoughtUpdated": "Pensée mise à jour avec succès",
+    "blogPostCreated": "Article créé avec succès",
+    "blogPostUpdated": "Article mis à jour avec succès",
+    "cancel": "Annuler"
   },
   "metadata": {
     "title": "TinyMind - Écrivez et synchronisez vos articles de blog et pensées avec connexion GitHub en un clic",
