@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { getThoughts, Thought } from "@/lib/githubApi";
+import { getThoughts, deleteThought, Thought } from "@/lib/githubApi";
 import GitHubSignInButton from "./GitHubSignInButton";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -11,6 +11,15 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { AiOutlineEllipsis } from "react-icons/ai";
 
 export default function ThoughtsList() {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
@@ -96,6 +105,36 @@ export default function ThoughtsList() {
             className="bg-[#f9f9f9] shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300 flex flex-col"
           >
             <div className="text-gray-800 mb-2 prose max-w-none">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="text-gray-700 hover:text-black float-right bg-transparent"
+                  >
+                    <AiOutlineEllipsis className="h-5 w-5" />{" "}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem
+                    onClick={async () => {
+                      await deleteThought(
+                        thought.id,
+                        session?.accessToken ?? ""
+                      );
+                      router.push("/editor?type=thought");
+                    }}
+                  >
+                    Delete
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router.push(`/editor?type=thought&id=${thought.id}`);
+                    }}
+                  >
+                    Edit
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
