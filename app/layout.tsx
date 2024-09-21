@@ -81,7 +81,7 @@ export default async function RootLayout({
             <main className="pt-20 pb-20">{children}</main>
             <Footer />
             <CreateButton messages={messages} />
-            <Toaster />
+            <Toaster /> {/* Ensure Toaster is included here */}
           </SessionProvider>
         </NextIntlClientProvider>
       </body>
