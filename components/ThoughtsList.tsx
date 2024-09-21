@@ -25,7 +25,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
 
@@ -33,19 +32,12 @@ export default function ThoughtsList() {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [thoughtToDelete, setThoughtToDelete] = useState<string | null>(null); // Add this line
+  const [thoughtToDelete, setThoughtToDelete] = useState<string | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
   const t = useTranslations("HomePage");
   const { toast } = useToast();
-
-  // Example usage of thoughtToDelete
-  useEffect(() => {
-    if (thoughtToDelete) {
-      console.log(`Thought to delete: ${thoughtToDelete}`);
-      // Add logic to handle the deletion of the thought
-    }
-  }, [thoughtToDelete]);
 
   useEffect(() => {
     async function fetchThoughts() {
@@ -124,6 +116,7 @@ export default function ThoughtsList() {
       });
     } finally {
       setThoughtToDelete(null);
+      setIsDeleteDialogOpen(false);
     }
   };
 
@@ -166,33 +159,37 @@ export default function ThoughtsList() {
             className="bg-[#f9f9f9] shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300 flex flex-col"
           >
             <div className="text-gray-800 mb-2 prose max-w-none">
-              <Dialog>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="text-gray-700 hover:text-black float-right bg-transparent"
-                    >
-                      <AiOutlineEllipsis className="h-5 w-5" />{" "}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DialogTrigger asChild>
-                      <DropdownMenuItem
-                        onSelect={() => setThoughtToDelete(thought.id)}
-                      >
-                        Delete
-                      </DropdownMenuItem>
-                    </DialogTrigger>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        router.push(`/editor?type=thought&id=${thought.id}`);
-                      }}
-                    >
-                      Edit
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="text-gray-700 hover:text-black float-right bg-transparent"
+                  >
+                    <AiOutlineEllipsis className="h-5 w-5" />{" "}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem
+                    onSelect={() => {
+                      setThoughtToDelete(thought.id);
+                      setIsDeleteDialogOpen(true);
+                    }}
+                  >
+                    Delete
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router.push(`/editor?type=thought&id=${thought.id}`);
+                    }}
+                  >
+                    Edit
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Dialog
+                open={isDeleteDialogOpen}
+                onOpenChange={setIsDeleteDialogOpen}
+              >
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>
@@ -206,13 +203,15 @@ export default function ThoughtsList() {
                   <DialogFooter>
                     <Button
                       variant="outline"
-                      onClick={() => setThoughtToDelete(null)}
+                      onClick={() => setIsDeleteDialogOpen(false)}
                     >
                       Cancel
                     </Button>
                     <Button
                       variant="destructive"
-                      onClick={() => handleDeleteThought(thought.id)}
+                      onClick={() =>
+                        thoughtToDelete && handleDeleteThought(thoughtToDelete)
+                      }
                     >
                       Delete
                     </Button>
