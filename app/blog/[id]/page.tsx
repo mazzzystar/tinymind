@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AiOutlineEllipsis } from "react-icons/ai";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import {
   Dialog,
   DialogContent,
@@ -126,7 +127,11 @@ export default function BlogPost({ params }: { params: { id: string } }) {
   };
 
   if (status === "loading" || !post) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <AiOutlineLoading3Quarters className="animate-spin text-4xl" />
+      </div>
+    );
   }
 
   const decodedTitle = decodeContent(post.title);
