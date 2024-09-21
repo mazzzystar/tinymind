@@ -534,11 +534,17 @@ export async function deleteBlogPost(id: string, accessToken: string): Promise<v
   try {
     const { owner, repo } = await getRepoInfo(accessToken);
     
+    // Decode the ID and create the file path
+    const decodedId = decodeURIComponent(id);
+    const path = `content/blog/${decodedId}.md`;
+
+    console.log(`Attempting to delete file: ${path}`);
+
     // Get the current file to retrieve its SHA
     const currentFile = await octokit.repos.getContent({
       owner,
       repo,
-      path: `content/blog/${id}.md`,
+      path,
     });
 
     if (Array.isArray(currentFile.data) || !('sha' in currentFile.data)) {
@@ -549,9 +555,9 @@ export async function deleteBlogPost(id: string, accessToken: string): Promise<v
     await octokit.repos.deleteFile({
       owner,
       repo,
-      path: `content/blog/${id}.md`,
+      path,
       message: 'Delete blog post',
-      sha: currentFile.data.sha, // Include the SHA of the file
+      sha: currentFile.data.sha,
     });
 
     console.log('Blog post deleted successfully');
