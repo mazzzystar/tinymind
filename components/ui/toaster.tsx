@@ -9,6 +9,8 @@ import {
   ToastTitle,
   ToastViewport,
 } from "@/components/ui/toast";
+import { BsCheckCircleFill } from "react-icons/bs";
+import { MdError } from "react-icons/md";
 
 export function Toaster() {
   const { toasts } = useToast();
@@ -16,10 +18,19 @@ export function Toaster() {
   return (
     <ToastProvider>
       {toasts.map(function ({ id, title, description, action, ...props }) {
+        const { variant } = props;
         return (
           <Toast key={id} {...props}>
-            <div className="grid gap-1">
-              {title && <ToastTitle>{title}</ToastTitle>}
+            <div className="gap-2">
+              <div className="flex gap-2">
+                {variant === "destructive" ? (
+                  <MdError />
+                ) : (
+                  <BsCheckCircleFill className="fill-emerald-500" />
+                )}
+
+                {title && <ToastTitle>{title}</ToastTitle>}
+              </div>
               {description && (
                 <ToastDescription>{description}</ToastDescription>
               )}
