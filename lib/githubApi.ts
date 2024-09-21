@@ -577,7 +577,7 @@ export async function updateBlogPost(id: string, title: string, content: string,
   try {
     const { owner, repo } = await getRepoInfo(accessToken);
     
-    // Get the current file to retrieve its SHA
+    // Get the current file to retrieve its SHA and content
     const currentFile = await octokit.repos.getContent({
       owner,
       repo,
@@ -588,24 +588,34 @@ export async function updateBlogPost(id: string, title: string, content: string,
       throw new Error('Unexpected response when fetching current blog post');
     }
 
-    const updatedContent = `---
+    if ('content' in currentFile.data) {
+        const existingContent = Buffer.from(currentFile.data.content, 'base64').toString('utf-8');
+
+        // Extract the original date from the existing content
+        const dateMatch = existingContent.match(/date:\s*(.+)/);
+        const date = dateMatch ? dateMatch[1] : new Date().toISOString();
+
+        const updatedContent = `---
 title: ${title}
-date: ${new Date().toISOString()}
+date: ${date}
 ---
 
 ${content}`;
 
-    // Update the blog post file
-    await octokit.repos.createOrUpdateFileContents({
-      owner,
-      repo,
-      path: `content/blog/${id}.md`,
-      message: 'Update blog post',
-      content: Buffer.from(updatedContent).toString('base64'),
-      sha: currentFile.data.sha,
-    });
+        // Update the blog post file
+        await octokit.repos.createOrUpdateFileContents({
+            owner,
+            repo,
+            path: `content/blog/${id}.md`,
+            message: 'Update blog post',
+            content: Buffer.from(updatedContent).toString('base64'),
+            sha: currentFile.data.sha,
+        });
 
-    console.log('Blog post updated successfully');
+        console.log('Blog post updated successfully');
+    } else {
+        throw new Error('Unexpected response when fetching current blog post');
+    }
   } catch (error) {
     console.error('Error updating blog post:', error);
     throw error;
