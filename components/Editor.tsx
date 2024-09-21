@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,6 +36,41 @@ export default function Editor({
   const [editingThoughtId, setEditingThoughtId] = useState<string | null>(null);
   const { toast } = useToast();
 
+  const fetchThought = useCallback(
+    async (id: string) => {
+      if (!session?.accessToken) return;
+      try {
+        const thoughts = await getThoughts(session.accessToken);
+        const thought = thoughts.find((t) => t.id === id);
+        if (thought) {
+          setContent(thought.content);
+        }
+      } catch (error) {
+        console.error("Error fetching thought:", error);
+      }
+    },
+    [session?.accessToken]
+  );
+
+  const fetchBlogPost = useCallback(
+    async (id: string) => {
+      if (!session?.accessToken) return;
+      try {
+        const response = await fetch(`/api/github?action=getBlogPost&id=${id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch blog post");
+        }
+        const blogPost = await response.json();
+        setTitle(blogPost.title);
+        setContent(blogPost.content);
+        setEditingThoughtId(id);
+      } catch (error) {
+        console.error("Error fetching blog post:", error);
+      }
+    },
+    [session?.accessToken]
+  );
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     params.set("type", type);
@@ -50,36 +85,7 @@ export default function Editor({
         fetchBlogPost(id);
       }
     }
-  }, [type, router, searchParams]);
-
-  const fetchThought = async (id: string) => {
-    if (!session?.accessToken) return;
-    try {
-      const thoughts = await getThoughts(session.accessToken);
-      const thought = thoughts.find((t) => t.id === id);
-      if (thought) {
-        setContent(thought.content);
-      }
-    } catch (error) {
-      console.error("Error fetching thought:", error);
-    }
-  };
-
-  const fetchBlogPost = async (id: string) => {
-    if (!session?.accessToken) return;
-    try {
-      const response = await fetch(`/api/github?action=getBlogPost&id=${id}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch blog post");
-      }
-      const blogPost = await response.json();
-      setTitle(blogPost.title);
-      setContent(blogPost.content);
-      setEditingThoughtId(id);
-    } catch (error) {
-      console.error("Error fetching blog post:", error);
-    }
-  };
+  }, [type, router, searchParams, fetchThought, fetchBlogPost]);
 
   const handleTypeChange = (value: "blog" | "thought") => {
     setType(value);

@@ -19,15 +19,33 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { AiOutlineEllipsis } from "react-icons/ai";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 export default function ThoughtsList() {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [thoughtToDelete, setThoughtToDelete] = useState<string | null>(null); // Add this line
   const { data: session, status } = useSession();
   const router = useRouter();
   const t = useTranslations("HomePage");
   const { toast } = useToast();
+
+  // Example usage of thoughtToDelete
+  useEffect(() => {
+    if (thoughtToDelete) {
+      console.log(`Thought to delete: ${thoughtToDelete}`);
+      // Add logic to handle the deletion of the thought
+    }
+  }, [thoughtToDelete]);
 
   useEffect(() => {
     async function fetchThoughts() {
@@ -104,6 +122,8 @@ export default function ThoughtsList() {
         variant: "destructive",
         duration: 3000,
       });
+    } finally {
+      setThoughtToDelete(null);
     }
   };
 
@@ -146,30 +166,59 @@ export default function ThoughtsList() {
             className="bg-[#f9f9f9] shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300 flex flex-col"
           >
             <div className="text-gray-800 mb-2 prose max-w-none">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="text-gray-700 hover:text-black float-right bg-transparent"
-                  >
-                    <AiOutlineEllipsis className="h-5 w-5" />{" "}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem
-                    onClick={() => handleDeleteThought(thought.id)}
-                  >
-                    Delete
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      router.push(`/editor?type=thought&id=${thought.id}`);
-                    }}
-                  >
-                    Edit
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Dialog>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="text-gray-700 hover:text-black float-right bg-transparent"
+                    >
+                      <AiOutlineEllipsis className="h-5 w-5" />{" "}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DialogTrigger asChild>
+                      <DropdownMenuItem
+                        onSelect={() => setThoughtToDelete(thought.id)}
+                      >
+                        Delete
+                      </DropdownMenuItem>
+                    </DialogTrigger>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        router.push(`/editor?type=thought&id=${thought.id}`);
+                      }}
+                    >
+                      Edit
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>
+                      Are you sure you want to delete this thought?
+                    </DialogTitle>
+                    <DialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      your thought.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <Button
+                      variant="outline"
+                      onClick={() => setThoughtToDelete(null)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={() => handleDeleteThought(thought.id)}
+                    >
+                      Delete
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
