@@ -12,6 +12,9 @@ import { Loader2 } from "lucide-react"; // Import Loader2 icon
 import { useTranslations } from "next-intl";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+// import { getThoughts, Thought } from "@/lib/githubApi";
+import { useSession } from "next-auth/react";
+import { getThoughts } from "@/lib/githubApi";
 
 export default function Editor({
   defaultType = "thought",
@@ -29,16 +32,39 @@ export default function Editor({
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const t = useTranslations("HomePage");
+  const { data: session } = useSession();
+  const [editingThoughtId, setEditingThoughtId] = useState<string | null>(null);
 
   useEffect(() => {
-    // Update URL when type changes
     const params = new URLSearchParams(window.location.search);
     params.set("type", type);
     router.push(`/editor?${params.toString()}`);
-  }, [type, router]);
+
+    const thoughtId = searchParams.get("id");
+    if (thoughtId && type === "thought") {
+      setEditingThoughtId(thoughtId);
+      fetchThought(thoughtId);
+    }
+  }, [type, router, searchParams]);
+
+  const fetchThought = async (id: string) => {
+    if (!session?.accessToken) return;
+    try {
+      const thoughts = await getThoughts(session.accessToken);
+      const thought = thoughts.find((t) => t.id === id);
+      if (thought) {
+        setContent(thought.content);
+      }
+    } catch (error) {
+      console.error("Error fetching thought:", error);
+    }
+  };
 
   const handleTypeChange = (value: "blog" | "thought") => {
     setType(value);
+    if (value === "blog") {
+      setEditingThoughtId(null);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,9 +78,15 @@ export default function Editor({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          action: type === "blog" ? "createBlogPost" : "createThought",
+          action:
+            type === "blog"
+              ? "createBlogPost"
+              : editingThoughtId
+              ? "updateThought"
+              : "createThought",
           title,
           content,
+          id: editingThoughtId,
         }),
       });
 

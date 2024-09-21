@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import { deleteThought, createBlogPost, createThought, getBlogPosts, getThoughts } from '@/lib/githubApi';
+import { deleteThought, createBlogPost, createThought, getBlogPosts, getThoughts, updateThought } from '@/lib/githubApi';
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,6 +24,9 @@ export async function POST(request: NextRequest) {
       case 'createThought':
         await createThought(data.content, data.image, session.accessToken);
         return NextResponse.json({ message: 'Thought created successfully' });
+      case 'updateThought':
+        await updateThought(data.id, data.content, session.accessToken);
+        return NextResponse.json({ message: 'Thought updated successfully' });
       case 'deleteThought':
         await deleteThought(data.id, session.accessToken);
         return NextResponse.json({ message: 'Thought deleted successfully' });

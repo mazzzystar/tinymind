@@ -459,3 +459,67 @@ export async function getUserLogin(accessToken: string): Promise<string> {
   const { data: user } = await octokit.users.getAuthenticated();
   return user.login;
 }
+
+export async function updateThought(id: string, content: string, accessToken: string): Promise<void> {
+  console.log('Updating thought...');
+  if (!accessToken) {
+    throw new Error('Access token is required');
+  }
+  const octokit = getOctokit(accessToken);
+  console.log('Octokit instance created');
+  
+  try {
+    const { owner, repo } = await getRepoInfo(accessToken);
+    console.log('Repo info:', { owner, repo });
+
+    await initializeGitHubStructure(octokit, owner, repo);
+    console.log('GitHub structure initialized');
+
+    let thoughts: Thought[] = [];
+    let existingSha: string | undefined;
+
+    // Fetch existing thoughts
+    const response = await octokit.repos.getContent({
+      owner,
+      repo,
+      path: 'content/thoughts.json',
+    });
+
+    if (!Array.isArray(response.data) && 'content' in response.data) {
+      const existingContent = Buffer.from(response.data.content, 'base64').toString('utf-8');
+      thoughts = JSON.parse(existingContent) as Thought[];
+      existingSha = response.data.sha;
+      console.log('Existing thoughts fetched');
+    }
+
+    // Find and update the thought
+    const thoughtIndex = thoughts.findIndex(t => t.id === id);
+    if (thoughtIndex === -1) {
+      throw new Error('Thought not found');
+    }
+
+    thoughts[thoughtIndex] = {
+      ...thoughts[thoughtIndex],
+      content,
+      timestamp: new Date().toISOString(),
+    };
+
+    console.log('Updating thoughts file...');
+    // Update the file with all thoughts
+    const updateParams: UpdateFileParams = {
+      owner,
+      repo,
+      path: 'content/thoughts.json',
+      message: 'Update thought',
+      content: Buffer.from(JSON.stringify(thoughts, null, 2)).toString('base64'),
+      sha: existingSha,
+    };
+
+    await octokit.repos.createOrUpdateFileContents(updateParams);
+
+    console.log('Thought updated successfully');
+  } catch (error) {
+    console.error('Error updating thought:', error);
+    throw error;
+  }
+}
