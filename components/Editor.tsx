@@ -8,13 +8,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Loader2 } from "lucide-react"; // Import Loader2 icon
+import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-// import { getThoughts, Thought } from "@/lib/githubApi";
-import { useSession } from "next-auth/react";
 import { getThoughts } from "@/lib/githubApi";
+import { useSession } from "next-auth/react";
 
 export default function Editor({
   defaultType = "thought",
@@ -40,10 +39,14 @@ export default function Editor({
     params.set("type", type);
     router.push(`/editor?${params.toString()}`);
 
-    const thoughtId = searchParams.get("id");
-    if (thoughtId && type === "thought") {
-      setEditingThoughtId(thoughtId);
-      fetchThought(thoughtId);
+    const id = searchParams.get("id");
+    if (id) {
+      if (type === "thought") {
+        setEditingThoughtId(id);
+        fetchThought(id);
+      } else if (type === "blog") {
+        fetchBlogPost(id);
+      }
     }
   }, [type, router, searchParams]);
 
@@ -57,6 +60,22 @@ export default function Editor({
       }
     } catch (error) {
       console.error("Error fetching thought:", error);
+    }
+  };
+
+  const fetchBlogPost = async (id: string) => {
+    if (!session?.accessToken) return;
+    try {
+      const response = await fetch(`/api/github?action=getBlogPost&id=${id}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch blog post");
+      }
+      const blogPost = await response.json();
+      setTitle(blogPost.title);
+      setContent(blogPost.content);
+      setEditingThoughtId(id);
+    } catch (error) {
+      console.error("Error fetching blog post:", error);
     }
   };
 
@@ -80,13 +99,15 @@ export default function Editor({
         body: JSON.stringify({
           action:
             type === "blog"
-              ? "createBlogPost"
+              ? editingThoughtId
+                ? "updateBlogPost"
+                : "createBlogPost"
               : editingThoughtId
               ? "updateThought"
               : "createThought",
+          id: editingThoughtId,
           title,
           content,
-          id: editingThoughtId,
         }),
       });
 
@@ -96,13 +117,12 @@ export default function Editor({
 
       setIsSuccess(true);
       setTimeout(() => {
-        // Redirect based on the type of content published
         if (type === "blog") {
           router.push("/blog");
         } else {
           router.push("/thoughts");
         }
-      }, 2000); // Redirect after 2 seconds
+      }, 2000);
     } catch (error) {
       console.error("Error publishing:", error);
       alert(t("failedPublish"));

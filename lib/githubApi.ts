@@ -523,3 +523,85 @@ export async function updateThought(id: string, content: string, accessToken: st
     throw error;
   }
 }
+
+export async function deleteBlogPost(id: string, accessToken: string): Promise<void> {
+  console.log('Deleting blog post...');
+  if (!accessToken) {
+    throw new Error('Access token is required');
+  }
+  const octokit = getOctokit(accessToken);
+  
+  try {
+    const { owner, repo } = await getRepoInfo(accessToken);
+    
+    // Get the current file to retrieve its SHA
+    const currentFile = await octokit.repos.getContent({
+      owner,
+      repo,
+      path: `content/blog/${id}.md`,
+    });
+
+    if (Array.isArray(currentFile.data) || !('sha' in currentFile.data)) {
+      throw new Error('Unexpected response when fetching current blog post');
+    }
+
+    // Delete the blog post file
+    await octokit.repos.deleteFile({
+      owner,
+      repo,
+      path: `content/blog/${id}.md`,
+      message: 'Delete blog post',
+      sha: currentFile.data.sha, // Include the SHA of the file
+    });
+
+    console.log('Blog post deleted successfully');
+  } catch (error) {
+    console.error('Error deleting blog post:', error);
+    throw error;
+  }
+}
+
+export async function updateBlogPost(id: string, title: string, content: string, accessToken: string): Promise<void> {
+  console.log('Updating blog post...');
+  if (!accessToken) {
+    throw new Error('Access token is required');
+  }
+  const octokit = getOctokit(accessToken);
+  
+  try {
+    const { owner, repo } = await getRepoInfo(accessToken);
+    
+    // Get the current file to retrieve its SHA
+    const currentFile = await octokit.repos.getContent({
+      owner,
+      repo,
+      path: `content/blog/${id}.md`,
+    });
+
+    if (Array.isArray(currentFile.data) || !('sha' in currentFile.data)) {
+      throw new Error('Unexpected response when fetching current blog post');
+    }
+
+    const updatedContent = `---
+title: ${title}
+date: ${new Date().toISOString()}
+---
+
+${content}`;
+
+    // Update the blog post file
+    await octokit.repos.createOrUpdateFileContents({
+      owner,
+      repo,
+      path: `content/blog/${id}.md`,
+      message: 'Update blog post',
+      content: Buffer.from(updatedContent).toString('base64'),
+      sha: currentFile.data.sha,
+    });
+
+    console.log('Blog post updated successfully');
+  } catch (error) {
+    console.error('Error updating blog post:', error);
+    throw error;
+  }
+}

@@ -5,6 +5,14 @@ import { useRouter } from "next/navigation";
 import { BlogPost } from "@/lib/githubApi";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { AiOutlineEllipsis } from "react-icons/ai";
 
 function decodeTitle(title: string): string {
   try {
@@ -22,6 +30,32 @@ function formatDate(dateString: string): string {
 export default function BlogList({ posts }: { posts: BlogPost[] }) {
   const router = useRouter();
   const t = useTranslations("HomePage");
+  const [blogPosts, setBlogPosts] = useState(posts);
+
+  const handleDeleteBlogPost = async (id: string) => {
+    try {
+      const response = await fetch("/api/github", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "deleteBlogPost",
+          id: id,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete blog post");
+      }
+
+      // Remove the deleted blog post from the state
+      setBlogPosts(blogPosts.filter((post) => post.id !== id));
+    } catch (error) {
+      console.error("Error deleting blog post:", error);
+      alert("Failed to delete blog post");
+    }
+  };
 
   const sortedPosts = [...posts].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
@@ -72,6 +106,30 @@ export default function BlogList({ posts }: { posts: BlogPost[] }) {
                 <span className="text-sm text-gray-400 font-light whitespace-nowrap">
                   {formatDate(post.date)}
                 </span>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="text-gray-700 hover:text-black bg-transparent ml-2"
+                    >
+                      <AiOutlineEllipsis className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem
+                      onClick={() => handleDeleteBlogPost(post.id)}
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        router.push(`/editor?type=blog&id=${post.id}`);
+                      }}
+                    >
+                      Edit
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </li>
             ))}
           </ul>
