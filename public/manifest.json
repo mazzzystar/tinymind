@@ -13,10 +13,13 @@
       "type": "image/jpeg"
     }
   ],
-  "orientation": "natural",
-  "start_url": ".",
+  "orientation": "any",
+  "start_url": "/",
   "theme_color": "#000000",
-  "background_color": "#000000",
+  "background_color": "#ffffff",
   "display": "standalone",
-  "description": "Turn GitHub into Your Blog & Thoughts Hub in Seconds."
+  "description": "Turn GitHub into Your Blog & Thoughts Hub in Seconds.",
+  "scope": "/",
+  "apple-mobile-web-app-capable": "yes",
+  "apple-mobile-web-app-status-bar-style": "black-translucent"
 }

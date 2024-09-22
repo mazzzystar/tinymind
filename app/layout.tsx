@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { Toaster } from "@/components/ui/toaster";
+import Head from "next/head";
 
 // const inter = Inter({
 //   subsets: ["latin"],
@@ -62,6 +63,19 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icon-144.jpg" />
+      </Head>
       <Script
         async
         src="https://www.googletagmanager.com/gtag/js?id=G-1MF16MH92D"
