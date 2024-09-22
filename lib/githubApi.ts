@@ -144,7 +144,18 @@ async function initializeGitHubStructure(octokit: Octokit, owner: string, repo: 
 export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
   const octokit = getOctokit(accessToken);
   const { owner, repo } = await getRepoInfo(accessToken);
-  await initializeGitHubStructure(octokit, owner, repo);
+  
+  try {
+    await initializeGitHubStructure(octokit, owner, repo);
+  } catch (error) {
+    console.error('Error initializing GitHub structure:', error);
+    // If the repository already exists, we can continue
+    if (error instanceof Error && error.message.includes('name already exists')) {
+      console.log('Repository already exists, continuing...');
+    } else {
+      throw error;
+    }
+  }
 
   try {
     const response = await octokit.repos.getContent({
@@ -200,6 +211,11 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
     return filteredPosts;
   } catch (error) {
     console.error('Error fetching blog posts:', error);
+    // If the blog directory doesn't exist, return an empty array
+    if (error instanceof Error && 'status' in error && error.status === 404) {
+      console.log('Blog directory does not exist, returning empty array');
+      return [];
+    }
     throw error;
   }
 }
