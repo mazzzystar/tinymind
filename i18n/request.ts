@@ -6,10 +6,21 @@ export default getRequestConfig(async () => {
   const acceptLanguage = headers().get('Accept-Language');
 
   // Parse the Accept-Language header to get the preferred language
-  const browserLocale = acceptLanguage ? acceptLanguage.split(',')[0].split('-')[0] : 'en';
+  let browserLocale = acceptLanguage ? acceptLanguage.split(',')[0] : 'en';
+
+  // Special handling for Chinese locales
+  if (browserLocale.startsWith('zh')) {
+    if (browserLocale === 'zh-TW' || browserLocale === 'zh-HK') {
+      browserLocale = browserLocale;  // Keep zh-TW or zh-HK as is
+    } else {
+      browserLocale = 'zh';  // Default to zh for other Chinese variants
+    }
+  } else {
+    browserLocale = browserLocale.split('-')[0];
+  }
 
   // Use the browser locale if it's supported, otherwise fallback to 'en'
-  const supportedLocales = ['en', 'zh', 'ja', 'ko', 'fr', 'de', 'es', 'pt', 'ru', 'ar', 'hi', 'it', 'nl', 'tr', 'pl', 'vi', 'th', 'id'];
+  const supportedLocales = ['en', 'zh', 'zh-TW', 'zh-HK', 'ja', 'ko', 'fr', 'de', 'es', 'pt', 'ru', 'ar', 'hi', 'it', 'nl', 'tr', 'pl', 'vi', 'th', 'id'];
   const selectedLocale = supportedLocales.includes(browserLocale) ? browserLocale : 'en';
 
   return {
