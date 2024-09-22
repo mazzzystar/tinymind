@@ -22,9 +22,9 @@ Your data remains secure:
 
 - [x] Blog and Thoughts support Markdown
 - [x] Add a feature to let writers manage their own blogs (add, delete, edit posts)
+- [x] Supports user drag-and-drop image uploads
 - [ ] Shareable user main pages (e.g., [tinymind.me/mazzzystar](https://www.tinymind.me/mazzzystar))
 - [ ] Create a showcase page for all public TinyMind writers (creator list)
-- [ ] Supports user drag-and-drop image uploads
 
 🙋 Contributors wanted!
 
