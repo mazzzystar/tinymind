@@ -1,23 +1,22 @@
 {
-  "name": "Tinymind",
   "short_name": "Tinymind",
-  "description": "Turn GitHub into Your Blog & Thoughts Hub in Seconds.",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "name": "Tinymind",
   "icons": [
     {
-      "src": "/icon.jpg",
-      "sizes": "192x192",
-      "type": "image/jpeg",
-      "purpose": "any maskable"
+      "src": "icon-144.jpg",
+      "sizes": "144x144",
+      "type": "image/jpeg"
     },
     {
-      "src": "/icon.jpg",
+      "src": "icon.jpg",
       "sizes": "512x512",
-      "type": "image/jpeg",
-      "purpose": "any maskable"
+      "type": "image/jpeg"
     }
-  ]
+  ],
+  "orientation": "natural",
+  "start_url": ".",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "display": "standalone",
+  "description": "Turn GitHub into Your Blog & Thoughts Hub in Seconds."
 }
