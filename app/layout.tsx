@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { gowun_wodum } from "@/components/ui/font";
-// import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import { SessionProvider } from "../components/SessionProvider";
@@ -9,6 +8,7 @@ import Footer from "@/components/Footer";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { Toaster } from "@/components/ui/toaster";
+import Head from "next/head";
 
 // const inter = Inter({
 //   subsets: ["latin"],
@@ -62,6 +62,11 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
+      <Head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#000000" />
+        <link rel="apple-touch-icon" href="/icon.jpg" />
+      </Head>
       <Script
         async
         src="https://www.googletagmanager.com/gtag/js?id=G-1MF16MH92D"
@@ -73,6 +78,22 @@ export default async function RootLayout({
 
         gtag('config', 'G-1MF16MH92D');`}
       </Script>
+      <Script id="register-sw">
+        {`
+          if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+              navigator.serviceWorker.register('/sw.js').then(
+                function(registration) {
+                  console.log('Service Worker registration successful with scope: ', registration.scope);
+                },
+                function(err) {
+                  console.log('Service Worker registration failed: ', err);
+                }
+              );
+            });
+          }
+        `}
+      </Script>
 
       <body className={gowun_wodum.className}>
         <NextIntlClientProvider messages={messages}>
@@ -81,7 +102,7 @@ export default async function RootLayout({
             <main className="pt-20 pb-20">{children}</main>
             <Footer />
             <CreateButton messages={messages} />
-            <Toaster /> {/* Ensure Toaster is included here */}
+            <Toaster />
           </SessionProvider>
         </NextIntlClientProvider>
       </body>
