@@ -12,9 +12,10 @@ import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { getThoughts } from "@/lib/githubApi";
+import { getThoughts, uploadImage } from "@/lib/githubApi";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/components/ui/use-toast";
+import { useDropzone } from "react-dropzone";
 
 function removeFrontmatter(content: string): string {
   const frontmatterRegex = /^---\n([\s\S]*?)\n---\n/;
@@ -157,6 +158,53 @@ export default function Editor({
     }
   };
 
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      for (const file of acceptedFiles) {
+        if (file.type.startsWith("image/")) {
+          try {
+            const imageUrl = await uploadImage(
+              file,
+              session?.accessToken ?? ""
+            );
+            setContent(
+              (prevContent) =>
+                `${prevContent}\n![${file.name}](${imageUrl})\n`
+            );
+            toast({
+              title: t("uploadSuccess"),
+              description: t("imageInserted"),
+              variant: "default",
+              duration: 3000,
+            });
+          } catch (error) {
+            console.error("Error uploading image:", error);
+            toast({
+              title: t("uploadError"),
+              description: t("uploadErrorDescription"),
+              variant: "destructive",
+              duration: 3000,
+            });
+          }
+        } else {
+          toast({
+            title: t("invalidFileType"),
+            description: t("onlyImagesAllowed"),
+            variant: "default",
+            duration: 3000,
+          });
+        }
+      }
+    },
+    [setContent, toast, t, session?.accessToken]
+  );
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    noClick: true,
+    noKeyboard: true,
+  });
+
   return (
     <Card className="max-w-2xl mx-auto shadow-md border border-gray-100">
       <CardHeader className="border-b border-gray-100 pb-2">
@@ -209,7 +257,8 @@ export default function Editor({
             />
           )}
 
-          <div className="border rounded-md">
+          <div className="border rounded-md" {...getRootProps()}>
+            <input {...getInputProps()} />
             <div className="flex border-b">
               <button
                 type="button"
@@ -244,6 +293,11 @@ export default function Editor({
                 className="min-h-[300px] border-0 focus:ring-0"
                 required
               />
+            )}
+            {isDragActive && (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50">
+                <p className="text-lg font-semibold">Drop here</p>
+              </div>
             )}
           </div>
 

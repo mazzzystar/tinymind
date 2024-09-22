@@ -1,4 +1,5 @@
-import { Octokit } from '@octokit/rest'
+import { Octokit } from '@octokit/rest';
+import path from 'path';
 
 // Add this type definition at the top of the file
 type UpdateFileParams = Parameters<Octokit['repos']['createOrUpdateFileContents']>[0];
@@ -11,11 +12,11 @@ export interface BlogPost {
 }
 
 export type Thought = {
-  id: string
-  content: string
-  timestamp: string
-  image?: string
-}
+  id: string;
+  content: string;
+  timestamp: string;
+  image?: string;
+};
 
 function getOctokit(accessToken: string | undefined) {
   if (!accessToken) {
@@ -33,7 +34,7 @@ async function getRepoInfo(accessToken: string | undefined) {
     const { data: user } = await octokit.users.getAuthenticated();
     return {
       owner: user.login,
-      repo: 'tinymind-blog' // You might want to make this configurable
+      repo: 'tinymind-blog', // You might want to make this configurable
     };
   } catch (error) {
     console.error('Error getting authenticated user:', error);
@@ -43,16 +44,16 @@ async function getRepoInfo(accessToken: string | undefined) {
 
 async function ensureRepoExists(octokit: Octokit, owner: string, repo: string) {
   try {
-    await octokit.repos.get({ owner, repo })
+    await octokit.repos.get({ owner, repo });
   } catch (error) {
     if (error instanceof Error && 'status' in error && error.status === 404) {
       await octokit.repos.createForAuthenticatedUser({
         name: repo,
         auto_init: true,
-      })
-      console.log(`Created new repository: ${repo}`)
+      });
+      console.log(`Created new repository: ${repo}`);
     } else {
-      throw error
+      throw error;
     }
   }
 
@@ -136,8 +137,8 @@ async function ensureContentStructure(octokit: Octokit, owner: string, repo: str
 }
 
 async function initializeGitHubStructure(octokit: Octokit, owner: string, repo: string) {
-  await ensureRepoExists(octokit, owner, repo)
-  await ensureContentStructure(octokit, owner, repo)
+  await ensureRepoExists(octokit, owner, repo);
+  await ensureContentStructure(octokit, owner, repo);
 }
 
 export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
@@ -161,7 +162,7 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
 
     const posts = await Promise.all(
       response.data
-        .filter(file => file.type === 'file' && file.name !== '.gitkeep' && file.name.endsWith('.md'))
+        .filter((file) => file.type === 'file' && file.name !== '.gitkeep' && file.name.endsWith('.md'))
         .map(async (file) => {
           try {
             const contentResponse = await octokit.repos.getContent({
@@ -172,7 +173,7 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
 
             if ('content' in contentResponse.data) {
               const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf-8');
-              
+
               // Parse the date from the content
               const dateMatch = content.match(/date:\s*(.+)/);
               const date = dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString();
@@ -238,13 +239,12 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
       owner,
       repo,
       path: `content/blog/${decodeURIComponent(id)}.md`,
-      per_page: 1
+      per_page: 1,
     });
 
     if (commitResponse.data.length === 0) {
       throw new Error('No commits found for this file');
     }
-
 
     return {
       id,
@@ -270,19 +270,19 @@ export async function getThoughts(accessToken: string | undefined): Promise<Thou
       owner,
       repo,
       path: 'content/thoughts.json',
-    })
+    });
 
     if (Array.isArray(response.data) || !('content' in response.data)) {
-      throw new Error('Unexpected response from GitHub API')
+      throw new Error('Unexpected response from GitHub API');
     }
 
-    const content = Buffer.from(response.data.content, 'base64').toString('utf-8')
-    const thoughts = JSON.parse(content) as Thought[]
+    const content = Buffer.from(response.data.content, 'base64').toString('utf-8');
+    const thoughts = JSON.parse(content) as Thought[];
 
-    return thoughts
+    return thoughts;
   } catch (error) {
-    console.error('Error fetching thoughts:', error)
-    throw error
+    console.error('Error fetching thoughts:', error);
+    throw error;
   }
 }
 
@@ -292,13 +292,13 @@ export async function createBlogPost(title: string, content: string, accessToken
   await initializeGitHubStructure(octokit, owner, repo);
 
   const path = `content/blog/${title.toLowerCase().replace(/\s+/g, '-')}.md`;
-  const date = new Date().toISOString() // Store full ISO string
+  const date = new Date().toISOString(); // Store full ISO string
   const fullContent = `---
 title: ${title}
 date: ${date}
 ---
 
-${content}`
+${content}`;
 
   await octokit.repos.createOrUpdateFileContents({
     owner,
@@ -316,7 +316,7 @@ export async function createThought(content: string, image: string | undefined, 
   }
   const octokit = getOctokit(accessToken);
   console.log('Octokit instance created');
-  
+
   try {
     const { owner, repo } = await getRepoInfo(accessToken);
     console.log('Repo info:', { owner, repo });
@@ -392,7 +392,7 @@ export async function deleteThought(id: string, accessToken: string): Promise<vo
   }
   const octokit = getOctokit(accessToken);
   console.log('Octokit instance created');
-  
+
   try {
     const { owner, repo } = await getRepoInfo(accessToken);
     console.log('Repo info:', { owner, repo });
@@ -426,10 +426,10 @@ export async function deleteThought(id: string, accessToken: string): Promise<vo
         throw error;
       }
     }
-  
-    console.log(thoughts)
-    const newThoughts = thoughts.filter((t) => t.id !== id)
-    console.log(newThoughts)
+
+    console.log(thoughts);
+    const newThoughts = thoughts.filter((t) => t.id !== id);
+    console.log(newThoughts);
 
     console.log('Updating thoughts file...');
     // Create or update the file with all thoughts
@@ -467,7 +467,7 @@ export async function updateThought(id: string, content: string, accessToken: st
   }
   const octokit = getOctokit(accessToken);
   console.log('Octokit instance created');
-  
+
   try {
     const { owner, repo } = await getRepoInfo(accessToken);
     console.log('Repo info:', { owner, repo });
@@ -493,7 +493,7 @@ export async function updateThought(id: string, content: string, accessToken: st
     }
 
     // Find and update the thought
-    const thoughtIndex = thoughts.findIndex(t => t.id === id);
+    const thoughtIndex = thoughts.findIndex((t) => t.id === id);
     if (thoughtIndex === -1) {
       throw new Error('Thought not found');
     }
@@ -530,10 +530,10 @@ export async function deleteBlogPost(id: string, accessToken: string): Promise<v
     throw new Error('Access token is required');
   }
   const octokit = getOctokit(accessToken);
-  
+
   try {
     const { owner, repo } = await getRepoInfo(accessToken);
-    
+
     // Decode the ID and create the file path
     const decodedId = decodeURIComponent(id);
     const path = `content/blog/${decodedId}.md`;
@@ -573,10 +573,10 @@ export async function updateBlogPost(id: string, title: string, content: string,
     throw new Error('Access token is required');
   }
   const octokit = getOctokit(accessToken);
-  
+
   try {
     const { owner, repo } = await getRepoInfo(accessToken);
-    
+
     // Get the current file to retrieve its SHA and content
     const currentFile = await octokit.repos.getContent({
       owner,
@@ -589,35 +589,94 @@ export async function updateBlogPost(id: string, title: string, content: string,
     }
 
     if ('content' in currentFile.data) {
-        const existingContent = Buffer.from(currentFile.data.content, 'base64').toString('utf-8');
+      const existingContent = Buffer.from(currentFile.data.content, 'base64').toString('utf-8');
 
-        // Extract the original date from the existing content
-        const dateMatch = existingContent.match(/date:\s*(.+)/);
-        const date = dateMatch ? dateMatch[1] : new Date().toISOString();
+      // Extract the original date from the existing content
+      const dateMatch = existingContent.match(/date:\s*(.+)/);
+      const date = dateMatch ? dateMatch[1] : new Date().toISOString();
 
-        const updatedContent = `---
+      const updatedContent = `---
 title: ${title}
 date: ${date}
 ---
 
 ${content}`;
 
-        // Update the blog post file
-        await octokit.repos.createOrUpdateFileContents({
-            owner,
-            repo,
-            path: `content/blog/${id}.md`,
-            message: 'Update blog post',
-            content: Buffer.from(updatedContent).toString('base64'),
-            sha: currentFile.data.sha,
-        });
+      // Update the blog post file
+      await octokit.repos.createOrUpdateFileContents({
+        owner,
+        repo,
+        path: `content/blog/${id}.md`,
+        message: 'Update blog post',
+        content: Buffer.from(updatedContent).toString('base64'),
+        sha: currentFile.data.sha,
+      });
 
-        console.log('Blog post updated successfully');
+      console.log('Blog post updated successfully');
     } else {
-        throw new Error('Unexpected response when fetching current blog post');
+      throw new Error('Unexpected response when fetching current blog post');
     }
   } catch (error) {
     console.error('Error updating blog post:', error);
     throw error;
   }
+}
+
+export async function uploadImage(file: File, accessToken: string): Promise<string> {
+  console.log('Uploading image...');
+  if (!accessToken) {
+    throw new Error('Access token is required');
+  }
+  const octokit = getOctokit(accessToken);
+  console.log('Octokit instance created');
+
+  try {
+    const { owner, repo } = await getRepoInfo(accessToken);
+    console.log('Repo info:', { owner, repo });
+
+    await initializeGitHubStructure(octokit, owner, repo);
+    console.log('GitHub structure initialized');
+
+    // Generate a unique filename
+    const id = Date.now().toString();
+    const ext = path.extname(file.name);
+    const filename = `${id}${ext}`;
+    const filePath = `assets/${filename}`;
+
+    // Convert file to base64
+    const content = await fileToBase64(file);
+
+    // Upload the file
+    const response = await octokit.repos.createOrUpdateFileContents({
+      owner,
+      repo,
+      path: filePath,
+      message: `Upload image: ${filename}`,
+      content,
+    });
+
+    console.log('Image uploaded successfully');
+
+    // Return the URL of the uploaded image
+    return `https://raw.githubusercontent.com/${owner}/${repo}/main/${filePath}`;
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    throw error;
+  }
+}
+
+async function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        // Remove the data URL prefix (e.g., "data:image/png;base64,")
+        resolve(reader.result.split(',')[1]);
+      } else {
+        reject(new Error('Failed to convert file to base64'));
+      }
+    };
+    reader.onerror = (error) => reject(error);
+  });
 }
