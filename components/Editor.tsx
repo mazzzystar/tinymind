@@ -37,6 +37,7 @@ export default function Editor({
   );
   const [isPreview, setIsPreview] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isImageUploading, setIsImageUploading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const t = useTranslations("HomePage");
   const { data: session } = useSession();
@@ -160,46 +161,52 @@ export default function Editor({
     }
   };
 
-  const handleImageUpload = async (file: File) => {
-    if (!session?.accessToken) {
-      toast({
-        title: t("error"),
-        description: t("notAuthenticated"),
-        variant: "destructive",
-        duration: 3000,
-      });
-      return;
-    }
-
-    try {
-      const imageUrl = await uploadImage(file, session.accessToken);
-      const imageMarkdown = `![${file.name}](${imageUrl})`;
-
-      if (cursorPosition !== null) {
-        const newContent =
-          content.slice(0, cursorPosition) +
-          imageMarkdown +
-          content.slice(cursorPosition);
-        setContent(newContent);
-      } else {
-        setContent((prevContent) => prevContent + "\n\n" + imageMarkdown);
+  const handleImageUpload = useCallback(
+    async (file: File) => {
+      if (!session?.accessToken) {
+        toast({
+          title: t("error"),
+          description: t("notAuthenticated"),
+          variant: "destructive",
+          duration: 3000,
+        });
+        return;
       }
 
-      toast({
-        title: t("uploadSuccess"),
-        description: t("imageInserted"),
-        duration: 3000,
-      });
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      toast({
-        title: t("error"),
-        description: t("imageUploadFailed"),
-        variant: "destructive",
-        duration: 3000,
-      });
-    }
-  };
+      setIsImageUploading(true);
+      try {
+        const imageUrl = await uploadImage(file, session.accessToken);
+        const imageMarkdown = `![${file.name}](${imageUrl})`;
+
+        if (cursorPosition !== null) {
+          const newContent =
+            content.slice(0, cursorPosition) +
+            imageMarkdown +
+            content.slice(cursorPosition);
+          setContent(newContent);
+        } else {
+          setContent((prevContent) => prevContent + "\n\n" + imageMarkdown);
+        }
+
+        toast({
+          title: t("success"),
+          description: t("imageUploaded"),
+          duration: 3000,
+        });
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        toast({
+          title: t("error"),
+          description: t("imageUploadFailed"),
+          variant: "destructive",
+          duration: 3000,
+        });
+      } finally {
+        setIsImageUploading(false);
+      }
+    },
+    [session?.accessToken, cursorPosition, content, toast, t]
+  );
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -208,7 +215,7 @@ export default function Editor({
           await handleImageUpload(file);
         } else {
           toast({
-            title: t("invalidFileType"),
+            title: t("error"),
             description: t("onlyImagesAllowed"),
             variant: "default",
             duration: 3000,
@@ -229,7 +236,12 @@ export default function Editor({
   });
 
   return (
-    <Card className="max-w-2xl mx-auto shadow-md border border-gray-100">
+    <Card className="max-w-2xl mx-auto shadow-md border border-gray-100 relative">
+      {(isLoading || isImageUploading) && (
+        <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
+          <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+        </div>
+      )}
       <CardHeader className="border-b border-gray-100 pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="flex flex-col items-start">
@@ -277,6 +289,7 @@ export default function Editor({
               placeholder={t("enterTitle")}
               required
               className="border-gray-200 focus:border-gray-300 focus:ring-gray-300"
+              disabled={isLoading || isImageUploading}
             />
           )}
 
@@ -289,6 +302,7 @@ export default function Editor({
                 className={`text-sm px-4 py-2 ${
                   !isPreview ? "bg-gray-100" : ""
                 }`}
+                disabled={isLoading || isImageUploading}
               >
                 {t("write")}
               </button>
@@ -298,6 +312,7 @@ export default function Editor({
                 className={`text-sm px-4 py-2 ${
                   isPreview ? "bg-gray-100 border-b-2 border-black" : ""
                 }`}
+                disabled={isLoading || isImageUploading}
               >
                 {t("preview")}
               </button>
@@ -316,6 +331,7 @@ export default function Editor({
                       handleImageUpload(e.target.files[0]);
                     }
                   }}
+                  disabled={isLoading || isImageUploading}
                 />
               </label>
             </div>
@@ -335,6 +351,7 @@ export default function Editor({
                 placeholder={t("writeContent")}
                 className="min-h-[300px] border-0 focus:ring-0"
                 required
+                disabled={isLoading || isImageUploading}
               />
             )}
             {isDragActive && (
@@ -353,7 +370,7 @@ export default function Editor({
           <div className="flex justify-center">
             <Button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || isImageUploading}
               className="px-12 py-5 bg-black hover:bg-gray-800"
             >
               {isLoading ? (

@@ -37,7 +37,12 @@
       "thoughtUpdated": "Gedanke erfolgreich aktualisiert",
       "blogPostCreated": "Blogbeitrag erfolgreich erstellt",
       "blogPostUpdated": "Blogbeitrag erfolgreich aktualisiert",
-      "cancel": "Abbrechen"
+      "cancel": "Abbrechen",
+      "imageUploaded": "Bild erfolgreich hochgeladen",
+      "imageUploadFailed": "Bild konnte nicht hochgeladen werden",
+      "onlyImagesAllowed": "Nur Bilddateien sind erlaubt",
+      "dropImageHere": "Bild hier ablegen",
+      "notAuthenticated": "Sie sind nicht authentifiziert. Bitte melden Sie sich an."
     },
     "metadata": {
       "title": "TinyMind - Schreiben und synchronisieren Sie Ihre Blogbeiträge und Gedanken mit einmaligem GitHub-Login",

@@ -37,7 +37,12 @@
     "thoughtUpdated": "Düşünce başarıyla güncellendi",
     "blogPostCreated": "Blog yazısı başarıyla oluşturuldu",
     "blogPostUpdated": "Blog yazısı başarıyla güncellendi",
-    "cancel": "İptal"
+    "cancel": "İptal",
+    "imageUploaded": "Resim başarıyla yüklendi",
+    "imageUploadFailed": "Resim yüklenemedi",
+    "onlyImagesAllowed": "Sadece resim dosyalarına izin verilir",
+    "dropImageHere": "Resmi buraya bırakın",
+    "notAuthenticated": "Kimlik doğrulaması yapılmadı. Lütfen giriş yapın."
   },
   "metadata": {
     "title": "TinyMind - Tek tıklamayla GitHub girişi ile blog yazılarınızı ve düşüncelerinizi yazın ve senkronize edin",

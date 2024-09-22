@@ -37,7 +37,12 @@
     "thoughtUpdated": "Pemikiran berhasil diperbarui",
     "blogPostCreated": "Postingan blog berhasil dibuat",
     "blogPostUpdated": "Postingan blog berhasil diperbarui",
-    "cancel": "Batal"
+    "cancel": "Batal",
+    "imageUploaded": "Gambar berhasil diunggah",
+    "imageUploadFailed": "Gagal mengunggah gambar",
+    "onlyImagesAllowed": "Hanya file gambar yang diizinkan",
+    "dropImageHere": "Jatuhkan gambar di sini",
+    "notAuthenticated": "Anda belum diautentikasi. Silakan masuk."
   },
   "metadata": {
     "title": "TinyMind - Tulis dan sinkronkan postingan blog dan pemikiran Anda dengan login satu klik GitHub",

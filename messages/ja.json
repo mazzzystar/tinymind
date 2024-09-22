@@ -37,7 +37,12 @@
     "thoughtUpdated": "アイデアが正常に更新されました",
     "blogPostCreated": "ブログ記事が正常に作成されました",
     "blogPostUpdated": "ブログ記事が正常に更新されました",
-    "cancel": "キャンセル"
+    "cancel": "キャンセル",
+    "imageUploaded": "画像が正常にアップロードされました",
+    "imageUploadFailed": "画像のアップロードに失敗しました",
+    "onlyImagesAllowed": "画像ファイルのみが許可されています",
+    "dropImageHere": "ここに画像をドロップしてください",
+    "notAuthenticated": "認証されていません。ログインしてください。"
   },
   "metadata": {
     "title": "TinyMind - GitHubワンクリックログインでブログ記事とアイデアを書いて同期",

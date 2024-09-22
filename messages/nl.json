@@ -37,7 +37,12 @@
     "thoughtUpdated": "Gedachte succesvol bijgewerkt",
     "blogPostCreated": "Blogpost succesvol aangemaakt",
     "blogPostUpdated": "Blogpost succesvol bijgewerkt",
-    "cancel": "Annuleren"
+    "cancel": "Annuleren",
+    "imageUploaded": "Afbeelding succesvol geüpload",
+    "imageUploadFailed": "Uploaden van afbeelding mislukt",
+    "onlyImagesAllowed": "Alleen afbeeldingsbestanden zijn toegestaan",
+    "dropImageHere": "Sleep de afbeelding hier naartoe",
+    "notAuthenticated": "U bent niet geauthenticeerd. Log alstublieft in."
   },
   "metadata": {
     "title": "TinyMind - Schrijf en synchroniseer je blogposts en gedachten met eenmalige GitHub-login",

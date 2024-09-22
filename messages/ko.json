@@ -37,7 +37,12 @@
     "thoughtUpdated": "아이디어가 성공적으로 업데이트되었습니다",
     "blogPostCreated": "블로그 게시물이 성공적으로 생성되었습니다",
     "blogPostUpdated": "블로그 게시물이 성공적으로 업데이트되었습니다",
-    "cancel": "취소"
+    "cancel": "취소",
+    "imageUploaded": "이미지가 성공적으로 업로드되었습니다",
+    "imageUploadFailed": "이미지 업로드 실패",
+    "onlyImagesAllowed": "이미지 파일만 허용됩니다",
+    "dropImageHere": "여기에 이미지를 드롭하세요",
+    "notAuthenticated": "인증되지 않았습니다. 로그인해 주세요."
   },
   "metadata": {
     "title": "TinyMind - 원클릭 GitHub 로그인으로 블로그 포스트와 생각을 작성하고 동기화하세요",

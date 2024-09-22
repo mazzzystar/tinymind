@@ -19,7 +19,7 @@
       "successPublished": "发布成功！可能需要长达30秒的时间才能显示。如果没有立即看到，请刷新。",
       "failedPublish": "发布失败",
       "readingFromGithub": "正在从GitHub读取数据...",
-      "publicContentWarning": "所有内容都是公开的。",
+      "publicContentWarning": "所有内���都是公开的。",
       "write": "写作",
       "preview": "预览",
       "noBlogPostsYet": "还没有博客文章",
@@ -37,7 +37,12 @@
       "thoughtUpdated": "想法已成功更新",
       "blogPostCreated": "博客文章已成功创建",
       "blogPostUpdated": "博客文章已成功更新",
-      "cancel": "取消"
+      "cancel": "取消",
+      "imageUploaded": "图片上传成功",
+      "imageUploadFailed": "图片上传失败",
+      "onlyImagesAllowed": "只允许图片文件",
+      "dropImageHere": "将图片拖放到这里",
+      "notAuthenticated": "您尚未通过身份验证。请登录。"
     },
     "metadata": {
       "title": "TinyMind - 用GitHub账号一键登录写作并同步你的博客和想法",

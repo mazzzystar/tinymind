@@ -37,7 +37,12 @@
     "thoughtUpdated": "Suy nghĩ đã được cập nhật thành công",
     "blogPostCreated": "Bài viết blog đã được tạo thành công",
     "blogPostUpdated": "Bài viết blog đã được cập nhật thành công",
-    "cancel": "Hủy"
+    "cancel": "Hủy",
+    "imageUploaded": "Tải lên hình ảnh thành công",
+    "imageUploadFailed": "Tải lên hình ảnh thất bại",
+    "onlyImagesAllowed": "Chỉ cho phép các tệp hình ảnh",
+    "dropImageHere": "Thả hình ảnh vào đây",
+    "notAuthenticated": "Bạn chưa được xác thực. Vui lòng đăng nhập."
   },
   "metadata": {
     "title": "TinyMind - Viết và đồng bộ hóa bài viết blog và suy nghĩ của bạn với đăng nhập GitHub một lần nhấp",
