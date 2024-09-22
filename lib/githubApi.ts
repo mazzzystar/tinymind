@@ -654,10 +654,14 @@ export async function uploadImage(file: File, accessToken: string): Promise<stri
     console.log('GitHub structure initialized');
 
     // Generate a unique filename
+    const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
     const id = Date.now().toString();
     const ext = path.extname(file.name);
     const filename = `${id}${ext}`;
-    const filePath = `assets/${filename}`;
+    const filePath = `assets/images/${date}/${filename}`;
+
+    // Ensure the directory exists
+    await ensureDirectoryExists(octokit, owner, repo, `assets/images/${date}`);
 
     // Convert file to base64
     const content = await fileToBase64(file);
@@ -670,6 +674,7 @@ export async function uploadImage(file: File, accessToken: string): Promise<stri
       message: `Upload image: ${filename}`,
       content,
     });
+    console.log(response);
 
     console.log('Image uploaded successfully');
 
@@ -678,6 +683,25 @@ export async function uploadImage(file: File, accessToken: string): Promise<stri
   } catch (error) {
     console.error('Error uploading image:', error);
     throw error;
+  }
+}
+
+async function ensureDirectoryExists(octokit: Octokit, owner: string, repo: string, path: string) {
+  try {
+    await octokit.repos.getContent({ owner, repo, path });
+  } catch (error) {
+    if (error instanceof Error && 'status' in error && error.status === 404) {
+      // Directory doesn't exist, create it
+      await octokit.repos.createOrUpdateFileContents({
+        owner,
+        repo,
+        path: `${path}/.gitkeep`,
+        message: `Create directory: ${path}`,
+        content: '',
+      });
+    } else {
+      throw error;
+    }
   }
 }
 

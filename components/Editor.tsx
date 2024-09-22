@@ -9,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import { CgImage } from "react-icons/cg";
 import { useTranslations } from "next-intl";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -41,6 +42,7 @@ export default function Editor({
   const { data: session } = useSession();
   const [editingThoughtId, setEditingThoughtId] = useState<string | null>(null);
   const { toast } = useToast();
+  const [cursorPosition, setCursorPosition] = useState<number | null>(null);
 
   const fetchThought = useCallback(
     async (id: string) => {
@@ -158,34 +160,52 @@ export default function Editor({
     }
   };
 
+  const handleImageUpload = async (file: File) => {
+    if (!session?.accessToken) {
+      toast({
+        title: t("error"),
+        description: t("notAuthenticated"),
+        variant: "destructive",
+        duration: 3000,
+      });
+      return;
+    }
+
+    try {
+      const imageUrl = await uploadImage(file, session.accessToken);
+      const imageMarkdown = `![${file.name}](${imageUrl})`;
+
+      if (cursorPosition !== null) {
+        const newContent =
+          content.slice(0, cursorPosition) +
+          imageMarkdown +
+          content.slice(cursorPosition);
+        setContent(newContent);
+      } else {
+        setContent((prevContent) => prevContent + "\n\n" + imageMarkdown);
+      }
+
+      toast({
+        title: t("uploadSuccess"),
+        description: t("imageInserted"),
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast({
+        title: t("error"),
+        description: t("imageUploadFailed"),
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
+  };
+
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       for (const file of acceptedFiles) {
         if (file.type.startsWith("image/")) {
-          try {
-            const imageUrl = await uploadImage(
-              file,
-              session?.accessToken ?? ""
-            );
-            setContent(
-              (prevContent) =>
-                `${prevContent}\n![${file.name}](${imageUrl})\n`
-            );
-            toast({
-              title: t("uploadSuccess"),
-              description: t("imageInserted"),
-              variant: "default",
-              duration: 3000,
-            });
-          } catch (error) {
-            console.error("Error uploading image:", error);
-            toast({
-              title: t("uploadError"),
-              description: t("uploadErrorDescription"),
-              variant: "destructive",
-              duration: 3000,
-            });
-          }
+          await handleImageUpload(file);
         } else {
           toast({
             title: t("invalidFileType"),
@@ -196,13 +216,16 @@ export default function Editor({
         }
       }
     },
-    [setContent, toast, t, session?.accessToken]
+    [handleImageUpload, toast, t]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     noClick: true,
     noKeyboard: true,
+    accept: {
+      "image/*": [],
+    },
   });
 
   return (
@@ -257,7 +280,7 @@ export default function Editor({
             />
           )}
 
-          <div className="border rounded-md" {...getRootProps()}>
+          <div className="border rounded-md relative" {...getRootProps()}>
             <input {...getInputProps()} />
             <div className="flex border-b">
               <button
@@ -278,6 +301,23 @@ export default function Editor({
               >
                 {t("preview")}
               </button>
+              <label
+                htmlFor="image-upload"
+                className="text-sm px-4 py-2 cursor-pointer hover:bg-gray-100"
+              >
+                <CgImage className="h-5 w-5" />
+                <input
+                  id="image-upload"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      handleImageUpload(e.target.files[0]);
+                    }
+                  }}
+                />
+              </label>
             </div>
             {isPreview ? (
               <div className="p-4 prose max-w-none">
@@ -289,6 +329,9 @@ export default function Editor({
               <Textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
+                onSelect={(e) =>
+                  setCursorPosition(e.currentTarget.selectionStart)
+                }
                 placeholder={t("writeContent")}
                 className="min-h-[300px] border-0 focus:ring-0"
                 required
@@ -296,7 +339,7 @@ export default function Editor({
             )}
             {isDragActive && (
               <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50">
-                <p className="text-lg font-semibold">Drop here</p>
+                <p className="text-lg font-semibold">{t("dropImageHere")}</p>
               </div>
             )}
           </div>
