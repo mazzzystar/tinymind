@@ -19,6 +19,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useDropzone } from "react-dropzone";
 import { Tooltip } from "react-tooltip";
 import { GrInfo } from "react-icons/gr";
+import { IoInformationCircle } from "react-icons/io";
 
 function removeFrontmatter(content: string): string {
   const frontmatterRegex = /^---\n([\s\S]*?)\n---\n/;
@@ -250,8 +251,8 @@ export default function Editor({
             {type === "blog" ? t("createBlogPost") : t("createThought")}
             <span className="mt-2 text-xs font-normal text-gray-400 flex items-center">
               <span className="text-gray-400">{t("publicContentWarning")}</span>
-              <GrInfo
-                className="m-1 cursor-pointer text-black"
+              <IoInformationCircle
+                className="ml-1 cursor-pointer text-gray-500"
                 data-tooltip-id="public-content-tooltip"
               />
               <Tooltip id="public-content-tooltip" place="top">

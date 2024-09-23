@@ -720,3 +720,69 @@ async function fileToBase64(file: File): Promise<string> {
     reader.onerror = (error) => reject(error);
   });
 }
+
+// Add these new functions to the existing file
+
+export async function getBlogPostsPublic(octokit: Octokit, owner: string, repo: string): Promise<BlogPost[]> {
+  try {
+    const response = await octokit.repos.getContent({
+      owner,
+      repo,
+      path: 'content/blog',
+    });
+
+    if (!Array.isArray(response.data)) {
+      return [];
+    }
+
+    const posts = await Promise.all(
+      response.data
+        .filter((file) => file.type === 'file' && file.name.endsWith('.md'))
+        .map(async (file) => {
+          const contentResponse = await octokit.repos.getContent({
+            owner,
+            repo,
+            path: `content/blog/${file.name}`,
+          });
+
+          if ('content' in contentResponse.data) {
+            const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf-8');
+            const titleMatch = content.match(/title:\s*(.+)/);
+            const dateMatch = content.match(/date:\s*(.+)/);
+
+            return {
+              id: file.name.replace('.md', ''),
+              title: titleMatch ? titleMatch[1] : file.name.replace('.md', ''),
+              content,
+              date: dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString(),
+            };
+          }
+        })
+    );
+
+    return posts.filter((post): post is BlogPost => post !== undefined);
+  } catch (error) {
+    console.error('Error fetching public blog posts:', error);
+    return [];
+  }
+}
+
+export async function getThoughtsPublic(octokit: Octokit, owner: string, repo: string): Promise<Thought[]> {
+  try {
+    const response = await octokit.repos.getContent({
+      owner,
+      repo,
+      path: 'content/thoughts.json',
+    });
+
+    if (Array.isArray(response.data) || !('content' in response.data)) {
+      return [];
+    }
+
+    const content = Buffer.from(response.data.content, 'base64').toString('utf-8');
+    return JSON.parse(content) as Thought[];
+  } catch (error) {
+    console.error('Error fetching public thoughts:', error);
+    return [];
+  }
+}
