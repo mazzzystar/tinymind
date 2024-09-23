@@ -30,9 +30,6 @@ import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import type { BlogPost } from "@/lib/githubApi";
 import GitHubSignInButton from "@/components/GitHubSignInButton";
-import Lightbox from "@/components/Lightbox";
-import { parseImagesFromMarkdown } from "@/components/Lightbox";
-import Image from "next/image";
 
 function decodeContent(content: string): string {
   try {
@@ -54,11 +51,8 @@ export default function BlogPost({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { toast } = useToast();
   const [post, setPost] = useState<BlogPost | null>(null);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const t = useTranslations("HomePage");
-  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
-  const [images, setImages] = useState<string[]>([]);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -75,8 +69,6 @@ export default function BlogPost({ params }: { params: { id: string } }) {
         }
         const fetchedPost = await response.json();
         setPost(fetchedPost);
-        const parsedImages = parseImagesFromMarkdown(fetchedPost.content);
-        setImages(parsedImages);
       } catch (error) {
         console.error("Error fetching blog post:", error);
         toast({
@@ -87,7 +79,7 @@ export default function BlogPost({ params }: { params: { id: string } }) {
       }
     };
     fetchPost();
-  }, [params.id, router, session, status, toast, t]); // Add 't' here
+  }, [params.id, router, session, status, toast]);
 
   const handleDeleteBlogPost = async () => {
     if (!session?.accessToken) {
@@ -230,43 +222,12 @@ export default function BlogPost({ params }: { params: { id: string } }) {
               a: ({ ...props }) => (
                 <a {...props} target="_blank" rel="noopener noreferrer" />
               ),
-              img: ({ src, alt }) => (
-                <Image
-                  src={src || ""}
-                  alt={alt || ""}
-                  width={500} // Adjust as needed
-                  height={300} // Adjust as needed
-                  className="rounded-lg cursor-pointer"
-                  onClick={() => {
-                    const index = images.indexOf(src || "");
-                    if (index !== -1) {
-                      setCurrentImageIndex(index);
-                      setLightboxImage(src || "");
-                    }
-                  }}
-                />
-              ),
             }}
           >
             {contentWithoutFrontmatter}
           </ReactMarkdown>
         </div>
       </CardContent>
-      {lightboxImage && images.length > 0 && (
-        <Lightbox
-          images={images}
-          currentIndex={currentImageIndex}
-          onClose={() => setLightboxImage(null)}
-          onPrev={() =>
-            setCurrentImageIndex(
-              (prev) => (prev - 1 + images.length) % images.length
-            )
-          }
-          onNext={() =>
-            setCurrentImageIndex((prev) => (prev + 1) % images.length)
-          }
-        />
-      )}
     </Card>
   );
 }
