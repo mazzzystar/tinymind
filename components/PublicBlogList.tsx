@@ -8,9 +8,13 @@ export default function PublicBlogList({
   posts: BlogPost[];
   username: string;
 }) {
+  const sortedPosts = [...posts].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+
   return (
     <div className="space-y-4">
-      {posts.map((post) => (
+      {sortedPosts.map((post) => (
         <div key={post.id} className="border-b pb-4">
           <Link
             href={`/${username}/blog/${post.id}`}
