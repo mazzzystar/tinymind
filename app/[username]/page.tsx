@@ -2,7 +2,6 @@ import { Octokit } from "@octokit/rest";
 import { getBlogPostsPublic, getThoughtsPublic } from "@/lib/githubApi";
 import PublicThoughtsList from "@/components/PublicThoughtsList";
 import PublicBlogList from "@/components/PublicBlogList";
-import { useTranslations } from "next-intl";
 
 export default async function PublicHomePage({
   params,
@@ -11,7 +10,6 @@ export default async function PublicHomePage({
 }) {
   const octokit = new Octokit();
   const username = params.username;
-  const t = useTranslations("HomePage");
 
   try {
     const blogPosts = await getBlogPostsPublic(
@@ -32,11 +30,11 @@ export default async function PublicHomePage({
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h2 className="text-2xl font-semibold mb-4">{t("blog")}</h2>
+            <h2 className="text-2xl font-semibold mb-4">Blog Posts</h2>
             <PublicBlogList posts={blogPosts} />
           </div>
           <div>
-            <h2 className="text-2xl font-semibold mb-4">{t("thoughts")}</h2>
+            <h2 className="text-2xl font-semibold mb-4">Thoughts</h2>
             <PublicThoughtsList thoughts={thoughts} />
           </div>
         </div>
