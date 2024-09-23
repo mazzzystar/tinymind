@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { getThoughts, Thought } from "@/lib/githubApi";
+import { Thought } from "@/lib/githubApi";
 import GitHubSignInButton from "./GitHubSignInButton";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -28,54 +28,32 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
+import Lightbox from "./Lightbox";
+import { parseImagesFromMarkdown } from "@/components/Lightbox";
+import Image from "next/image";
 
 export default function ThoughtsList() {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [error] = useState<string | null>(null);
+  const [isLoading] = useState(true);
   const [thoughtToDelete, setThoughtToDelete] = useState<string | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+  const [lightboxImages, setLightboxImages] = useState<string[]>([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { data: session, status } = useSession();
   const router = useRouter();
   const t = useTranslations("HomePage");
   const { toast } = useToast();
 
   useEffect(() => {
-    async function fetchThoughts() {
-      if (status === "loading") return;
-      if (status === "unauthenticated") {
-        setError("Please log in to view thoughts");
-        setIsLoading(false);
-        return;
-      }
-      if (!session?.accessToken) {
-        setError("Access token not available");
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        const fetchedThoughts = await getThoughts(session.accessToken);
-        setThoughts(fetchedThoughts);
-        setError(null);
-      } catch (error) {
-        console.error("Error fetching thoughts:", error);
-        if (
-          error instanceof Error &&
-          (error.message.includes("Bad credentials") ||
-            error.message.includes("Failed to get authenticated user"))
-        ) {
-          setError("authentication_failed");
-        } else {
-          setThoughts([]);
-        }
-      } finally {
-        setIsLoading(false);
-      }
+    if (thoughts.length > 0) {
+      const allImages = thoughts.flatMap((thought) =>
+        parseImagesFromMarkdown(thought.content)
+      );
+      setLightboxImages(allImages);
     }
-
-    fetchThoughts();
-  }, [session, status]);
+  }, [thoughts]);
 
   const handleDeleteThought = async (id: string) => {
     if (!session?.accessToken) {
@@ -243,6 +221,22 @@ export default function ThoughtsList() {
                       </code>
                     );
                   },
+                  img: ({ src, alt }) => (
+                    <Image
+                      src={src || ""}
+                      alt={alt || ""}
+                      width={500}
+                      height={300}
+                      className="rounded-lg cursor-pointer"
+                      onClick={() => {
+                        const index = lightboxImages.indexOf(src || "");
+                        if (index !== -1) {
+                          setCurrentImageIndex(index);
+                          setLightboxImage(src || "");
+                        }
+                      }}
+                    />
+                  ),
                 }}
               >
                 {thought.content}
@@ -254,6 +248,22 @@ export default function ThoughtsList() {
           </div>
         ))}
       </div>
+      {lightboxImage && lightboxImages.length > 0 && (
+        <Lightbox
+          images={lightboxImages}
+          currentIndex={currentImageIndex}
+          onClose={() => setLightboxImage(null)}
+          onPrev={() =>
+            setCurrentImageIndex(
+              (prev) =>
+                (prev - 1 + lightboxImages.length) % lightboxImages.length
+            )
+          }
+          onNext={() =>
+            setCurrentImageIndex((prev) => (prev + 1) % lightboxImages.length)
+          }
+        />
+      )}
     </div>
   );
 }
