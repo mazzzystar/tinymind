@@ -7,19 +7,23 @@ import { FaGithub } from "react-icons/fa"; // Change this import
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 
-export default function Header() {
+export default function Header({ username }: { username?: string }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const t = useTranslations("HomePage");
 
+  const isUserPage = !!username;
+
   // Determine the active tab based on the current pathname and search params
-  const activeTab =
-    pathname.startsWith("/blog") || searchParams.get("type") === "blog"
-      ? "blog"
-      : pathname.startsWith("/thoughts") ||
-        searchParams.get("type") === "thought"
+  const activeTab = isUserPage
+    ? pathname.includes("/thoughts")
       ? "thoughts"
-      : "thoughts";
+      : "blog"
+    : pathname.startsWith("/blog") || searchParams.get("type") === "blog"
+    ? "blog"
+    : pathname.startsWith("/thoughts") || searchParams.get("type") === "thought"
+    ? "thoughts"
+    : "thoughts";
 
   return (
     <header className="fixed top-0 left-0 right-0 py-4 bg-card shadow z-10">
@@ -37,7 +41,9 @@ export default function Header() {
                 }`}
                 asChild
               >
-                <Link href="/blog">{t("blog")}</Link>
+                <Link href={isUserPage ? `/${username}` : "/blog"}>
+                  {t("blog")}
+                </Link>
               </Button>
               <Button
                 variant="ghost"
@@ -46,7 +52,9 @@ export default function Header() {
                 }`}
                 asChild
               >
-                <Link href="/thoughts">{t("thoughts")}</Link>
+                <Link href={isUserPage ? `/${username}/thoughts` : "/thoughts"}>
+                  {t("thoughts")}
+                </Link>
               </Button>
             </div>
           </div>
