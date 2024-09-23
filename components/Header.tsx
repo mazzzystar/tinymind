@@ -41,7 +41,7 @@ export default function Header({ username }: { username?: string }) {
                 }`}
                 asChild
               >
-                <Link href={isUserPage ? `/${username}` : "/blog"}>
+                <Link href={isUserPage ? `/${username}/blog` : "/blog"}>
                   {t("blog")}
                 </Link>
               </Button>

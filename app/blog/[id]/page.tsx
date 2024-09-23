@@ -190,7 +190,7 @@ export default function BlogPost({ params }: { params: { id: string } }) {
         </DialogContent>
       </Dialog>
       <CardContent>
-        <div className="prose prose-sm max-w-none dark:prose-invert">
+        <div className="prose max-w-none dark:prose-invert">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
