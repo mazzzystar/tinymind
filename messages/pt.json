@@ -42,7 +42,8 @@
     "imageUploadFailed": "Falha ao carregar a imagem",
     "onlyImagesAllowed": "Apenas arquivos de imagem são permitidos",
     "dropImageHere": "Solte a imagem aqui",
-    "notAuthenticated": "Você não está autenticado. Por favor, faça login."
+    "notAuthenticated": "Você não está autenticado. Por favor, faça login.",
+    "publicContentTooltip": "Solicitamos apenas permissão de leitura/escrita do repositório público, então não podemos criar repositórios privados."
   },
   "metadata": {
     "title": "TinyMind - Escreva e sincronize suas postagens no blog e pensamentos com login de um clique no GitHub",

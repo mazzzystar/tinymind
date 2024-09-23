@@ -17,6 +17,8 @@ import { getThoughts, uploadImage } from "@/lib/githubApi";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/components/ui/use-toast";
 import { useDropzone } from "react-dropzone";
+import { Tooltip } from "react-tooltip";
+import { AiOutlineInfoCircle } from "react-icons/ai";
 
 function removeFrontmatter(content: string): string {
   const frontmatterRegex = /^---\n([\s\S]*?)\n---\n/;
@@ -246,8 +248,15 @@ export default function Editor({
         <div className="flex items-center justify-between">
           <CardTitle className="flex flex-col items-start">
             {type === "blog" ? t("createBlogPost") : t("createThought")}
-            <span className="mt-2 text-xs font-normal text-gray-400">
+            <span className="mt-2 text-xs font-normal text-gray-400 flex items-center">
               {t("publicContentWarning")}
+              <AiOutlineInfoCircle
+                className="ml-1 cursor-pointer"
+                data-tooltip-id="public-content-tooltip"
+              />
+              <Tooltip id="public-content-tooltip" place="top">
+                {t("publicContentTooltip")}
+              </Tooltip>
             </span>
           </CardTitle>
         </div>

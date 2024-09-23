@@ -42,7 +42,8 @@
     "imageUploadFailed": "Resim yüklenemedi",
     "onlyImagesAllowed": "Sadece resim dosyalarına izin verilir",
     "dropImageHere": "Resmi buraya bırakın",
-    "notAuthenticated": "Kimlik doğrulaması yapılmadı. Lütfen giriş yapın."
+    "notAuthenticated": "Kimlik doğrulaması yapılmadı. Lütfen giriş yapın.",
+    "publicContentTooltip": "Sadece genel depo okuma/yazma izni istiyoruz, bu nedenle özel depolar oluşturamıyoruz."
   },
   "metadata": {
     "title": "TinyMind - Tek tıklamayla GitHub girişi ile blog yazılarınızı ve düşüncelerinizi yazın ve senkronize edin",

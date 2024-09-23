@@ -42,7 +42,8 @@
     "imageUploadFailed": "Nie udało się przesłać obrazu",
     "onlyImagesAllowed": "Dozwolone są tylko pliki obrazów",
     "dropImageHere": "Upuść obraz tutaj",
-    "notAuthenticated": "Nie jesteś uwierzytelniony. Proszę się zalogować."
+    "notAuthenticated": "Nie jesteś uwierzytelniony. Proszę się zalogować.",
+    "publicContentTooltip": "Prosimy tylko o uprawnienia do odczytu/zapisu publicznego repozytorium, więc nie możemy tworzyć prywatnych repozytoriów."
   },
   "metadata": {
     "title": "TinyMind - Escreva e sincronize seus posts no blog e pensamentos com login único no GitHub",

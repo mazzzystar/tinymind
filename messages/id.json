@@ -20,6 +20,7 @@
     "failedPublish": "Gagal menerbitkan",
     "readingFromGithub": "Membaca data dari GitHub...",
     "publicContentWarning": "Semua konten bersifat publik.",
+    "publicContentTooltip": "Kami hanya meminta izin baca/tulis repositori publik, jadi kami tidak dapat membuat repositori pribadi.",
     "write": "Tulis",
     "preview": "Pratinjau",
     "noBlogPostsYet": "Belum ada postingan blog",

@@ -42,7 +42,8 @@
       "imageUploadFailed": "图片上传失败",
       "onlyImagesAllowed": "只允许图片文件",
       "dropImageHere": "将图片拖放到这里",
-      "notAuthenticated": "您尚未通过身份验证。请登录。"
+      "notAuthenticated": "您尚未通过身份验证。请登录。",
+      "publicContentTooltip": "我们只请求公共仓库的读/写权限，无法创建私有仓库。"
     },
     "metadata": {
       "title": "TinyMind - 用GitHub账号一键登录写作并同步你的博客和想法",

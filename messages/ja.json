@@ -42,7 +42,8 @@
     "imageUploadFailed": "画像のアップロードに失敗しました",
     "onlyImagesAllowed": "画像ファイルのみが許可されています",
     "dropImageHere": "ここに画像をドロップしてください",
-    "notAuthenticated": "認証されていません。ログインしてください。"
+    "notAuthenticated": "認証されていません。ログインしてください。",
+    "publicContentTooltip": "パブリックリポジトリの読み取り/書き込み権限のみを要求するため、プライベートリポジトリを作成することはできません。"
   },
   "metadata": {
     "title": "TinyMind - GitHubワンクリックログインでブログ記事とアイデアを書いて同期",
