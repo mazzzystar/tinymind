@@ -22,6 +22,19 @@ const nextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: '/:username/manifest.json',
+        destination: '/api/manifest/:username',
+      },
+      // Keep the root manifest.json as is
+      {
+        source: '/manifest.json',
+        destination: '/manifest.json',
+      },
+    ];
+  },
 }
 
 export default withNextIntl(nextConfig);

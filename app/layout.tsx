@@ -29,6 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description,
+    manifest: "/manifest.json", // Add this line for the root manifest
     openGraph: {
       title,
       description,
@@ -70,7 +71,6 @@ export default async function RootLayout({
         />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icon-144.jpg" />
       </Head>
       <Script
@@ -96,7 +96,6 @@ export default async function RootLayout({
           </SessionProvider>
         </NextIntlClientProvider>
       </body>
-      <link rel="manifest" href="manifest.json" />
     </html>
   );
 }
