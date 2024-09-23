@@ -4,6 +4,13 @@ Turn your GitHub into a blog & memo data storage place with one-click Sign in. N
 
 https://github.com/user-attachments/assets/4c9f590e-dd1e-4e9f-95a0-45b236752494
 
+## Demo Page
+[tinymind.me/mazzzystar](https://tinymind.me/mazzzystar)
+
+<img width="1188" alt="image" src="https://github.com/user-attachments/assets/2a74609d-da01-4085-ad9d-73b7825c4528">
+
+
+
 ## How It Works
 
 1. We create a public repository named `tinymind-blog` in your GitHub account.
@@ -23,7 +30,7 @@ Your data remains secure:
 - [x] Blog and Thoughts support Markdown
 - [x] Add a feature to let writers manage their own blogs (add, delete, edit posts)
 - [x] Supports user drag-and-drop image uploads
-- [ ] Shareable user main pages (e.g., [tinymind.me/mazzzystar](https://www.tinymind.me/mazzzystar))
+- [x] Shareable user main pages (e.g., [tinymind.me/mazzzystar](https://www.tinymind.me/mazzzystar))
 - [ ] Create a showcase page for all public TinyMind writers (creator list)
 
 🙋 Contributors wanted!
