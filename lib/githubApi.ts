@@ -752,7 +752,7 @@ export async function getBlogPostsPublic(octokit: Octokit, owner: string, repo: 
 
             return {
               id: file.name.replace('.md', ''),
-              title: titleMatch ? titleMatch[1] : file.name.replace('.md', ''),
+              title: titleMatch ? decodeURIComponent(titleMatch[1]) : decodeURIComponent(file.name.replace('.md', '')),
               content,
               date: dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString(),
             };
