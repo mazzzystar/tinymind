@@ -41,10 +41,13 @@
       "cancel": "Cancel",
       "publicContentTooltip": "We only request public repository read/write permission, so we can't create private repositories.",
       "myHomepage": "My Homepage",
-      "dataStoredOnGithub": "Data Stored on GitHub"
+      "dataStoredOnGithub": "Data Stored on GitHub",
+      "blogTitle": "'s TinyMind Blog",
+      "blogShortTitle": "'s Blog",
+      "blogDescription": "Write and sync blog in Markdown with data stored in GitHub."
     },
     "metadata": {
       "title": "TinyMind - Write and sync your blog posts & thoughts with one-click GitHub sign-in",
-      "description": "Write and preserve your blogs, thoughts, and notes effortlessly. Sign in with GitHub to automatically sync your content to your own repository, ensuring your ideas are safely stored as long as GitHub exists."
+      "description": "Write and sync blog in Markdown with data stored in GitHub."
     }
   }

@@ -45,7 +45,10 @@
     "notAuthenticated": "인증되지 않았습니다. 로그인해 주세요.",
     "publicContentTooltip": "공개 저장소 읽기/쓰기 권한만 요청하므로 비공개 저장소를 만들 수 없습니다.",
     "myHomepage": "내 홈페이지",
-    "dataStoredOnGithub": "GitHub에 저장된 데이터"
+    "dataStoredOnGithub": "GitHub에 저장된 데이터",
+    "blogTitle": "의 TinyMind 블로그",
+    "blogShortTitle": "의 블로그",
+    "blogDescription": "GitHub에 저장된 데이터로 Markdown으로 블로그를 작성하고 동기화합니다."
   },
   "metadata": {
     "title": "TinyMind - 원클릭 GitHub 로그인으로 블로그 포스트와 생각을 작성하고 동기화하세요",

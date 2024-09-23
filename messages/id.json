@@ -45,7 +45,10 @@
     "dropImageHere": "Jatuhkan gambar di sini",
     "notAuthenticated": "Anda belum diautentikasi. Silakan masuk.",
     "myHomepage": "Beranda Saya",
-    "dataStoredOnGithub": "Data Disimpan di GitHub"
+    "dataStoredOnGithub": "Data Disimpan di GitHub",
+    "blogTitle": " Blog TinyMind",
+    "blogShortTitle": " Blog",
+    "blogDescription": "Tulis dan sinkronkan blog dalam Markdown dengan data yang disimpan di GitHub."
   },
   "metadata": {
     "title": "TinyMind - Tulis dan sinkronkan postingan blog dan pemikiran Anda dengan login satu klik GitHub",

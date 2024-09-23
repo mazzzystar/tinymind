@@ -45,7 +45,10 @@
     "notAuthenticated": "Вы не аутентифицированы. Пожалуйста, войдите в систему.",
     "publicContentTooltip": "Мы запрашиваем только разрешение на чтение/запись публичного репозитория, поэтому мы не можем создавать частные репозитории.",
     "myHomepage": "Моя домашняя страница",
-    "dataStoredOnGithub": "Данные хранятся на GitHub"
+    "dataStoredOnGithub": "Данные хранятся на GitHub",
+    "blogTitle": " Блог TinyMind",
+    "blogShortTitle": " Блог",
+    "blogDescription": "Пишите и синхронизируйте блоги в Markdown с данными, хранящимися в GitHub."
   },
   "metadata": {
     "title": "TinyMind - Пишите и синхронизируйте свои записи в блоге и мысли с помощью одноразового входа в GitHub",

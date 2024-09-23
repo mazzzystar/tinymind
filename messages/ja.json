@@ -45,7 +45,10 @@
     "notAuthenticated": "認証されていません。ログインしてください。",
     "publicContentTooltip": "パブリックリポジトリの読み取り/書き込み権限のみを要求するため、プライベートリポジトリを作成することはできません。",
     "myHomepage": "マイホームページ",
-    "dataStoredOnGithub": "GitHubに保存されたデータ"
+    "dataStoredOnGithub": "GitHubに保存されたデータ",
+    "blogTitle": " の TinyMind ブログ",
+    "blogShortTitle": " のブログ",
+    "blogDescription": "GitHubに保存されたデータでMarkdownでブログを書いて同期します。"
   },
   "metadata": {
     "title": "TinyMind - GitHubワンクリックログインでブログ記事とアイデアを書いて同期",

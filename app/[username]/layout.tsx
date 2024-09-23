@@ -1,4 +1,15 @@
 import Header from "@/components/Header";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { username: string };
+}): Promise<Metadata> {
+  return {
+    manifest: `/api/manifest/${params.username}`,
+  };
+}
 
 export default function UserLayout({
   children,

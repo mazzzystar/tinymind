@@ -19,7 +19,7 @@
     "successPublished": "發佈成功！可能需要長達30秒的時間才能顯示。如果沒有立即看到，請重新整理。",
     "failedPublish": "發佈失敗",
     "readingFromGithub": "正在從GitHub讀取數據...",
-    "publicContentWarning": "所有���容都是公開的。",
+    "publicContentWarning": "所有都是公開的。",
     "write": "寫作",
     "preview": "預覽",
     "noBlogPostsYet": "還沒有網誌文章",
@@ -45,10 +45,13 @@
     "notAuthenticated": "您尚未通過身份驗證。請登入。",
     "publicContentTooltip": "我們只請求公共儲存庫的讀/寫權限，因此無法創建私人儲存庫。",
     "myHomepage": "我的主頁",
-    "dataStoredOnGithub": "數據存儲在GitHub"
+    "dataStoredOnGithub": "數據存儲在GitHub",
+    "blogTitle": " 的 TinyMind 網誌",
+    "blogShortTitle": " 的網誌",
+    "blogDescription": "使用Markdown編寫網誌並同步，數據存儲在GitHub中。"
   },
   "metadata": {
     "title": "TinyMind - 用GitHub帳戶一鍵登入寫作並同步你的網誌和想法",
-    "description": "輕鬆寫作並保存您的網誌、想法和筆記。使用GitHub登入自動將您的內容同步到您自己的儲存庫。只要Github還活著，您的日記數據就不會丟失。"
+    "description": "使用Markdown編寫網誌並同步，數據存儲在GitHub中。"
   }
 }

@@ -45,7 +45,10 @@
     "notAuthenticated": "คุณยังไม่ได้รับการตรวจสอบสิทธิ์ กรุณาเข้าสู่ระบบ",
     "publicContentTooltip": "เราขออนุญาตอ่าน/เขียนที่เก็บสาธารณะเท่านั้น ดังนั้นเราจึงไม่สามารถสร้างที่เก็บส่วนตัวได้",
     "myHomepage": "หน้าแรกของฉัน",
-    "dataStoredOnGithub": "ข้อมูลที่เก็บไว้ใน GitHub"
+    "dataStoredOnGithub": "ข้อมูลที่เก็บไว้ใน GitHub",
+    "blogTitle": " บล็อก TinyMind ของ",
+    "blogShortTitle": " บล็อกของ",
+    "blogDescription": "เขียนและซิงค์บล็อกใน Markdown โดยเก็บข้อมูลไว้ใน GitHub"
   },
   "metadata": {
     "title": "TinyMind - เขียนและซิงค์โพสต์บล็อกและความคิดของคุณด้วยการลงชื่อเข้าใช้ GitHub เพียงคลิกเดียว",

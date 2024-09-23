@@ -45,7 +45,10 @@
     "dropImageHere": "छवि यहाँ छोड़ें",
     "notAuthenticated": "आप प्रमाणित नहीं हैं। कृपया साइन इन करें।",
     "myHomepage": "मेरा होमपेज",
-    "dataStoredOnGithub": "GitHub पर संग्रहीत डेटा"
+    "dataStoredOnGithub": "GitHub पर संग्रहीत डेटा",
+    "blogTitle": " का TinyMind ब्लॉग",
+    "blogShortTitle": " का ब्लॉग",
+    "blogDescription": "GitHub में संग्रहीत डेटा के साथ Markdown में ब्लॉग लिखें और सिंक करें।"
   },
   "metadata": {
     "title": "TinyMind - एक-क्लिक GitHub साइन-इन के ाथ अपने ब्लॉग पोस्ट और विचारों को लिखें और सिंक करें",

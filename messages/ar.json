@@ -36,7 +36,7 @@
     "thoughtCreated": "تم إنشاء الفكرة بنجاح",
     "thoughtUpdated": "تم تحديث الفكرة بنجاح",
     "blogPostCreated": "تم إنشاء منشور المدونة بنجاح",
-    "blogPostUpdated": "تم تحديث منشور لمدونة بنجاح",
+    "blogPostUpdated": "ت تحديث منشور لمدونة بنجاح",
     "cancel": "إلغاء",
     "imageUploaded": "تم رفع الصورة بنجاح",
     "imageUploadFailed": "فشل في رفع الصورة",
@@ -45,10 +45,13 @@
     "notAuthenticated": "أنت غير مصادق عليه. يرجى تسجيل الدخول.",
     "publicContentTooltip": "نحن نطلب فقط إذن القراءة/الكتابة للمستودع العام، لذا لا يمكننا إنشاء مستودعات خاصة.",
     "myHomepage": "صفحتي الرئيسية",
-    "dataStoredOnGithub": "البيانات المخزنة على GitHub"
+    "dataStoredOnGithub": "البيانات المخزنة على GitHub",
+    "blogTitle": " مدونة TinyMind الخاصة بـ",
+    "blogShortTitle": " مدونة",
+    "blogDescription": "اكتب وزامن المدونة بصيغة Markdown مع تخزين البيانات في GitHub."
   },
   "metadata": {
     "title": "TinyMind - اكتب وزامن منشورات مدونتك وأفكارك بتسجيل دخول GitHub بنقرة واحدة",
-    "description": "اكتب واحفظ مدوناتك وأفكارك وملاحظاتك بسهولة. سجل الدخول باستخدام GitHub لمزامنة المحتوى الخاص بك تلقائيًا مع مستودعك الخاص، مما يضمن بقاء أفكارك مخزنة بأمان طالما أن GitHub موجود."
+    "description": "اكتب وزامن المدونة بصيغة Markdown مع تخزين البيانات في GitHub."
   }
 }

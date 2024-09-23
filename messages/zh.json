@@ -45,10 +45,13 @@
       "notAuthenticated": "您尚未通过身份验证。请登录。",
       "publicContentTooltip": "我们只请求公共仓库的读/写权限，无法创建私有仓库。",
       "myHomepage": "我的主页",
-      "dataStoredOnGithub": "数据存储在GitHub"
+      "dataStoredOnGithub": "数据存储在GitHub",
+      "blogTitle": " 的 TinyMind 博客",
+      "blogShortTitle": " 的博客",
+      "blogDescription": "使用Markdown编写博客并同步，数据存储在GitHub中。"
     },
     "metadata": {
       "title": "TinyMind - 用GitHub账号一键登录写作并同步你的博客和想法",
-      "description": "轻松写作并保存您的博客、想法和笔记。使用GitHub登录自动将您的内容同步到您自己的仓库。只要Github还活着，您的日记数据就不会丢失。"
+      "description": "使用Markdown编写博客并同步，数据存储在GitHub中。"
     }
   }

@@ -45,7 +45,10 @@
     "notAuthenticated": "Non sei autenticato. Per favore, accedi.",
     "publicContentTooltip": "Richiediamo solo l'autorizzazione di lettura/scrittura del repository pubblico, quindi non possiamo creare repository privati.",
     "myHomepage": "La mia homepage",
-    "dataStoredOnGithub": "Dati memorizzati su GitHub"
+    "dataStoredOnGithub": "Dati memorizzati su GitHub",
+    "blogTitle": " Blog TinyMind di",
+    "blogShortTitle": " Blog di",
+    "blogDescription": "Scrivi e sincronizza blog in Markdown con dati archiviati su GitHub."
   },
   "metadata": {
     "title": "TinyMind - Scrivi e sincronizza i tuoi post sul blog e pensieri con l'accesso a GitHub con un clic",
