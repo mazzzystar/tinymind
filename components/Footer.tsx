@@ -26,14 +26,21 @@ const Footer = () => {
 
   return (
     <footer className="fixed bottom-0 left-0 w-full border-t border-gray-200 bg-white py-3 text-center text-sm">
-      <div className="container mx-auto px-4 text-gray-400 hover:text-black transition-colors duration-200">
-        {t("dataStoredIn")}
+      <div className="container mx-auto px-4 text-gray-400">
+        <Link
+          href={`/${owner}`}
+          className="hover:text-black transition-colors duration-200 mr-4"
+        >
+          {t("myHomepage")}
+        </Link>
+        |
         <Link
           href={`https://github.com/${owner}/${repo}`}
           target="_blank"
           rel="noopener noreferrer"
+          className="hover:text-black transition-colors duration-200 ml-4"
         >
-          {`${owner}/${repo}`}
+          {t("dataStoredOnGithub")}
         </Link>
       </div>
     </footer>

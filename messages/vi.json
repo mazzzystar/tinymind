@@ -43,7 +43,9 @@
     "onlyImagesAllowed": "Chỉ cho phép các tệp hình ảnh",
     "dropImageHere": "Thả hình ảnh vào đây",
     "notAuthenticated": "Bạn chưa được xác thực. Vui lòng đăng nhập.",
-    "publicContentTooltip": "Chúng tôi chỉ yêu cầu quyền đọc/ghi kho lưu trữ công khai, vì vậy chúng tôi không thể tạo kho lưu trữ riêng tư."
+    "publicContentTooltip": "Chúng tôi chỉ yêu cầu quyền đọc/ghi kho lưu trữ công khai, vì vậy chúng tôi không thể tạo kho lưu trữ riêng tư.",
+    "myHomepage": "Trang chủ của tôi",
+    "dataStoredOnGithub": "Dữ liệu được lưu trữ trên GitHub"
   },
   "metadata": {
     "title": "TinyMind - Viết và đồng bộ hóa bài viết blog và suy nghĩ của bạn với đăng nhập GitHub một lần nhấp",

@@ -16,7 +16,7 @@
     "signInWithGitHub": "تسجيل الدخول باستخدام GitHub",
     "redirecting": "إعادة التوجيه...",
     "publishing": "جارٍ النشر...",
-    "successPublished": "تم النشر بنجاح! قد يستغرق ��لأمر ما يصل إلى 30 ثانية للظهور. قم بالتحديث إذا لم تره على الفور.",
+    "successPublished": "تم النشر بنجاح! قد يستغرق لأمر ما يصل إلى 30 ثانية للظهور. قم بالتحديث إذا لم تره على الفور.",
     "failedPublish": "فشل النشر",
     "readingFromGithub": "قراءة البيانات من GitHub...",
     "publicContentWarning": "كل المحتوى عام.",
@@ -36,14 +36,16 @@
     "thoughtCreated": "تم إنشاء الفكرة بنجاح",
     "thoughtUpdated": "تم تحديث الفكرة بنجاح",
     "blogPostCreated": "تم إنشاء منشور المدونة بنجاح",
-    "blogPostUpdated": "تم تحديث منشور ��لمدونة بنجاح",
+    "blogPostUpdated": "تم تحديث منشور لمدونة بنجاح",
     "cancel": "إلغاء",
     "imageUploaded": "تم رفع الصورة بنجاح",
     "imageUploadFailed": "فشل في رفع الصورة",
     "onlyImagesAllowed": "يُسمح فقط بملفات الصور",
     "dropImageHere": "أسقط الصورة هنا",
     "notAuthenticated": "أنت غير مصادق عليه. يرجى تسجيل الدخول.",
-    "publicContentTooltip": "نحن نطلب فقط إذن القراءة/الكتابة للمستودع العام، لذا لا يمكننا إنشاء مستودعات خاصة."
+    "publicContentTooltip": "نحن نطلب فقط إذن القراءة/الكتابة للمستودع العام، لذا لا يمكننا إنشاء مستودعات خاصة.",
+    "myHomepage": "صفحتي الرئيسية",
+    "dataStoredOnGithub": "البيانات المخزنة على GitHub"
   },
   "metadata": {
     "title": "TinyMind - اكتب وزامن منشورات مدونتك وأفكارك بتسجيل دخول GitHub بنقرة واحدة",

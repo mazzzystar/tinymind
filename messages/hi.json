@@ -43,7 +43,9 @@
     "imageUploadFailed": "छवि अपलोड करने में विफल",
     "onlyImagesAllowed": "केवल छवि फ़ाइलों की अनुमति है",
     "dropImageHere": "छवि यहाँ छोड़ें",
-    "notAuthenticated": "आप प्रमाणित नहीं हैं। कृपया साइन इन करें।"
+    "notAuthenticated": "आप प्रमाणित नहीं हैं। कृपया साइन इन करें।",
+    "myHomepage": "मेरा होमपेज",
+    "dataStoredOnGithub": "GitHub पर संग्रहीत डेटा"
   },
   "metadata": {
     "title": "TinyMind - एक-क्लिक GitHub साइन-इन के ाथ अपने ब्लॉग पोस्ट और विचारों को लिखें और सिंक करें",

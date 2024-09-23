@@ -43,7 +43,9 @@
       "onlyImagesAllowed": "Nur Bilddateien sind erlaubt",
       "dropImageHere": "Bild hier ablegen",
       "notAuthenticated": "Sie sind nicht authentifiziert. Bitte melden Sie sich an.",
-      "publicContentTooltip": "Wir fordern nur öffentliche Repository-Lese-/Schreibberechtigung an, daher können wir keine privaten Repositories erstellen."
+      "publicContentTooltip": "Wir fordern nur öffentliche Repository-Lese-/Schreibberechtigung an, daher können wir keine privaten Repositories erstellen.",
+      "myHomepage": "Meine Homepage",
+      "dataStoredOnGithub": "Daten auf GitHub gespeichert"
     },
     "metadata": {
       "title": "TinyMind - Schreiben und synchronisieren Sie Ihre Blogbeiträge und Gedanken mit einmaligem GitHub-Login",

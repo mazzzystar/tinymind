@@ -43,7 +43,9 @@
     "onlyImagesAllowed": "Alleen afbeeldingsbestanden zijn toegestaan",
     "dropImageHere": "Sleep de afbeelding hier naartoe",
     "notAuthenticated": "U bent niet geauthenticeerd. Log alstublieft in.",
-    "publicContentTooltip": "We vragen alleen om openbare repository lees-/schrijfrechten, dus we kunnen geen privérepository's maken."
+    "publicContentTooltip": "We vragen alleen om openbare repository lees-/schrijfrechten, dus we kunnen geen privérepository's maken.",
+    "myHomepage": "Mijn homepage",
+    "dataStoredOnGithub": "Gegevens opgeslagen op GitHub"
   },
   "metadata": {
     "title": "TinyMind - Schrijf en synchroniseer je blogposts en gedachten met eenmalige GitHub-login",

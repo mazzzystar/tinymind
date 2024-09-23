@@ -43,7 +43,9 @@
     "onlyImagesAllowed": "Solo se permiten archivos de imagen",
     "dropImageHere": "Suelta la imagen aquí",
     "notAuthenticated": "No estás autenticado. Por favor, inicia sesión.",
-    "publicContentTooltip": "Solo solicitamos permiso de lectura/escritura para repositorios públicos, por lo que no podemos crear repositorios privados."
+    "publicContentTooltip": "Solo solicitamos permiso de lectura/escritura para repositorios públicos, por lo que no podemos crear repositorios privados.",
+    "myHomepage": "Mi página de inicio",
+    "dataStoredOnGithub": "Datos almacenados en GitHub"
   },
   "metadata": {
     "title": "TinyMind - Escribe y sincroniza tus entradas de blog y pensamientos con un inicio de sesión en GitHub con un solo clic",

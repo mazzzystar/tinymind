@@ -39,7 +39,9 @@
       "blogPostCreated": "Blog post created successfully",
       "blogPostUpdated": "Blog post updated successfully",
       "cancel": "Cancel",
-      "publicContentTooltip": "We only request public repository read/write permission, so we can't create private repositories."
+      "publicContentTooltip": "We only request public repository read/write permission, so we can't create private repositories.",
+      "myHomepage": "My Homepage",
+      "dataStoredOnGithub": "Data Stored on GitHub"
     },
     "metadata": {
       "title": "TinyMind - Write and sync your blog posts & thoughts with one-click GitHub sign-in",

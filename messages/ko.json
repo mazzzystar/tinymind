@@ -17,7 +17,7 @@
     "redirecting": "리다이렉팅 중...",
     "publishing": "게시 중...",
     "successPublished": "성공적으로 게시되었습니다! 표시되는 데 최대 30초가 걸릴 수 있습니다. 즉시 보이지 않으면 새로고침하세요.",
-    "failedPublish": "게시��� 실패했습니다",
+    "failedPublish": "게시 실패했습니다",
     "readingFromGithub": "GitHub에서 데이터를 읽는 중...",
     "publicContentWarning": "모든 내용은 공개됩니다.",
     "write": "작성",
@@ -43,7 +43,9 @@
     "onlyImagesAllowed": "이미지 파일만 허용됩니다",
     "dropImageHere": "여기에 이미지를 드롭하세요",
     "notAuthenticated": "인증되지 않았습니다. 로그인해 주세요.",
-    "publicContentTooltip": "공개 저장소 읽기/쓰기 권한만 요청하므로 비공개 저장소를 만들 수 없습니다."
+    "publicContentTooltip": "공개 저장소 읽기/쓰기 권한만 요청하므로 비공개 저장소를 만들 수 없습니다.",
+    "myHomepage": "내 홈페이지",
+    "dataStoredOnGithub": "GitHub에 저장된 데이터"
   },
   "metadata": {
     "title": "TinyMind - 원클릭 GitHub 로그인으로 블로그 포스트와 생각을 작성하고 동기화하세요",
