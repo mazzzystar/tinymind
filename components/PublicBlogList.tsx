@@ -39,7 +39,7 @@ export default function PublicBlogList({
             {groupedPosts[Number(year)].map((post) => (
               <li key={post.id} className="flex items-center">
                 <Link
-                  href={`/${username}/blog/${post.id.replace(".md", "")}`}
+                  href={`/${username}/blog/${post.id}`}
                   className="text-gray-700 hover:text-gray-400 transition-colors duration-200"
                 >
                   {post.title}
