@@ -653,6 +653,11 @@ export async function uploadImage(
     const { owner, repo } = await getRepoInfo(accessToken);
     console.log('Repo info:', { owner, repo });
 
+    // Get the default branch
+    const { data: repoData } = await octokit.repos.get({ owner, repo });
+    const defaultBranch = repoData.default_branch;
+    console.log('Default branch:', defaultBranch);
+
     await initializeGitHubStructure(octokit, owner, repo);
     console.log('GitHub structure initialized');
 
@@ -687,10 +692,9 @@ export async function uploadImage(
       const parts = rawUrl.split('/');
       const username = parts[3];
       const repo = parts[4];
-      const branch = 'main'; // or 'main', depending on your default branch
-      const path = parts.slice(6).join('/'); // Changed from 5 to 6 to skip the extra 'main/'
+      const path = parts.slice(6).join('/');
       
-      return `https://github.com/${username}/${repo}/blob/${branch}/${path}?raw=true`;
+      return `https://github.com/${username}/${repo}/blob/${defaultBranch}/${path}?raw=true`;
     }
 
     throw new Error('Failed to get image URL');
