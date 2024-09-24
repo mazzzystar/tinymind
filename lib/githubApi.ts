@@ -161,18 +161,6 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
   const { owner, repo } = await getRepoInfo(accessToken);
   
   try {
-    await initializeGitHubStructure(octokit, owner, repo);
-  } catch (error) {
-    console.error('Error initializing GitHub structure:', error);
-    // If the repository already exists, we can continue
-    if (error instanceof Error && error.message.includes('name already exists')) {
-      console.log('Repository already exists, continuing...');
-    } else {
-      throw error;
-    }
-  }
-
-  try {
     const response = await octokit.repos.getContent({
       owner,
       repo,
@@ -241,7 +229,6 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
   }
   const octokit = getOctokit(accessToken);
   const { owner, repo } = await getRepoInfo(accessToken);
-  await initializeGitHubStructure(octokit, owner, repo);
 
   try {
     // Fetch the file content
@@ -295,18 +282,6 @@ export async function getThoughts(accessToken: string | undefined): Promise<Thou
   }
   const octokit = getOctokit(accessToken);
   const { owner, repo } = await getRepoInfo(accessToken);
-
-  try {
-    await initializeGitHubStructure(octokit, owner, repo);
-  } catch (error) {
-    console.error('Error initializing GitHub structure:', error);
-    // If the repository already exists, we can continue
-    if (error instanceof Error && error.message.includes('name already exists')) {
-      console.log('Repository already exists, continuing...');
-    } else {
-      throw error;
-    }
-  }
 
   try {
     const response = await octokit.repos.getContent({
