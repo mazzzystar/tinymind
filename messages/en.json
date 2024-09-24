@@ -40,7 +40,7 @@
       "blogPostUpdated": "Blog post updated successfully",
       "cancel": "Cancel",
       "publicContentTooltip": "We only request public repository read/write permission, so we can't create private repositories.",
-      "myHomepage": "My Homepage",
+      "myHomepage": "My Public Homepage",
       "dataStoredOnGithub": "Data Stored on GitHub",
       "blogTitle": "'s TinyMind Blog",
       "blogShortTitle": "'s Blog",
