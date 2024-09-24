@@ -297,6 +297,18 @@ export async function getThoughts(accessToken: string | undefined): Promise<Thou
   const { owner, repo } = await getRepoInfo(accessToken);
 
   try {
+    await initializeGitHubStructure(octokit, owner, repo);
+  } catch (error) {
+    console.error('Error initializing GitHub structure:', error);
+    // If the repository already exists, we can continue
+    if (error instanceof Error && error.message.includes('name already exists')) {
+      console.log('Repository already exists, continuing...');
+    } else {
+      throw error;
+    }
+  }
+
+  try {
     const response = await octokit.repos.getContent({
       owner,
       repo,
