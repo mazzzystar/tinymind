@@ -46,8 +46,8 @@ async function ensureRepoExists(octokit: Octokit, owner: string, repo: string) {
   try {
     const { data: repoData } = await octokit.repos.get({ owner, repo });
     
-    // Check if the repository description is empty
-    if (!repoData.description) {
+    // Check if the repository description is empty or starts with "About"
+    if (!repoData.description || repoData.description.startsWith("About")) {
       // Get the authenticated user's login
       const { data: userData } = await octokit.users.getAuthenticated();
       const userLogin = userData.login;
@@ -56,9 +56,9 @@ async function ensureRepoExists(octokit: Octokit, owner: string, repo: string) {
       await octokit.repos.update({
         owner,
         repo,
-        description: `@https://tinymind.me/${userLogin}`,
+        description: `https://tinymind.me/${userLogin}`,
       });
-      console.log(`Updated repository description to @https://tinymind.me/${userLogin}`);
+      console.log(`Updated repository description to https://tinymind.me/${userLogin}`);
     }
   } catch (error) {
     if (error instanceof Error && 'status' in error && error.status === 404) {
