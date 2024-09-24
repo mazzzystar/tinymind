@@ -46,7 +46,7 @@ async function ensureRepoExists(octokit: Octokit, owner: string, repo: string) {
   try {
     const { data: repoData } = await octokit.repos.get({ owner, repo });
     
-    // Check if the repository description is empty or starts with "About"
+    // Check if the repository description is empty.
     if (!repoData.description) {
       // Get the authenticated user's login
       const { data: userData } = await octokit.users.getAuthenticated();
