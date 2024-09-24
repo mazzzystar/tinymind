@@ -7,7 +7,7 @@
 .pnp.js
 .yarn/install-state.gz
 
-
+src-tauri/
 # testing
 /coverage
 
