@@ -9,6 +9,12 @@ https://github.com/user-attachments/assets/4c9f590e-dd1e-4e9f-95a0-45b236752494
 
 <img width="1188" alt="image" src="https://github.com/user-attachments/assets/2a74609d-da01-4085-ad9d-73b7825c4528">
 
+## Usage
+https://tinymind.me 
+
+MacOS version packaged using [Pake](https://github.com/tw93/Pake):
+
+[<img width="128" alt="icon_512x512" src="https://github.com/user-attachments/assets/a6f82868-2d30-480c-b439-f158b5b389c9">](https://github.com/mazzzystar/tinymind/blob/main/public/Tinymind.dmg)
 
 
 ## How It Works
