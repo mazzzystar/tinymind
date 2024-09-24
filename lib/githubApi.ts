@@ -638,7 +638,10 @@ ${content}`;
   }
 }
 
-export async function uploadImage(file: File, accessToken: string): Promise<string> {
+export async function uploadImage(
+  file: File,
+  accessToken: string
+): Promise<string> {
   console.log('Uploading image...');
   if (!accessToken) {
     throw new Error('Access token is required');
@@ -678,8 +681,19 @@ export async function uploadImage(file: File, accessToken: string): Promise<stri
 
     console.log('Image uploaded successfully');
 
-    // Return the URL of the uploaded image
-    return `https://raw.githubusercontent.com/${owner}/${repo}/main/${filePath}`;
+    // Modify the returned URL to use the correct format
+    const rawUrl = response.data.content?.download_url;
+    if (rawUrl) {
+      const parts = rawUrl.split('/');
+      const username = parts[3];
+      const repo = parts[4];
+      const branch = 'master'; // or 'main', depending on your default branch
+      const path = parts.slice(5).join('/');
+      
+      return `https://github.com/${username}/${repo}/blob/${branch}/${path}?raw=true`;
+    }
+
+    throw new Error('Failed to get image URL');
   } catch (error) {
     console.error('Error uploading image:', error);
     throw error;
