@@ -687,7 +687,7 @@ export async function uploadImage(
       const parts = rawUrl.split('/');
       const username = parts[3];
       const repo = parts[4];
-      const branch = 'master'; // or 'main', depending on your default branch
+      const branch = 'main'; // or 'main', depending on your default branch
       const path = parts.slice(5).join('/');
       
       return `https://github.com/${username}/${repo}/blob/${branch}/${path}?raw=true`;
