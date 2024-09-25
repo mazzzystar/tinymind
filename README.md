@@ -22,7 +22,7 @@ MacOS version packaged using [Pake](https://github.com/tw93/Pake):
 
 1. You authorize Tinymind to read/write your public GitHub repositories.
 2. Tinymind immediately creates a public repository named `tinymind-blog` in your GitHub account.
-3. When you write anything on our webpage, it automatically commits to your `yourname/tinymind-blog` repository.
+3. When you write anything on Tinymind, it automatically commits to your `yourname/tinymind-blog` repository.
 
 This ensures a seamless way to create content and maintain data persistence.
 
