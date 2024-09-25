@@ -37,9 +37,9 @@ Your data remains secure:
 - [x] Add a feature to let writers manage their own blogs (add, delete, edit posts)
 - [x] Supports user drag-and-drop image uploads
 - [x] Shareable user main pages (e.g., [tinymind.me/mazzzystar](https://www.tinymind.me/mazzzystar))
-- [ ] Create a showcase page for all public TinyMind writers (creator list)
 
-🙋 Contributors wanted!
+## Creator List
+If you use Tinymind for blogging or writing thoughts, feel free to comment below this issue(https://github.com/mazzzystar/tinymind/issues/18) to share your homepage URL for others to discover your work! 🎉
 
 ## Tech Stack
 
