@@ -18,11 +18,13 @@ MacOS version packaged using [Pake](https://github.com/tw93/Pake):
 [<img width="128" alt="icon_512x512" src="https://github.com/user-attachments/assets/a6f82868-2d30-480c-b439-f158b5b389c9">](https://github.com/mazzzystar/tinymind/blob/main/public/Tinymind.dmg)
 
 
-## How It Works
+## How it works
 
-1. We create a public repository named `tinymind-blog` in your GitHub account.
-2. When you write anything on our webpage, it automatically commits to your `yourname/tinymind-blog` repo.
-3. This ensures a seamless way to create content and maintain data persistence.
+1. You authorize Tinymind to read/write your public GitHub repositories.
+2. Tinymind immediately creates a public repository named `tinymind-blog` in your GitHub account.
+3. When you write anything on our webpage, it automatically commits to your `yourname/tinymind-blog` repository.
+
+This ensures a seamless way to create content and maintain data persistence.
 
 ## Data Privacy & Permissions
 
