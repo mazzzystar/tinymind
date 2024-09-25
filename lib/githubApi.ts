@@ -333,6 +333,8 @@ export async function createThought(content: string, image: string | undefined, 
     throw new Error('Access token is required');
   }
   const octokit = getOctokit(accessToken);
+  const { owner, repo } = await getRepoInfo(accessToken);
+  await initializeGitHubStructure(octokit, owner, repo);
   console.log('Octokit instance created');
 
   try {
