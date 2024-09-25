@@ -14,10 +14,11 @@ const GitHubSignInButton = () => {
         <h2 className="text-2xl font-semibold text-gray-800">
           {t("howItWorksTitle")}
         </h2>
-        <ol className="list-decimal list-inside space-y-2 text-sm text-gray-600">
+        <ol className="list-decimal list-inside space-y-2 text-base text-gray-600 md:w-full">
           <li>{t("howItWorksStep1")}</li>
           <li>{t("howItWorksStep2")}</li>
           <li>{t("howItWorksStep3")}</li>
+          <li>{t("howItWorksStep4")}</li>
         </ol>
       </div>
       <div className="mt-6">

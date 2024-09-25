@@ -16,9 +16,10 @@
       "enterTitle": "Enter your title here...",
 
       "howItWorksTitle": "How it works:",
-      "howItWorksStep1": "We create a public \"tinymind-blog\" repo in your GitHub.",
-      "howItWorksStep2": "Your new blog & thoughts will be automatically committed to this repo.",
-      "howItWorksStep3": "Your data is stored only on GitHub, independent of this site.",
+      "howItWorksStep1": "Authorize Tinymind to access your public GitHub repositories.",
+      "howItWorksStep2": "Tinymind creates a public repository named \"tinymind-blog\" in your GitHub account.",
+      "howItWorksStep3": "Anything you write on Tinymind is committed to this repository.",
+      "howItWorksStep4": "Your data is stored on your GitHub repository, separate from Tinymind.",
       "signInWithGitHub": "Sign in with GitHub",
       "publicContentWarning": "All content is public.",
       "write": "Write",
