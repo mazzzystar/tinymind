@@ -28,6 +28,9 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
+import "katex/dist/katex.min.css";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 
 export default function ThoughtsList() {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
@@ -214,7 +217,8 @@ export default function ThoughtsList() {
                 </DialogContent>
               </Dialog>
               <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
+                remarkPlugins={[remarkGfm, remarkMath]}
+                rehypePlugins={[rehypeKatex]}
                 components={{
                   code({
                     inline,

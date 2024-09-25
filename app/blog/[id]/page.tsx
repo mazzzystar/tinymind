@@ -2,12 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { format } from "date-fns";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { BlogPostContent } from "@/components/BlogPostContent";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -16,8 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { AiOutlineEllipsis } from "react-icons/ai";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { AiOutlineEllipsis, AiOutlineLoading3Quarters } from "react-icons/ai";
 import {
   Dialog,
   DialogContent,
@@ -51,7 +45,7 @@ export default function BlogPost({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { toast } = useToast();
   const [post, setPost] = useState<BlogPost | null>(null);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const t = useTranslations("HomePage");
 
   useEffect(() => {
@@ -79,7 +73,7 @@ export default function BlogPost({ params }: { params: { id: string } }) {
       }
     };
     fetchPost();
-  }, [params.id, router, session, status, toast]);
+  }, [params.id, router, session, status, toast, t]);
 
   const handleDeleteBlogPost = async () => {
     if (!session?.accessToken) {
@@ -139,33 +133,25 @@ export default function BlogPost({ params }: { params: { id: string } }) {
   const decodedContent = decodeContent(post.content);
   const contentWithoutFrontmatter = removeFrontmatter(decodedContent);
 
-  return (
-    <Card className="max-w-3xl mx-auto mt-8">
-      <CardHeader className="flex justify-between items-start">
-        <div>
-          <CardTitle className="text-3xl font-bold">{decodedTitle}</CardTitle>
-          <p className="text-sm text-gray-500">
-            {format(new Date(post.date), "MMMM d, yyyy")}
-          </p>
-        </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <AiOutlineEllipsis className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onSelect={() => router.push(`/editor?type=blog&id=${params.id}`)}
-            >
-              {t("edit")}
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setIsDeleteDialogOpen(true)}>
-              {t("delete")}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </CardHeader>
+  const headerContent = (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <AiOutlineEllipsis className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem
+            onSelect={() => router.push(`/editor?type=blog&id=${params.id}`)}
+          >
+            {t("edit")}
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => setIsDeleteDialogOpen(true)}>
+            {t("delete")}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -189,45 +175,15 @@ export default function BlogPost({ params }: { params: { id: string } }) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <CardContent>
-        <div className="prose max-w-none dark:prose-invert">
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            components={{
-              code({
-                inline,
-                className,
-                children,
-                ...props
-              }: {
-                inline?: boolean;
-                className?: string;
-                children?: React.ReactNode;
-              } & React.HTMLAttributes<HTMLElement>) {
-                const match = /language-(\w+)/.exec(className || "");
-                return !inline && match ? (
-                  <SyntaxHighlighter
-                    style={tomorrow as { [key: string]: React.CSSProperties }}
-                    language={match[1]}
-                    PreTag="div"
-                  >
-                    {String(children).replace(/\n$/, "")}
-                  </SyntaxHighlighter>
-                ) : (
-                  <code className={className} {...props}>
-                    {children}
-                  </code>
-                );
-              },
-              a: ({ ...props }) => (
-                <a {...props} target="_blank" rel="noopener noreferrer" />
-              ),
-            }}
-          >
-            {contentWithoutFrontmatter}
-          </ReactMarkdown>
-        </div>
-      </CardContent>
-    </Card>
+    </>
+  );
+
+  return (
+    <BlogPostContent
+      title={decodedTitle}
+      date={post.date}
+      content={contentWithoutFrontmatter}
+      headerContent={headerContent}
+    />
   );
 }

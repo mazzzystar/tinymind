@@ -19,6 +19,9 @@ import { useToast } from "@/components/ui/use-toast";
 import { useDropzone } from "react-dropzone";
 import { Tooltip } from "react-tooltip";
 import { GrInfo } from "react-icons/gr";
+import "katex/dist/katex.min.css";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 
 function removeFrontmatter(content: string): string {
   const frontmatterRegex = /^---\n([\s\S]*?)\n---\n/;
@@ -346,7 +349,10 @@ export default function Editor({
             </div>
             {isPreview ? (
               <div className="p-4 prose max-w-none">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm, remarkMath]}
+                  rehypePlugins={[rehypeKatex]}
+                >
                   {content}
                 </ReactMarkdown>
               </div>
