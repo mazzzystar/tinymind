@@ -14,7 +14,7 @@ const GitHubSignInButton = () => {
         <h2 className="text-2xl font-semibold text-gray-800">
           {t("howItWorksTitle")}
         </h2>
-        <ol className="list-decimal list-inside space-y-2 text-base text-gray-600 md:w-full">
+        <ol className="list-decimal list-inside space-y-2 text-sm text-gray-600 md:w-full">
           <li>{t("howItWorksStep1")}</li>
           <li>{t("howItWorksStep2")}</li>
           <li>{t("howItWorksStep3")}</li>
@@ -26,7 +26,7 @@ const GitHubSignInButton = () => {
           <Github className="mr-2 h-4 w-4" />
           {t("signInWithGitHub")}
         </Button>
-        <p className="mt-2 text-sm text-gray-500 underline">
+        <p className="mt-2 text-sm text-gray-500 underline underline-offset-1">
           <a
             href="https://tinymind.me/mazzzystar"
             target="_blank"
