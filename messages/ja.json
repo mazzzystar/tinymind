@@ -48,13 +48,11 @@
     "dataStoredOnGithub": "GitHubに保存されたデータ",
     "blogTitle": " の TinyMind ブログ",
     "blogShortTitle": " のブログ",
-    "blogDescription": "GitHubに保存されたデータでMarkdownでブログを書いて同期します。"
+    "blogDescription": "GitHubに保存されたデータでMarkdownでブログを書いて同期します。",
+    "demoPage": "デモページ"
   },
   "metadata": {
     "title": "TinyMind - GitHubワンクリックログインでブログ記事とアイデアを書いて同期",
     "description": "ブログ、アイデア、メモを簡単に書いて保存。GitHubログインで自動的に自分のリポジトリに同期。GitHubが存在する限り、あなたの記録は安全に保管されます。"
-  },
-  "HomePage": {
-    "demoPage": "デモページ"
   }
 }
