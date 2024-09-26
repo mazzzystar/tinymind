@@ -49,7 +49,8 @@
     "dataStoredOnGithub": "Datos almacenados en GitHub",
     "blogTitle": " Blog TinyMind de",
     "blogShortTitle": " Blog de",
-    "blogDescription": "Escribe y sincroniza blogs en Markdown con datos almacenados en GitHub."
+    "blogDescription": "Escribe y sincroniza blogs en Markdown con datos almacenados en GitHub.",
+    "demoPage": "Página de Demostración"
   },
   "metadata": {
     "title": "TinyMind - Escribe y sincroniza tus entradas de blog y pensamientos con un inicio de sesión en GitHub con un solo clic",

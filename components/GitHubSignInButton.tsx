@@ -21,11 +21,20 @@ const GitHubSignInButton = () => {
           <li>{t("howItWorksStep4")}</li>
         </ol>
       </div>
-      <div className="mt-6">
+      <div className="mt-6 flex flex-col items-center">
         <Button onClick={() => signIn("github")} className="mt-6">
           <Github className="mr-2 h-4 w-4" />
           {t("signInWithGitHub")}
         </Button>
+        <p className="mt-2 text-sm text-gray-500 underline">
+          <a
+            href="https://tinymind.me/mazzzystar"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t("demoPage")}
+          </a>
+        </p>
       </div>
     </div>
   );

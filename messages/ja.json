@@ -53,5 +53,8 @@
   "metadata": {
     "title": "TinyMind - GitHubワンクリックログインでブログ記事とアイデアを書いて同期",
     "description": "ブログ、アイデア、メモを簡単に書いて保存。GitHubログインで自動的に自分のリポジトリに同期。GitHubが存在する限り、あなたの記録は安全に保管されます。"
+  },
+  "HomePage": {
+    "demoPage": "デモページ"
   }
 }

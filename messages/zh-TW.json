@@ -33,12 +33,12 @@
       "thoughtDeleted": "想法已成功刪除",
       "thoughtDeleteFailed": "刪除想法失敗",
       "blogPostDeleted": "部落格文章已成功刪除",
-      "blogPostDeleteFailed": "刪除部落格���章失敗",
+      "blogPostDeleteFailed": "刪除部落格文章失敗",
       "thoughtCreated": "想法已成功創建",
       "thoughtUpdated": "想法已成功更新",
       "blogPostCreated": "部落格文章已成功創建",
       "blogPostUpdated": "部落格文章已成功更新",
-      "cancel": "取消",
+      "cancel": "取��",
       "imageUploaded": "圖片上傳成功",
       "imageUploadFailed": "圖片上傳失敗",
       "onlyImagesAllowed": "只允許圖片檔案",
@@ -49,7 +49,8 @@
       "dataStoredOnGithub": "數據存儲在GitHub",
       "blogTitle": " 的 TinyMind 部落格",
       "blogShortTitle": " 的部落格",
-      "blogDescription": "使用Markdown編寫部落格並同步，數據存儲在GitHub中。"
+      "blogDescription": "使用Markdown編寫部落格並同步，數據存儲在GitHub中。",
+      "demoPage": "示範頁面"
     },
     "metadata": {
       "title": "TinyMind - 用GitHub帳號一鍵登入寫作並同步你的部落格和想法",

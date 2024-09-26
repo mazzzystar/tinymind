@@ -49,7 +49,8 @@
     "dataStoredOnGithub": "GitHub पर संग्रहीत डेटा",
     "blogTitle": " का TinyMind ब्लॉग",
     "blogShortTitle": " का ब्लॉग",
-    "blogDescription": "GitHub में संग्रहीत डेटा के साथ Markdown में ब्लॉग लिखें और सिंक करें।"
+    "blogDescription": "GitHub में संग्रहीत डेटा के साथ Markdown में ब्लॉग लिखें और सिंक करें।",
+    "demoPage": "डेमो पेज"
   },
   "metadata": {
     "title": "TinyMind - एक-क्लिक GitHub साइन-इन के ाथ अपने ब्लॉग पोस्ट और विचारों को लिखें और सिंक करें",

@@ -49,7 +49,8 @@
       "dataStoredOnGithub": "数据存储在GitHub",
       "blogTitle": " 的 TinyMind 博客",
       "blogShortTitle": " 的博客",
-      "blogDescription": "使用Markdown编写博客并同步，数据存储在GitHub中。"
+      "blogDescription": "使用Markdown编写博客并同步，数据存储在GitHub中。",
+      "demoPage": "演示页面"
     },
     "metadata": {
       "title": "TinyMind - 用GitHub账号一键登录写作并同步你的博客和想法",

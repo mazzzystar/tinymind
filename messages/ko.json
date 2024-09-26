@@ -49,7 +49,8 @@
     "dataStoredOnGithub": "GitHub에 저장된 데이터",
     "blogTitle": "의 TinyMind 블로그",
     "blogShortTitle": "의 블로그",
-    "blogDescription": "GitHub에 저장된 데이터로 Markdown으로 블로그를 작성하고 동기화합니다."
+    "blogDescription": "GitHub에 저장된 데이터로 Markdown으로 블로그를 작성하고 동기화합니다.",
+    "demoPage": "데모 페이지"
   },
   "metadata": {
     "title": "TinyMind - 원클릭 GitHub 로그인으로 블로그 포스트와 생각을 작성하고 동기화하세요",

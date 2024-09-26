@@ -49,7 +49,8 @@
     "dataStoredOnGithub": "Data Disimpan di GitHub",
     "blogTitle": " Blog TinyMind",
     "blogShortTitle": " Blog",
-    "blogDescription": "Tulis dan sinkronkan blog dalam Markdown dengan data yang disimpan di GitHub."
+    "blogDescription": "Tulis dan sinkronkan blog dalam Markdown dengan data yang disimpan di GitHub.",
+    "demoPage": "Halaman Demo"
   },
   "metadata": {
     "title": "TinyMind - Tulis dan sinkronkan postingan blog dan pemikiran Anda dengan login satu klik GitHub",
