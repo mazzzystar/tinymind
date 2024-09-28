@@ -7,7 +7,7 @@ import { FaGithub } from "react-icons/fa"; // Change this import
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 
-export default function Header({ username }: { username?: string }) {
+export default function Header({ username, iconUrl }: { username?: string, iconUrl?: string }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const t = useTranslations("HomePage");
@@ -30,7 +30,7 @@ export default function Header({ username }: { username?: string }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <Link href="/" className="">
-            <Image src="/icon.jpg" alt="Home" width={32} height={32} />
+            <Image src={iconUrl ?? '/icon.jpg'} alt="Home" width={32} height={32} className="rounded-full" />
           </Link>
           <div className="flex-grow flex justify-center">
             <div className="flex space-x-2 sm:space-x-4">

@@ -743,8 +743,6 @@ async function fileToBase64(file: File): Promise<string> {
   });
 }
 
-// Add these new functions to the existing file
-
 export async function getBlogPostsPublic(octokit: Octokit, owner: string, repo: string): Promise<BlogPost[]> {
   try {
     const response = await octokit.repos.getContent({
@@ -779,6 +777,7 @@ export async function getBlogPostsPublic(octokit: Octokit, owner: string, repo: 
               date: dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString(),
             };
           }
+          return undefined;
         })
     );
 
@@ -806,5 +805,28 @@ export async function getThoughtsPublic(octokit: Octokit, owner: string, repo: s
   } catch (error) {
     console.error('Error fetching public thoughts:', error);
     return [];
+  }
+}
+
+export async function getIconUrls(accessToken: string): Promise<{ iconPath: string; appleTouchIconPath: string }> {
+  const octokit = getOctokit(accessToken);
+  const { owner, repo } = await getRepoInfo(accessToken);
+
+  const defaultIconPath = '/icon.jpg';
+  const defaultAppleTouchIconPath = '/icon-144.jpg';
+
+  const iconPath = await getIconUrl(octokit, owner, repo, 'assets/icon.jpg', defaultIconPath);
+  const appleTouchIconPath = await getIconUrl(octokit, owner, repo, 'assets/icon-144.jpg', defaultAppleTouchIconPath);
+
+  return { iconPath, appleTouchIconPath };
+}
+
+async function getIconUrl(octokit: Octokit, owner: string, repo: string, path: string, defaultPath: string): Promise<string> {
+  try {
+    await octokit.repos.getContent({ owner, repo, path });
+    return `https://github.com/${owner}/${repo}/blob/main/${path}?raw=true`;
+  } catch (error) {
+    console.warn(`No icon found in ${path}:`, error);
+    return defaultPath;
   }
 }
