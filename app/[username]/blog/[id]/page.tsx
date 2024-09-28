@@ -72,7 +72,7 @@ export async function generateMetadata({
         authors: [username],
         images: [
           {
-            url: new URL(imageUrl, baseUrl).toString(),
+            url: imageUrl,
             width: 1200,
             height: 630,
             alt: decodedTitle,
@@ -83,7 +83,7 @@ export async function generateMetadata({
         card: "summary_large_image",
         title: decodedTitle,
         description,
-        images: [new URL(imageUrl, baseUrl).toString()],
+        images: [imageUrl],
         creator: `@${username}`,
       },
       alternates: {
