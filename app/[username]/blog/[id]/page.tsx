@@ -1,10 +1,7 @@
-"use client";
-
-import { useState, useEffect } from "react";
+import { Metadata } from "next";
 import { Octokit } from "@octokit/rest";
-import { BlogPost, getBlogPostsPublic } from "@/lib/githubApi";
-import { BlogPostContent } from "@/components/BlogPostContent";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { getBlogPostsPublic } from "@/lib/githubApi";
+import BlogPostClient from "./BlogPostClient";
 
 function decodeContent(content: string): string {
   try {
@@ -25,52 +22,78 @@ export default function PublicBlogPost({
 }: {
   params: { username: string; id: string };
 }) {
-  const [post, setPost] = useState<BlogPost | null>(null);
-  const [loading, setLoading] = useState(true);
+  return <BlogPostClient username={params.username} id={params.id} />;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { username: string; id: string };
+}): Promise<Metadata> {
   const { username, id } = params;
+  const octokit = new Octokit();
 
-  useEffect(() => {
-    const fetchPost = async () => {
-      const octokit = new Octokit();
-      try {
-        const posts = await getBlogPostsPublic(
-          octokit,
-          username,
-          "tinymind-blog"
-        );
-        const foundPost = posts.find((p) => p.id === decodeURIComponent(id));
-        setPost(foundPost || null);
-      } catch (error) {
-        console.error("Error fetching blog post:", error);
-      } finally {
-        setLoading(false);
-      }
+  try {
+    const posts = await getBlogPostsPublic(octokit, username, "tinymind-blog");
+    const post = posts.find((p) => p.id === decodeURIComponent(id));
+
+    if (!post) {
+      return {
+        title: "Blog Post Not Found",
+      };
+    }
+
+    const decodedTitle = decodeContent(post.title);
+    const decodedContent = decodeContent(post.content);
+    const contentWithoutFrontmatter = removeFrontmatter(decodedContent);
+
+    // Extract the first few sentences (up to 200 characters) for the description
+    const description =
+      contentWithoutFrontmatter
+        .split(". ")
+        .slice(0, 3)
+        .join(". ")
+        .slice(0, 200) + "...";
+
+    // Find the first image in the content
+    const imageMatch = contentWithoutFrontmatter.match(/!\[.*?\]\((.*?)\)/);
+    const imageUrl = imageMatch ? imageMatch[1] : "/public/icon.jpg";
+
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://tinymind.me";
+
+    return {
+      title: decodedTitle,
+      description,
+      openGraph: {
+        title: decodedTitle,
+        description,
+        type: "article",
+        publishedTime: post.date,
+        authors: [username],
+        images: [
+          {
+            url: new URL(imageUrl, baseUrl).toString(),
+            width: 1200,
+            height: 630,
+            alt: decodedTitle,
+          },
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: decodedTitle,
+        description,
+        images: [new URL(imageUrl, baseUrl).toString()],
+        creator: `@${username}`,
+      },
+      alternates: {
+        canonical: `${baseUrl}/${username}/blog/${id}`,
+      },
     };
-
-    fetchPost();
-  }, [username, id]);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <AiOutlineLoading3Quarters className="animate-spin text-4xl" />
-      </div>
-    );
+  } catch (error) {
+    console.error("Error generating metadata:", error);
+    return {
+      title: "Error Loading Blog Post",
+    };
   }
-
-  if (!post) {
-    return <div>Blog post not found</div>;
-  }
-
-  const decodedTitle = decodeContent(post.title);
-  const decodedContent = decodeContent(post.content);
-  const contentWithoutFrontmatter = removeFrontmatter(decodedContent);
-
-  return (
-    <BlogPostContent
-      title={decodedTitle}
-      date={post.date}
-      content={contentWithoutFrontmatter}
-    />
-  );
 }
