@@ -57,7 +57,14 @@ export async function generateMetadata({
 
     // Find the first image in the content
     const imageMatch = contentWithoutFrontmatter.match(/!\[.*?\]\((.*?)\)/);
-    const imageUrl = imageMatch ? imageMatch[1] : "/public/icon.jpg";
+    let imageUrl = imageMatch ? imageMatch[1] : "/public/icon.jpg";
+
+    // If the image URL is relative, make it absolute
+    if (imageUrl.startsWith("/")) {
+      imageUrl = `${
+        process.env.NEXT_PUBLIC_BASE_URL || "https://tinymind.me"
+      }${imageUrl}`;
+    }
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://tinymind.me";
 
