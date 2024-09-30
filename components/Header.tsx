@@ -25,13 +25,13 @@ export default function Header({
   const [avatarUrl, setAvatarUrl] = useState<string>("/icon.jpg");
 
   useEffect(() => {
-    if (session?.accessToken) {
+    if (username) {
+      setAvatarUrl(`https://github.com/${username}.png`);
+    } else if (session?.accessToken) {
       getUserLogin(session.accessToken).then((login) => {
         setUserLogin(login);
         setAvatarUrl(`https://github.com/${login}.png`);
       });
-    } else if (username) {
-      setAvatarUrl(`https://github.com/${username}.png`);
     }
   }, [session, username]);
 
