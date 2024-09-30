@@ -16,9 +16,10 @@ export const formatTimestamp = (timestamp: string) => {
     minute: '2-digit',
     second: '2-digit',
     hour12: false,
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
   });
 
-  // Get the UTC offset
+  // Get the local time zone offset
   const offsetMinutes = date.getTimezoneOffset();
   const offsetHours = Math.abs(Math.floor(offsetMinutes / 60));
   const offsetMinutesPart = Math.abs(offsetMinutes % 60);
