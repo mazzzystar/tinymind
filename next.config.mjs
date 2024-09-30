@@ -10,11 +10,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'avatars.githubusercontent.com',
+        hostname: '*',
       },
       {
-        protocol: 'https',
-        hostname: 'github.com',
+        protocol: 'http',
+        hostname: '*',
       },
     ],
   },

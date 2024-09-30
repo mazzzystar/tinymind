@@ -47,7 +47,6 @@ export async function generateMetadata({
     const decodedContent = decodeContent(post.content);
     const contentWithoutFrontmatter = removeFrontmatter(decodedContent);
 
-    // Extract the first few sentences (up to 200 characters) for the description
     const description =
       contentWithoutFrontmatter
         .split(". ")
@@ -57,7 +56,7 @@ export async function generateMetadata({
 
     // Find the first image in the content
     const imageMatch = contentWithoutFrontmatter.match(/!\[.*?\]\((.*?)\)/);
-    let imageUrl = imageMatch ? imageMatch[1] : "/public/icon.jpg";
+    let imageUrl = imageMatch ? imageMatch[1] : "/icon.jpg";
 
     // If the image URL is relative, make it absolute
     if (imageUrl.startsWith("/")) {
