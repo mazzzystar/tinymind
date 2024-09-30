@@ -22,30 +22,28 @@ export default function Header({
   const searchParams = useSearchParams();
   const t = useTranslations("HomePage");
   const [userLogin, setUserLogin] = useState<string | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string>("/icon.jpg");
 
   useEffect(() => {
     if (session?.accessToken) {
-      getUserLogin(session.accessToken).then(setUserLogin);
+      getUserLogin(session.accessToken).then((login) => {
+        setUserLogin(login);
+        setAvatarUrl(`https://github.com/${login}.png`);
+      });
+    } else if (username) {
+      setAvatarUrl(`https://github.com/${username}.png`);
     }
-  }, [session]);
+  }, [session, username]);
 
   const isUserPage = !!username;
   const isOwnProfile = userLogin === username;
 
-  // Determine the avatar URL
-  let avatarUrl = "/icon.jpg"; // Default to public icon
-  if (userLogin) {
-    // User is logged in, use their GitHub avatar
-    avatarUrl = `https://github.com/${userLogin}.png`;
-  } else if (username) {
-    // Viewing someone else's profile
-    avatarUrl = `https://github.com/${username}.png`;
-  }
-
   // Use iconUrl if provided (for cases where we have a custom icon)
-  if (iconUrl && iconUrl !== "/icon.jpg") {
-    avatarUrl = iconUrl;
-  }
+  useEffect(() => {
+    if (iconUrl && iconUrl !== "/icon.jpg") {
+      setAvatarUrl(iconUrl);
+    }
+  }, [iconUrl]);
 
   // Determine the active tab based on the current pathname
   const activeTab = isUserPage
