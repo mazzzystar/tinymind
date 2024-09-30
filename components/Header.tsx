@@ -34,7 +34,7 @@ export default function Header({
   }
 
   // Use iconUrl if provided (for cases where we have a custom icon)
-  if (iconUrl) {
+  if (iconUrl && iconUrl !== "/icon.jpg") {
     avatarUrl = iconUrl;
   }
 
