@@ -808,15 +808,39 @@ export async function getThoughtsPublic(octokit: Octokit, owner: string, repo: s
   }
 }
 
-export async function getIconUrls(accessToken: string): Promise<{ iconPath: string; appleTouchIconPath: string }> {
-  const octokit = getOctokit(accessToken);
-  const { owner, repo } = await getRepoInfo(accessToken);
+export async function getIconUrls(usernameOrAccessToken: string): Promise<{ iconPath: string; appleTouchIconPath: string }> {
+  let owner: string;
+  let repo: string;
+  let octokit: Octokit | null = null;
 
-  const defaultIconPath = '/icon.jpg';
-  const defaultAppleTouchIconPath = '/icon-144.jpg';
+  // Check if the input is an access token or a username
+  if (usernameOrAccessToken.length > 40) { // Assuming access tokens are longer than usernames
+    try {
+      octokit = getOctokit(usernameOrAccessToken);
+      const repoInfo = await getRepoInfo(usernameOrAccessToken);
+      owner = repoInfo.owner;
+      repo = repoInfo.repo;
+    } catch (error) {
+      console.error('Error getting authenticated user:', error);
+      // Fallback to using the access token as a username
+      owner = usernameOrAccessToken;
+      repo = 'tinymind-blog'; // Default repo name
+    }
+  } else {
+    owner = usernameOrAccessToken;
+    repo = 'tinymind-blog'; // Default repo name
+  }
 
-  const iconPath = await getIconUrl(octokit, owner, repo, 'assets/icon.jpg', defaultIconPath);
-  const appleTouchIconPath = await getIconUrl(octokit, owner, repo, 'assets/icon-144.jpg', defaultAppleTouchIconPath);
+  const defaultIconPath = `https://github.com/${owner}.png`;
+  const defaultAppleTouchIconPath = `https://github.com/${owner}.png`;
+
+  let iconPath = defaultIconPath;
+  let appleTouchIconPath = defaultAppleTouchIconPath;
+
+  if (octokit) {
+    iconPath = await getIconUrl(octokit, owner, repo, 'assets/icon.jpg', defaultIconPath);
+    appleTouchIconPath = await getIconUrl(octokit, owner, repo, 'assets/icon-144.jpg', defaultAppleTouchIconPath);
+  }
 
   return { iconPath, appleTouchIconPath };
 }
@@ -826,7 +850,7 @@ async function getIconUrl(octokit: Octokit, owner: string, repo: string, path: s
     await octokit.repos.getContent({ owner, repo, path });
     return `https://github.com/${owner}/${repo}/blob/main/${path}?raw=true`;
   } catch (error) {
-    console.warn(`No icon found in ${path}:`, error);
+    console.warn(`No icon found in ${path}, using default:`, defaultPath);
     return defaultPath;
   }
 }

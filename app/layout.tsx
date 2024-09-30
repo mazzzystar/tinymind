@@ -18,8 +18,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("metadata");
   const session = await getServerSession(authOptions);
 
-  const title = t("title") || "TinyMind - Write and sync your blog posts & thoughts with one-click GitHub sign-in";
-  const description = t("description") || "Write and preserve your blogs, thoughts, and notes effortlessly. Sign in with GitHub to automatically sync your content to your own repository, ensuring your ideas are safely stored as long as GitHub exists.";
+  const title =
+    t("title") ||
+    "TinyMind - Write and sync your blog posts & thoughts with one-click GitHub sign-in";
+  const description =
+    t("description") ||
+    "Write and preserve your blogs, thoughts, and notes effortlessly. Sign in with GitHub to automatically sync your content to your own repository, ensuring your ideas are safely stored as long as GitHub exists.";
 
   const { iconPath } = await getIconPaths(session?.accessToken);
 
@@ -51,7 +55,9 @@ export default async function RootLayout({
   const messages = await getMessages();
   const session = await getServerSession(authOptions);
 
-  const { iconPath, appleTouchIconPath } = await getIconPaths(session?.accessToken);
+  const { iconPath, appleTouchIconPath } = await getIconPaths(
+    session?.accessToken
+  );
 
   return (
     <html lang={locale}>
@@ -90,13 +96,16 @@ export default async function RootLayout({
 }
 
 async function getIconPaths(accessToken: string | undefined) {
-  const defaultIconPath = '/icon.jpg';
-  const defaultAppleTouchIconPath = '/icon-144.jpg';
+  const defaultIconPath = "/icon.jpg";
+  const defaultAppleTouchIconPath = "/icon-144.jpg";
 
   if (accessToken) {
     const iconUrls = await getIconUrls(accessToken);
     return iconUrls;
   }
 
-  return { iconPath: defaultIconPath, appleTouchIconPath: defaultAppleTouchIconPath };
+  return {
+    iconPath: defaultIconPath,
+    appleTouchIconPath: defaultAppleTouchIconPath,
+  };
 }
