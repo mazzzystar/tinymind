@@ -5,6 +5,7 @@ import rehypeKatex from "rehype-katex";
 import { Thought } from "@/lib/githubApi";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { formatTimestamp } from "@/utils/dateFormatting";
 
 export default function PublicThoughtsList({
   thoughts,
@@ -27,7 +28,7 @@ export default function PublicThoughtsList({
             </ReactMarkdown>
           </div>
           <small className="text-gray-500 self-end mt-2">
-            {new Date(thought.timestamp).toLocaleString()}
+            {formatTimestamp(thought.timestamp)}
           </small>
         </div>
       ))}
