@@ -1,5 +1,5 @@
-import { format, parseISO } from 'date-fns';
-import { formatInTimeZone, toZonedTime } from 'date-fns-tz';
+import { format, toZonedTime } from 'date-fns-tz';
+import { parseISO } from 'date-fns';
 
 export const formatTimestamp = (timestamp: string) => {
   let date: Date;
@@ -24,7 +24,9 @@ export const formatTimestamp = (timestamp: string) => {
   // Convert UTC date to user's local time zone
   const zonedDate = toZonedTime(date, userTimeZone);
 
-  const localDateString = format(zonedDate, "yyyy-MM-dd HH:mm:ss");
-  const utcOffset = formatInTimeZone(zonedDate, userTimeZone, "xxx");
+  // Format the date string in the user's local time zone
+  const localDateString = format(zonedDate, "yyyy-MM-dd HH:mm:ss", { timeZone: userTimeZone });
+  const utcOffset = format(zonedDate, "xxxxx", { timeZone: userTimeZone });
+
   return `${localDateString} (UTC${utcOffset})`;
 };
