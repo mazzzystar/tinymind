@@ -53,7 +53,7 @@
     "demoPage": "Demo Sayfası"
   },
   "metadata": {
-    "title": "TinyMind - Tek tıklamayla GitHub girişi ile blog yazılarınızı ve düşüncelerinizi yazın ve senkronize edin",
-    "description": "Bloglarınızı, düşüncelerinizi ve notlarınızı kolayca yazın ve saklayın. İçeriğinizi otomatik olarak kendi deponuza senkronize etmek için GitHub ile giriş yapın, böylece GitHub var olduğu sürece fikirleriniz güvenli bir şekilde saklanır."
+    "title": "TinyMind - GitHub ile blog ve düşünceler yazın.",
+    "description": "GitHub'da depolanan verilerle Markdown'da blog gönderileri ve düşünceler yazın ve senkronize edin."
   }
 }

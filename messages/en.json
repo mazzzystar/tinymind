@@ -49,7 +49,7 @@
       "demoPage": "Demo Page"
     },
     "metadata": {
-      "title": "TinyMind - Write and sync your blog posts & thoughts with one-click GitHub sign-in",
-      "description": "Write and sync blog in Markdown with data stored in GitHub."
+      "title": "TinyMind - Write blog & thoughts with GitHub.",
+      "description": "Write and sync blog posts & thoughts in Markdown with data stored in GitHub."
     }
   }

@@ -53,7 +53,7 @@
     "demoPage": "Page de Démonstration"
   },
   "metadata": {
-    "title": "TinyMind - Écrivez et synchronisez vos articles de blog et pensées avec connexion GitHub en un clic",
-    "description": "Écrivez et préservez facilement vos blogs, pensées et notes. Connectez-vous avec GitHub pour synchroniser automatiquement votre contenu dans votre propre dépôt. Vos idées sont stockées en sécurité tant que GitHub existe."
+    "title": "TinyMind - Écrivez blog et pensées avec GitHub.",
+    "description": "Écrivez et synchronisez des articles de blog et des pensées en Markdown avec des données stockées sur GitHub."
   }
 }

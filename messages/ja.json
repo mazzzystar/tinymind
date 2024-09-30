@@ -52,7 +52,7 @@
     "demoPage": "デモページ"
   },
   "metadata": {
-    "title": "TinyMind - GitHubワンクリックログインでブログ記事とアイデアを書いて同期",
-    "description": "ブログ、アイデア、メモを簡単に書いて保存。GitHubログインで自動的に自分のリポジトリに同期。GitHubが存在する限り、あなたの記録は安全に保管されます。"
+    "title": "TinyMind - GitHubでブログと思考を書く。",
+    "description": "GitHubに保存されたデータでMarkdownでブログ投稿と思考を書いて同期します。"
   }
 }

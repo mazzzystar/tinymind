@@ -53,7 +53,7 @@
     "demoPage": "Halaman Demo"
   },
   "metadata": {
-    "title": "TinyMind - Tulis dan sinkronkan postingan blog dan pemikiran Anda dengan login satu klik GitHub",
-    "description": "Tulis dan simpan blog, pemikiran, dan catatan Anda dengan mudah. Masuk dengan GitHub untuk secara otomatis menyinkronkan konten Anda dengan repositori Anda sendiri, memastikan ide-ide Anda disimpan dengan aman selama GitHub ada."
+    "title": "TinyMind - Tulis blog & pemikiran dengan GitHub.",
+    "description": "Tulis dan sinkronkan postingan blog & pemikiran dalam Markdown dengan data yang disimpan di GitHub."
   }
 }

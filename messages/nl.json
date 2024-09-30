@@ -1,5 +1,5 @@
 {
-"HomePage": {
+  "HomePage": {
     "blog": "Blog",
     "thoughts": "Gedachten",
     "noThoughtsYet": "Nog geen gedachten",
@@ -53,7 +53,7 @@
     "demoPage": "Demopagina"
   },
   "metadata": {
-    "title": "TinyMind - Schrijf en synchroniseer je blogposts en gedachten met eenmalige GitHub-login",
-    "description": "Schrijf en bewaar je blogs, gedachten en notities moeiteloos. Log in met GitHub om je inhoud automatisch te synchroniseren met je eigen repository, zodat je ideeën veilig worden opgeslagen zolang GitHub bestaat."
+    "title": "TinyMind - Schrijf blog & gedachten met GitHub.",
+    "description": "Schrijf en synchroniseer blogposts & gedachten in Markdown met gegevens opgeslagen in GitHub."
   }
 }

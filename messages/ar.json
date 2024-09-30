@@ -44,7 +44,7 @@
     "onlyImagesAllowed": "يُسمح فقط بملفات الصور",
     "dropImageHere": "أسقط الصورة هنا",
     "notAuthenticated": "أنت غير مصادق عليه. يرجى تسجيل الدخول.",
-    "publicContentTooltip": "نحن نطلب فقط إذن القراءة/الكتابة للمستودع العام، لذا لا يمكننا إنشاء مستودعات خاصة.",
+    "publicContentTooltip": "نطلب فقط إذن القراءة/الكتابة للمستودع العام، لذا لا يمكننا إنشاء مستودعات خاصة.",
     "myHomepage": "صفحتي الرئيسية العامة",
     "dataStoredOnGithub": "البيانات المخزنة على GitHub",
     "blogTitle": " مدونة TinyMind الخاصة بـ",

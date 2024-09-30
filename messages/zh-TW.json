@@ -53,7 +53,7 @@
       "demoPage": "示範頁面"
     },
     "metadata": {
-      "title": "TinyMind - 用GitHub帳號一鍵登入寫作並同步你的部落格和想法",
-      "description": "使用Markdown編寫部落格並同步，數據存儲在GitHub中。"
+      "title": "TinyMind - 使用GitHub編寫部落格和想法。",
+      "description": "使用Markdown編寫並同步部落格文章和想法，數據存儲在GitHub中。"
     }
   }
