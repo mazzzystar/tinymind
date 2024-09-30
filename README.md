@@ -1,5 +1,5 @@
 <a href="https://tinymind.me/">
-  <img src="https://github.com/mazzzystar/tinymind/blob/main/public/Tinymind-banner.png?raw=true" alt="Tinymind Blog Banner">
+  <img src="https://raw.githubusercontent.com/mazzzystar/tinymind/main/public/Tinymind-banner.png" alt="Tinymind Blog Banner">
 </a>
 
 Turn your GitHub into a blog & memo data storage place with one-click Sign in. No server needed - every input automatically syncs to your GitHub repository.
