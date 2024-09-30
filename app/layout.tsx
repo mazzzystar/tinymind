@@ -55,9 +55,7 @@ export default async function RootLayout({
   const messages = await getMessages();
   const session = await getServerSession(authOptions);
 
-  const { iconPath, appleTouchIconPath } = await getIconPaths(
-    session?.accessToken
-  );
+  const { iconPath } = await getIconPaths(session?.accessToken);
 
   return (
     <html lang={locale}>
@@ -68,7 +66,7 @@ export default async function RootLayout({
         />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <link rel="apple-touch-icon" href={appleTouchIconPath} />
+        <link rel="apple-touch-icon" href={iconPath} />
       </Head>
       <Script
         async
