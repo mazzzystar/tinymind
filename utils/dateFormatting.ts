@@ -10,8 +10,8 @@ export const formatTimestamp = (timestamp: string) => {
   // Format the date string in the user's local time zone
   const localDateString = date.toLocaleString('en-US', {
     year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
+    month: 'numeric',
+    day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
@@ -20,11 +20,14 @@ export const formatTimestamp = (timestamp: string) => {
   });
 
   // Get the local time zone offset
-  const offsetMinutes = date.getTimezoneOffset();
-  const offsetHours = Math.abs(Math.floor(offsetMinutes / 60));
-  const offsetMinutesPart = Math.abs(offsetMinutes % 60);
-  const offsetSign = offsetMinutes > 0 ? '-' : '+';
-  const utcOffset = `${offsetSign}${offsetHours.toString().padStart(2, '0')}:${offsetMinutesPart.toString().padStart(2, '0')}`;
+  const offsetMinutes = -date.getTimezoneOffset();
+  const offsetHours = Math.floor(offsetMinutes / 60);
+  const offsetSign = offsetHours >= 0 ? '+' : '-';
+  const absOffsetHours = Math.abs(offsetHours);
 
-  return `${localDateString.replace(',', '')} (UTC${utcOffset})`;
+  // Reformat the date string to match the desired format
+  const [datePart, timePart] = localDateString.split(', ');
+  const [month, day, year] = datePart.split('/');
+  
+  return `${year}/${month}/${day} ${timePart}(UTC${offsetSign}${absOffsetHours})`;
 };
