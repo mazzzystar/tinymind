@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { BlogPost } from "@/lib/githubApi";
 import Link from "next/link";
 
@@ -13,9 +16,14 @@ export default function PublicBlogList({
   posts: BlogPost[];
   username: string;
 }) {
-  const sortedPosts = [...posts].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
+  const [sortedPosts, setSortedPosts] = useState<BlogPost[]>([]);
+
+  useEffect(() => {
+    const sorted = [...posts].sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+    setSortedPosts(sorted);
+  }, [posts]);
 
   const groupedPosts = sortedPosts.reduce((acc, post) => {
     const year = new Date(post.date).getFullYear();
