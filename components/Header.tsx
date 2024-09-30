@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { usePathname, useSearchParams } from "next/navigation";
 import { FaGithub } from "react-icons/fa";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+import { getUserLogin } from "@/lib/githubApi";
 
 export default function Header({
   username,
@@ -19,15 +21,22 @@ export default function Header({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const t = useTranslations("HomePage");
+  const [userLogin, setUserLogin] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (session?.accessToken) {
+      getUserLogin(session.accessToken).then(setUserLogin);
+    }
+  }, [session]);
 
   const isUserPage = !!username;
-  const isOwnProfile = session?.user?.name === username;
+  const isOwnProfile = userLogin === username;
 
   // Determine the avatar URL
   let avatarUrl = "/icon.jpg"; // Default to public icon
-  if (session?.user?.name) {
+  if (userLogin) {
     // User is logged in, use their GitHub avatar
-    avatarUrl = `https://github.com/${session.user.name}.png`;
+    avatarUrl = `https://github.com/${userLogin}.png`;
   } else if (username) {
     // Viewing someone else's profile
     avatarUrl = `https://github.com/${username}.png`;
@@ -38,7 +47,7 @@ export default function Header({
     avatarUrl = iconUrl;
   }
 
-  // Determine the active tab based on the current pathname and search params
+  // Determine the active tab based on the current pathname
   const activeTab = isUserPage
     ? pathname.includes("/thoughts")
       ? "thoughts"
