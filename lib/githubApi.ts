@@ -231,11 +231,14 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
   const { owner, repo } = await getRepoInfo(accessToken);
 
   try {
+    // Decode the ID once to get the correct file name
+    const decodedId = decodeURIComponent(id);
+    
     // Fetch the file content
     const contentResponse = await octokit.repos.getContent({
       owner,
       repo,
-      path: `content/blog/${encodeURIComponent(decodeURIComponent(id))}.md`,
+      path: `content/blog/${decodedId}.md`,
     });
 
     if (Array.isArray(contentResponse.data) || !('content' in contentResponse.data)) {
@@ -250,25 +253,13 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
 
     // Parse the date from the content
     const dateMatch = content.match(/date:\s*(.+)/);
-    const creationDate = dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString();
-
-    // Fetch the latest commit for this file
-    const commitResponse = await octokit.repos.listCommits({
-      owner,
-      repo,
-      path: `content/blog/${encodeURIComponent(decodeURIComponent(id))}.md`,
-      per_page: 1,
-    });
-
-    if (commitResponse.data.length === 0) {
-      throw new Error('No commits found for this file');
-    }
+    const date = dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString();
 
     return {
       id,
       title,
       content,
-      date: creationDate,
+      date,
     };
   } catch (error) {
     console.error('Error fetching blog post:', error);

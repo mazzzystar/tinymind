@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { BlogPostContent } from "@/components/BlogPostContent";
@@ -55,8 +56,10 @@ export default function BlogPost({ params }: { params: { id: string } }) {
       }
 
       try {
+        // Decode the ID before sending it to the API
+        const decodedId = decodeURIComponent(params.id);
         const response = await fetch(
-          `/api/github?action=getBlogPost&id=${encodeURIComponent(params.id)}`
+          `/api/github?action=getBlogPost&id=${encodeURIComponent(decodedId)}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch blog post");
