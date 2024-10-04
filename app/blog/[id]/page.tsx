@@ -57,9 +57,9 @@ export default function BlogPost({ params }: { params: { id: string } }) {
 
       try {
         // Use the encoded ID directly from the params
-        const encodedId = params.id;
+        // Decode the ID before sending it to the API
         const response = await fetch(
-          `/api/github?action=getBlogPost&id=${encodedId}`
+          `/api/github?action=getBlogPost&id=${params.id}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch blog post");
