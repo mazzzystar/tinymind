@@ -231,14 +231,14 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
   const { owner, repo } = await getRepoInfo(accessToken);
 
   try {
-    // Decode the ID once to get the correct file name
-    const decodedId = decodeURIComponent(id);
+    // Encode the ID to match the file name format
+    const encodedId = encodeURIComponent(id).replace(/%20/g, '-');
     
     // Fetch the file content
     const contentResponse = await octokit.repos.getContent({
       owner,
       repo,
-      path: `content/blog/${decodedId}.md`,
+      path: `content/blog/${encodedId}.md`,
     });
 
     if (Array.isArray(contentResponse.data) || !('content' in contentResponse.data)) {
