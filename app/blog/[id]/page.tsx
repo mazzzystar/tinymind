@@ -56,7 +56,7 @@ export default function BlogPost({ params }: { params: { id: string } }) {
 
       try {
         const response = await fetch(
-          `/api/github?action=getBlogPost&id=${params.id}`
+          `/api/github?action=getBlogPost&id=${encodeURIComponent(params.id)}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch blog post");
