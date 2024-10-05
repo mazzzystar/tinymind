@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { getThoughts, Thought } from "@/lib/githubApi";
+import { getThoughts, getThoughtsPublic, Thought } from "@/lib/githubApi";
+import { Octokit } from "@octokit/rest";
 import GitHubSignInButton from "./GitHubSignInButton";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -16,7 +17,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 import { AiOutlineEllipsis } from "react-icons/ai";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -33,7 +34,7 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import { formatTimestamp } from "@/utils/dateFormatting";
 
-export default function ThoughtsList() {
+export default function ThoughtsList({ username }: { username: string }) {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -48,18 +49,16 @@ export default function ThoughtsList() {
     async function fetchThoughts() {
       if (status === "loading") return;
       if (status === "unauthenticated") {
-        setError("Please log in to view thoughts");
         setIsLoading(false);
-        return;
-      }
-      if (!session?.accessToken) {
-        setError("Access token not available");
-        setIsLoading(false);
-        return;
       }
 
       try {
-        const fetchedThoughts = await getThoughts(session.accessToken);
+        const octokit = new Octokit();
+        const fetchedThoughts = session?.accessToken
+          ? await getThoughts(session.accessToken)
+          : username
+          ? await getThoughtsPublic(octokit, username, "tinymind-blog")
+          : [];
         setThoughts(fetchedThoughts);
         setError(null);
       } catch (error) {
@@ -79,7 +78,7 @@ export default function ThoughtsList() {
     }
 
     fetchThoughts();
-  }, [session, status]);
+  }, [session, status, username]);
 
   const handleDeleteThought = async (id: string) => {
     if (!session?.accessToken) {
@@ -125,7 +124,9 @@ export default function ThoughtsList() {
   };
 
   if (status === "unauthenticated" || error === "authentication_failed") {
-    return <GitHubSignInButton />;
+    if (!username) {
+      return <GitHubSignInButton />;
+    }
   }
 
   if (error && error !== "authentication_failed") {

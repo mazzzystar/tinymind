@@ -12,7 +12,11 @@ export default async function EditorPage({
   const defaultType = searchParams.type === "blog" ? "blog" : "thought";
 
   if (!session) {
-    return <GitHubSignInButton />;
+
+    const username = process.env.GITHUB_USERNAME;
+    if (!username) { 
+      return <GitHubSignInButton />;
+    }
   }
 
   return (
