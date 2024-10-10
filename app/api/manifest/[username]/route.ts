@@ -3,6 +3,7 @@ import { match } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
 import fs from 'fs';
 import path from 'path';
+import { getIconUrls } from '@/lib/githubApi';
 
 const locales = [
   'en', 'zh', 'zh-HK', 'zh-TW', 'ar', 'de', 'es', 'fr', 'hi', 'id', 'it', 'ja', 
@@ -30,6 +31,7 @@ export async function GET(
   const username = params.username;
   const lang = getLocale(request);
   const translations = loadTranslations(lang);
+  const { iconPath } = await getIconUrls(username);
 
   const manifest = {
     name: `${username}${translations.HomePage.blogTitle || "'s TinyMind Blog"}`,
@@ -41,9 +43,9 @@ export async function GET(
     theme_color: '#000000',
     icons: [
       {
-        src: '/icon.jpg',
+        src: iconPath,
         sizes: '192x192',
-        type: 'image/jpeg'
+        type: 'image/png'
       }
     ]
   };
