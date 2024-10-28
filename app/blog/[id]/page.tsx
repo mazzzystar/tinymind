@@ -26,8 +26,6 @@ import { useTranslations } from "next-intl";
 import type { BlogPost } from "@/lib/githubApi";
 import GitHubSignInButton from "@/components/GitHubSignInButton";
 
-export const revalidate = 60;
-
 function decodeContent(content: string): string {
   try {
     return decodeURIComponent(content);
