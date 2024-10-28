@@ -2,6 +2,9 @@ import { Octokit } from "@octokit/rest";
 import { getThoughtsPublic } from "@/lib/githubApi";
 import PublicThoughtsList from "@/components/PublicThoughtsList";
 
+// Add this to disable static page generation
+export const revalidate = 60;
+
 export default async function PublicThoughtsPage({
   params,
 }: {
@@ -19,7 +22,6 @@ export default async function PublicThoughtsPage({
 
     return (
       <div className="max-w-2xl mx-auto px-4 py-8">
-        {/* <h2 className="text-2xl font-semibold mb-4">Thoughts</h2> */}
         <PublicThoughtsList thoughts={thoughts} />
       </div>
     );

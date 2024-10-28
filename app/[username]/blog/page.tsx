@@ -2,6 +2,9 @@ import { Octokit } from "@octokit/rest";
 import { getBlogPostsPublic } from "@/lib/githubApi";
 import PublicBlogList from "@/components/PublicBlogList";
 
+// Add this to disable static page generation
+export const revalidate = 60;
+
 export default async function PublicBlogListPage({
   params,
 }: {
