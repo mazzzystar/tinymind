@@ -6,6 +6,8 @@ import { getThoughtsPublic } from "@/lib/githubApi";
 import { Octokit } from "@octokit/rest";
 import PublicThoughtsList from "@/components/PublicThoughtsList";
 
+export const revalidate = 60;
+
 export default async function ThoughtsPage() {
   const session = await getServerSession(authOptions);
   const username = process.env.GITHUB_USERNAME ?? '';

@@ -6,6 +6,8 @@ import { getBlogPosts, getBlogPostsPublic } from "@/lib/githubApi";
 import { Octokit } from "@octokit/rest";
 import PublicBlogList from "@/components/PublicBlogList";
 
+export const revalidate = 60;
+
 export default async function BlogPage() {
   const session = await getServerSession(authOptions);
 
