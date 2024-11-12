@@ -249,6 +249,11 @@ export default function ThoughtsList({ username }: { username: string }) {
                       </code>
                     );
                   },
+                  blockquote: ({ children }) => (
+                    <div className="pl-4 border-l-4 border-gray-200 text-gray-400">
+                      {children}
+                    </div>
+                  ),
                 }}
               >
                 {thought.content}
