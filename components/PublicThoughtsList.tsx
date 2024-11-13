@@ -68,7 +68,7 @@ export default function PublicThoughtsList({
                   );
                 },
                 blockquote: ({ children }) => (
-                  <div className="pl-4 border-l-4 border-gray-200 text-gray-400">
+                  <div className="pl-4 border-l-4 border-gray-200 text-gray-500">
                     {children}
                   </div>
                 ),
