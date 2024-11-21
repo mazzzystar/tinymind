@@ -67,7 +67,7 @@ export function BlogPostContent({
               a: ({ children, ...props }) => (
                 <a
                   {...props}
-                  className="text-gray-400 no-underline hover:text-gray-600 hover:underline hover:underline-offset-4 transition-colors duration-200"
+                  className="text-gray-400 no-underline hover:text-gray-600 hover:underline hover:underline-offset-4 transition-colors duration-200 break-words"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
