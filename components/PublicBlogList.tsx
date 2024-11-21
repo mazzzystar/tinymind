@@ -48,7 +48,7 @@ export default function PublicBlogList({
               <li key={post.id} className="flex items-center">
                 <Link
                   href={`/${username}/blog/${encodeURIComponent(post.id)}`}
-                  className="text-gray-700 hover:text-gray-400 transition-colors duration-200"
+                  className="text-gray-400 no-underline hover:text-gray-600 hover:underline hover:underline-offset-4 transition-colors duration-200"
                 >
                   {post.title}
                 </Link>
