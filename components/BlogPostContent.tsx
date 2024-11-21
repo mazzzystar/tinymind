@@ -64,13 +64,20 @@ export function BlogPostContent({
                   </code>
                 );
               },
+              a: ({ children, ...props }) => (
+                <a
+                  {...props}
+                  className="text-gray-400 no-underline hover:text-gray-600 hover:underline hover:underline-offset-4 transition-colors duration-200"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {children}
+                </a>
+              ),
               blockquote: ({ children }) => (
-                <div className="pl-4 border-l-4 border-gray-200 text-gray-500">
+                <div className="pl-4 border-l-4 border-gray-200 text-gray-400">
                   {children}
                 </div>
-              ),
-              a: ({ ...props }) => (
-                <a {...props} target="_blank" rel="noopener noreferrer" />
               ),
             }}
           >
