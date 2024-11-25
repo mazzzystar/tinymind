@@ -243,6 +243,65 @@ export default function Editor({
     },
   });
 
+  const handlePaste = useCallback(
+    async (e: React.ClipboardEvent) => {
+      if (!session?.accessToken) {
+        toast({
+          title: t("error"),
+          description: t("notAuthenticated"),
+          variant: "destructive",
+          duration: 3000,
+        });
+        return;
+      }
+
+      const items = Array.from(e.clipboardData.items);
+      for (const item of items) {
+        if (item.type.startsWith("image/")) {
+          e.preventDefault();
+          setIsImageUploading(true);
+
+          try {
+            const file = item.getAsFile();
+            if (!file) continue;
+
+            const imageUrl = await uploadImage(file, session.accessToken);
+            const imageMarkdown = `![${
+              file.name || "Pasted image"
+            }](${imageUrl})`;
+
+            if (cursorPosition !== null) {
+              const newContent =
+                content.slice(0, cursorPosition) +
+                imageMarkdown +
+                content.slice(cursorPosition);
+              setContent(newContent);
+            } else {
+              setContent((prevContent) => prevContent + "\n\n" + imageMarkdown);
+            }
+
+            toast({
+              title: t("success"),
+              description: t("imageUploaded"),
+              duration: 3000,
+            });
+          } catch (error) {
+            console.error("Error uploading pasted image:", error);
+            toast({
+              title: t("error"),
+              description: t("imageUploadFailed"),
+              variant: "destructive",
+              duration: 3000,
+            });
+          } finally {
+            setIsImageUploading(false);
+          }
+        }
+      }
+    },
+    [session?.accessToken, cursorPosition, content, toast, t]
+  );
+
   return (
     <Card className="max-w-2xl mx-auto shadow-md border border-gray-100 relative">
       {(isLoading || isImageUploading) && (
@@ -383,6 +442,16 @@ export default function Editor({
                         </code>
                       );
                     },
+                    a: ({ children, ...props }) => (
+                      <a
+                        {...props}
+                        className="text-gray-400 no-underline hover:text-gray-600 hover:underline hover:underline-offset-4 transition-colors duration-200 break-words"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {children}
+                      </a>
+                    ),
                     blockquote: ({ children }) => (
                       <div className="pl-4 border-l-4 border-gray-200 text-gray-400">
                         {children}
@@ -400,6 +469,7 @@ export default function Editor({
                 onSelect={(e) =>
                   setCursorPosition(e.currentTarget.selectionStart)
                 }
+                onPaste={handlePaste}
                 placeholder={t("writeContent")}
                 className="min-h-[300px] border-0 focus:ring-0"
                 required
