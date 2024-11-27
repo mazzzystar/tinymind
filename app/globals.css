@@ -68,8 +68,4 @@
     text-underline-offset: 3px;
     text-decoration-thickness: 0.5px;
   }
-
-  ::selection {
-    @apply bg-secondary;
-  }
 }
