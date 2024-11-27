@@ -3,40 +3,15 @@
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Github } from "lucide-react";
-import { useTranslations } from "next-intl";
 
 const GitHubSignInButton = () => {
-  const t = useTranslations("HomePage");
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-[50vh] max-w-md mx-auto px-4 py-8 space-y-6">
-      <div className="space-y-4">
-        <h2 className="text-2xl font-semibold text-gray-800">
-          {t("howItWorksTitle")}
-        </h2>
-        <ol className="list-decimal list-inside space-y-2 text-sm text-gray-600 md:w-full">
-          <li>{t("howItWorksStep1")}</li>
-          <li>{t("howItWorksStep2")}</li>
-          <li>{t("howItWorksStep3")}</li>
-          <li>{t("howItWorksStep4")}</li>
-        </ol>
-      </div>
-      <div className="mt-6 flex flex-col items-center">
-        <Button onClick={() => signIn("github")} className="mt-6">
-          <Github className="mr-2 h-4 w-4" />
-          {t("signInWithGitHub")}
-        </Button>
-        <p className="mt-2 text-sm text-gray-500 underline underline-offset-1">
-          <a
-            href="https://tinymind.me/mazzzystar"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {t("demoPage")}
-          </a>
-        </p>
-      </div>
-    </div>
+    <Button 
+      onClick={() => signIn("github")} 
+      className="rounded-full w-12 h-12 p-0 flex items-center justify-center"
+    >
+      <Github className="h-5 w-5" />
+    </Button>
   );
 };
 

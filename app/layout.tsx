@@ -4,7 +4,6 @@ import "./globals.css";
 import Header from "@/components/Header";
 import { SessionProvider } from "../components/SessionProvider";
 import Script from "next/script";
-import Footer from "@/components/Footer";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { Toaster } from "@/components/ui/toaster";
@@ -54,6 +53,7 @@ export default async function RootLayout({
   const locale = await getLocale();
   const messages = await getMessages();
   const session = await getServerSession(authOptions);
+  const username = process.env.GITHUB_USERNAME ?? '';
 
   const { iconPath } = await getIconPaths(session?.accessToken);
 
@@ -81,9 +81,8 @@ export default async function RootLayout({
       <body className={gowun_wodum.className}>
         <NextIntlClientProvider messages={messages}>
           <SessionProvider>
-            <Header iconUrl={iconPath} />
-            <main className="pt-20 pb-20">{children}</main>
-            <Footer />
+            <Header iconUrl={iconPath} username={username} />
+            <main className="pb-20">{children}</main>
             <CreateButton messages={messages} />
             <Toaster />
           </SessionProvider>

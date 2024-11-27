@@ -1,111 +1,140 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import { useSession } from "next-auth/react";
-import { Button } from "@/components/ui/button";
-import { usePathname, useSearchParams } from "next/navigation";
-import { FaGithub } from "react-icons/fa";
-import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { getUserLogin } from "@/lib/githubApi";
+import Image from "next/image";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { getUserLogin, getThoughts, getThoughtsPublic, Thought } from "@/lib/githubApi";
+import { Octokit } from "@octokit/rest";
 
-export default function Header({
-  username,
-  iconUrl,
-}: {
+interface HeaderProps {
   username?: string;
   iconUrl?: string;
-}) {
-  const { data: session } = useSession();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const t = useTranslations("HomePage");
+}
+
+const getRelativeTimeString = (timestamp: string): string => {
+  const diff = Date.now() - new Date(timestamp).getTime();
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const days = Math.floor(hours / 24);
+  const years = Math.floor(days / 365);
+  
+  if (years > 0) return `${years} year${years > 1 ? 's' : ''} ago`;
+  if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
+  return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+};
+
+const Avatar = ({ src, alt, href }: { src: string; alt: string; href: string }) => (
+  <Link href={href}>
+    <Image
+      src={src}
+      alt={alt}
+      width={48}
+      height={48}
+      className="rounded-full hover:opacity-90 transition-opacity"
+    />
+  </Link>
+);
+
+const UserInfo = ({ 
+  displayName, 
+  latestThought 
+}: { 
+  displayName: string;
+  latestThought: Thought | null;
+}) => (
+  <div className="flex flex-col">
+    <span className="font-medium text-gray-900">{displayName}</span>
+    <div className="flex items-center space-x-2">
+      <span className="text-sm text-gray-600 font-mono">
+        {latestThought?.content.substring(0, 50) || "No status"}
+      </span>
+      <span className="text-xs text-gray-400">•</span>
+      <time className="text-xs text-gray-400" data-status-datetime="">
+        {latestThought ? getRelativeTimeString(latestThought.timestamp) : ""}
+      </time>
+      <span className="text-xs text-gray-400">•</span>
+      <Link href="/thoughts" className="text-xs text-gray-400 hover:text-gray-600 underline">
+        more
+      </Link>
+    </div>
+  </div>
+);
+
+export default function Header({ username, iconUrl }: HeaderProps) {
+  const { data: session, status } = useSession();
   const [userLogin, setUserLogin] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string>("/icon.jpg");
+  const [latestThought, setLatestThought] = useState<Thought | null>(null);
 
   useEffect(() => {
-    if (username) {
-      setAvatarUrl(`https://github.com/${username}.png`);
-    } else if (session?.accessToken) {
-      getUserLogin(session.accessToken).then((login) => {
+    const updateAvatarUrl = async () => {
+      if (username) {
+        setAvatarUrl(`https://github.com/${username}.png`);
+      } else if (session?.accessToken) {
+        const login = await getUserLogin(session.accessToken);
         setUserLogin(login);
         setAvatarUrl(`https://github.com/${login}.png`);
-      });
-    }
+      }
+    };
+    updateAvatarUrl();
   }, [session, username]);
 
-  const isUserPage = !!username;
-  const isOwnProfile = userLogin === username;
-
-  // Use iconUrl if provided (for cases where we have a custom icon)
   useEffect(() => {
     if (iconUrl && iconUrl !== "/icon.jpg") {
       setAvatarUrl(iconUrl);
     }
   }, [iconUrl]);
 
-  // Determine the active tab based on the current pathname
-  const activeTab = isUserPage
-    ? pathname.includes("/thoughts")
-      ? "thoughts"
-      : "blog"
-    : pathname.startsWith("/blog") || searchParams.get("type") === "blog"
-    ? "blog"
-    : pathname.startsWith("/thoughts") || searchParams.get("type") === "thought"
-    ? "thoughts"
-    : "thoughts";
+  useEffect(() => {
+    const fetchLatestThought = async () => {
+      if (status === "loading") return;
+
+      try {
+        const octokit = new Octokit();
+        const thoughts = session?.accessToken
+          ? await getThoughts(session.accessToken)
+          : username
+          ? await getThoughtsPublic(octokit, username, "tinymind-blog")
+          : [];
+        
+        if (thoughts.length > 0) {
+          setLatestThought(thoughts[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching thoughts:", error);
+      }
+    };
+
+    fetchLatestThought();
+  }, [session, status, username]);
+
+  const isOwnProfile = userLogin === username;
+  const navigationPath = isOwnProfile ? "/" : username ? `/${username}` : "/";
+  const displayName = username || userLogin || "Anonymous";
 
   return (
-    <header className="fixed top-0 left-0 right-0 py-4 bg-card shadow z-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center">
-          <Link
-            href={isOwnProfile ? "/" : username ? `/${username}` : "/"}
-            className=""
-          >
-            <Image
+    <header className="top-0 left-0 right-0 py-6 bg-card z-10">
+      <div className="max-w-2xl mx-auto px-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <Avatar 
               src={avatarUrl}
-              alt="Home"
-              width={32}
-              height={32}
-              className="rounded-full"
+              alt="Blogger Avatar"
+              href={navigationPath}
             />
-          </Link>
-          <div className="flex-grow flex justify-center">
-            <div className="flex space-x-2 sm:space-x-4">
-              <Button
-                variant="ghost"
-                className={`text-lg font-normal ${
-                  activeTab === "blog" ? "text-black" : "text-gray-300"
-                }`}
-                asChild
-              >
-                <Link href={isUserPage ? `/${username}/blog` : "/blog"}>
-                  {t("blog")}
-                </Link>
-              </Button>
-              <Button
-                variant="ghost"
-                className={`text-lg font-normal ${
-                  activeTab === "thoughts" ? "text-black" : "text-gray-300"
-                }`}
-                asChild
-              >
-                <Link href={isUserPage ? `/${username}/thoughts` : "/thoughts"}>
-                  {t("thoughts")}
-                </Link>
-              </Button>
-            </div>
+            <UserInfo 
+              displayName={displayName}
+              latestThought={latestThought}
+            />
           </div>
-          <Link
-            href="https://github.com/mazzzystar/tinymind"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-black hover:text-gray-500"
-          >
-            <FaGithub size={24} />
-          </Link>
+          <nav className="hidden">
+            <Link href="/blog" className="text-gray-600 hover:text-gray-900">
+              Blog
+            </Link>
+            <Link href="/thoughts" className="text-gray-600 hover:text-gray-900">
+              Thoughts
+            </Link>
+          </nav>
         </div>
       </div>
     </header>

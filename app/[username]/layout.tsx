@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import { Metadata } from "next";
 import { getIconUrls } from "@/lib/githubApi";
 
@@ -23,17 +22,13 @@ export async function generateMetadata({
 
 export default async function UserLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
   params: { username: string };
 }) {
-  const { iconPath } = await getIconUrls(params.username);
-
   return (
     <>
-      <Header username={params.username} iconUrl={iconPath} />
-      <div className="pt-20 max-w-4xl mx-auto px-4 py-8">{children}</div>
+      <div className="max-w-4xl mx-auto px-4 py-8">{children}</div>
     </>
   );
 }

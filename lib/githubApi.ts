@@ -167,8 +167,6 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
       path: 'content/blog',
     });
 
-    console.log('GitHub API response:', response);
-
     if (!Array.isArray(response.data)) {
       console.warn('Unexpected response from GitHub API: data is not an array');
       return [];

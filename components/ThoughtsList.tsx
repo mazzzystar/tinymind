@@ -34,7 +34,103 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import { formatTimestamp } from "@/utils/dateFormatting";
 
-export default function ThoughtsList({ username }: { username: string }) {
+interface ThoughtCardProps {
+  thought: Thought;
+  onDelete: (id: string) => void;
+  onEdit: (id: string) => void;
+}
+
+const ThoughtCard = ({ thought, onDelete, onEdit }: ThoughtCardProps) => {
+  const t = useTranslations("HomePage");
+  
+  return (
+    <div
+      key={thought.id}
+      className="relative flex flex-col justify-center p-4 
+                 bg-[#f6f8fa] rounded-lg text-[#333333] font-sans text-base leading-4
+                 transition-all duration-300 ease-in-out
+                 hover:shadow-lg max-h-[33vh] overflow-auto"
+    >
+      <div className="text-gray-800 mb-2 prose max-w-none">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="text-gray-700 hover:text-black float-right bg-transparent"
+            >
+              <AiOutlineEllipsis className="h-5 w-5" />{" "}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem onSelect={() => onDelete(thought.id)}>
+              {t("delete")}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onEdit(thought.id)}>
+              {t("edit")}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm, remarkMath]}
+          rehypePlugins={[rehypeKatex]}
+          components={{
+            code({
+              inline,
+              className,
+              children,
+              ...props
+            }: {
+              inline?: boolean;
+              className?: string;
+              children?: React.ReactNode;
+            } & React.HTMLAttributes<HTMLElement>) {
+              const match = /language-(\w+)/.exec(className || "");
+              return !inline && match ? (
+                <SyntaxHighlighter
+                  style={tomorrow as { [key: string]: React.CSSProperties }}
+                  language={match[1]}
+                  PreTag="div"
+                >
+                  {String(children).replace(/\n$/, "")}
+                </SyntaxHighlighter>
+              ) : (
+                <code className={className} {...props}>
+                  {children}
+                </code>
+              );
+            },
+            a: ({ children, ...props }) => (
+              <a
+                {...props}
+                className="text-gray-400 no-underline hover:text-gray-600 hover:underline hover:underline-offset-4 transition-colors duration-200 break-words"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {children}
+              </a>
+            ),
+            blockquote: ({ children }) => (
+              <div className="pl-4 border-l-4 border-gray-200 text-gray-400">
+                {children}
+              </div>
+            ),
+          }}
+        >
+          {thought.content}
+        </ReactMarkdown>
+      </div>
+      <small className="text-gray-500 self-end mt-2">
+        {formatTimestamp(thought.timestamp)}
+      </small>
+    </div>
+  );
+};
+
+interface ThoughtsListProps {
+  username: string;
+}
+
+export default function ThoughtsList({ username }: ThoughtsListProps) {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -123,6 +219,15 @@ export default function ThoughtsList({ username }: { username: string }) {
     }
   };
 
+  const handleEdit = (id: string) => {
+    router.push(`/editor?type=thought&id=${id}`);
+  };
+
+  const handleDelete = (id: string) => {
+    setThoughtToDelete(id);
+    setIsDeleteDialogOpen(true);
+  };
+
   if (status === "unauthenticated" || error === "authentication_failed") {
     if (!username) {
       return <GitHubSignInButton />;
@@ -157,121 +262,40 @@ export default function ThoughtsList({ username }: { username: string }) {
 
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <div className="space-y-4">
+     
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("confirmDelete")}</DialogTitle>
+            <DialogDescription>{t("undoAction")}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">{t("cancel")}</Button>
+            </DialogClose>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                if (thoughtToDelete) {
+                  handleDeleteThought(thoughtToDelete);
+                }
+                setIsDeleteDialogOpen(false);
+              }}
+            >
+              {t("delete")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <div className="grid grid-cols-2 gap-4">
         {thoughts.map((thought) => (
-          <div
-            key={thought.id}
-            className="bg-[#f9f9f9] shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300 flex flex-col"
-          >
-            <div className="text-gray-800 mb-2 prose max-w-none">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="text-gray-700 hover:text-black float-right bg-transparent"
-                  >
-                    <AiOutlineEllipsis className="h-5 w-5" />{" "}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem
-                    onSelect={() => {
-                      setThoughtToDelete(thought.id);
-                      setIsDeleteDialogOpen(true);
-                    }}
-                  >
-                    {t("delete")}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      router.push(`/editor?type=thought&id=${thought.id}`);
-                    }}
-                  >
-                    {t("edit")}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <Dialog
-                open={isDeleteDialogOpen}
-                onOpenChange={setIsDeleteDialogOpen}
-              >
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>{t("confirmDelete")}</DialogTitle>
-                    <DialogDescription>{t("undoAction")}</DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter>
-                    <DialogClose asChild>
-                      <Button variant="outline">{t("cancel")}</Button>
-                    </DialogClose>
-                    <Button
-                      variant="destructive"
-                      onClick={() => {
-                        if (thoughtToDelete) {
-                          handleDeleteThought(thoughtToDelete);
-                        }
-                        setIsDeleteDialogOpen(false);
-                      }}
-                    >
-                      {t("delete")}
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm, remarkMath]}
-                rehypePlugins={[rehypeKatex]}
-                components={{
-                  code({
-                    inline,
-                    className,
-                    children,
-                    ...props
-                  }: {
-                    inline?: boolean;
-                    className?: string;
-                    children?: React.ReactNode;
-                  } & React.HTMLAttributes<HTMLElement>) {
-                    const match = /language-(\w+)/.exec(className || "");
-                    return !inline && match ? (
-                      <SyntaxHighlighter
-                        style={
-                          tomorrow as { [key: string]: React.CSSProperties }
-                        }
-                        language={match[1]}
-                        PreTag="div"
-                      >
-                        {String(children).replace(/\n$/, "")}
-                      </SyntaxHighlighter>
-                    ) : (
-                      <code className={className} {...props}>
-                        {children}
-                      </code>
-                    );
-                  },
-                  a: ({ children, ...props }) => (
-                    <a
-                      {...props}
-                      className="text-gray-400 no-underline hover:text-gray-600 hover:underline hover:underline-offset-4 transition-colors duration-200 break-words"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {children}
-                    </a>
-                  ),
-                  blockquote: ({ children }) => (
-                    <div className="pl-4 border-l-4 border-gray-200 text-gray-400">
-                      {children}
-                    </div>
-                  ),
-                }}
-              >
-                {thought.content}
-              </ReactMarkdown>
-            </div>
-            <small className="text-gray-500 self-end mt-2">
-              {formatTimestamp(thought.timestamp)}
-            </small>
+          <div key={thought.id} className="relative">
+            <ThoughtCard
+              thought={thought}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+            />
           </div>
         ))}
       </div>

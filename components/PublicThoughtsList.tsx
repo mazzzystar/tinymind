@@ -31,7 +31,7 @@ export default function PublicThoughtsList({
   }, [thoughts]);
 
   return (
-    <div className="space-y-4">
+    <div className="grid grid-cols-2 gap-4">
       {formattedThoughts.map((thought) => (
         <div
           key={thought.id}
