@@ -32,7 +32,7 @@ import {
 import "katex/dist/katex.min.css";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
-import { formatTimestamp } from "@/utils/dateFormatting";
+import { getRelativeTimeString } from "@/utils/dateFormatting";
 
 interface ThoughtCardProps {
   thought: Thought;
@@ -120,7 +120,7 @@ const ThoughtCard = ({ thought, onDelete, onEdit }: ThoughtCardProps) => {
         </ReactMarkdown>
       </div>
       <small className="text-gray-500 self-end mt-2">
-        {formatTimestamp(thought.timestamp)}
+        {getRelativeTimeString(thought.timestamp)}
       </small>
     </div>
   );
