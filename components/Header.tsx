@@ -43,19 +43,23 @@ const UserInfo = ({
   latestThought: Thought | null;
 }) => (
   <div className="flex flex-col">
-    <span className="font-medium text-gray-900">{displayName}</span>
+    <span className="font-medium text-gray-900 text-xl">{displayName}</span>
     <div className="flex items-center space-x-2">
-      <span className="text-sm text-gray-600 font-mono">
-        {latestThought?.content.substring(0, 50) || "No status"}
+      <span className="text-xs text-gray-600 font-mono">
+        {latestThought?.content ? (latestThought.content.length > 24 ? `${latestThought.content.substring(0, 24)} ...` : latestThought.content) : "No status"}
       </span>
       <span className="text-xs text-gray-400">•</span>
       <time className="text-xs text-gray-400" data-status-datetime="">
         {latestThought ? getRelativeTimeString(latestThought.timestamp) : ""}
       </time>
-      <span className="text-xs text-gray-400">•</span>
-      <Link href="/thoughts" className="text-xs text-gray-400 hover:text-gray-600 underline">
-        more
-      </Link>
+      {window.location.pathname !== '/thoughts' && (
+        <>
+          <span className="text-xs text-gray-400">•</span>
+          <Link href="/thoughts" className="text-xs text-gray-400 hover:text-gray-600 underline">
+            more
+          </Link>
+        </>
+      )}
     </div>
   </div>
 );

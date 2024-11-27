@@ -49,7 +49,7 @@ const ThoughtCard = ({ thought, onDelete, onEdit }: ThoughtCardProps) => {
       className="relative flex flex-col justify-center p-4 
                  bg-[#f6f8fa] rounded-lg text-[#333333] font-sans text-base leading-4
                  transition-all duration-300 ease-in-out
-                 hover:shadow-lg max-h-[33vh] overflow-auto"
+                 hover:shadow-lg overflow-auto"
     >
       <div className="text-gray-800 mb-2 prose max-w-none">
         <DropdownMenu>
