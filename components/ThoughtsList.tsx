@@ -49,7 +49,7 @@ const ThoughtCard = ({ thought, onDelete, onEdit }: ThoughtCardProps) => {
       className="relative flex flex-col justify-center p-4 
                  bg-[#f6f8fa] rounded-lg text-[#333333] font-sans text-base leading-4
                  transition-all duration-300 ease-in-out
-                 hover:shadow-lg overflow-auto"
+                 hover:shadow-lg overflow-auto h-fit"
     >
       <div className="text-gray-800 mb-2 prose max-w-none">
         <DropdownMenu>
@@ -262,7 +262,28 @@ export default function ThoughtsList({ username }: ThoughtsListProps) {
 
   return (
     <div className="max-w-2xl mx-auto p-4">
-     
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-2">
+        <div className="flex flex-col gap-2">
+        {thoughts.filter((_, index) => index % 2 !== 0).map((thought) => (
+            <ThoughtCard
+              key={thought.id}
+              thought={thought}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+            />
+        ))}
+        </div>
+        <div className="grid gap-4">
+        {thoughts.filter((_, index) => index % 2 === 0).map((thought) => (
+            <ThoughtCard
+              key={thought.id}
+              thought={thought}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+            />
+        ))}
+        </div>
+      </div>
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -287,18 +308,6 @@ export default function ThoughtsList({ username }: ThoughtsListProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      <div className="grid grid-cols-2 gap-4">
-        {thoughts.map((thought) => (
-          <div key={thought.id} className="relative">
-            <ThoughtCard
-              thought={thought}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-            />
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
