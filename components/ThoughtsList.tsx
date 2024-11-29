@@ -273,7 +273,7 @@ export default function ThoughtsList({ username }: ThoughtsListProps) {
             />
         ))}
         </div>
-        <div className="grid gap-4">
+        <div className="flex flex-col gap-2">
         {thoughts.filter((_, index) => index % 2 === 0).map((thought) => (
             <ThoughtCard
               key={thought.id}
