@@ -2,14 +2,9 @@
 
 import { useState, useEffect } from "react";
 import "katex/dist/katex.min.css";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import { Thought } from "@/lib/githubApi";
 import { formatTimestamp } from "@/utils/dateFormatting";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { ThoughtCard } from "./ThoughtsList"; // Import ThoughtCard from ThoughtsList
 
 type FormattedThought = Thought & { formattedTimestamp: string };
 
@@ -31,67 +26,29 @@ export default function PublicThoughtsList({
   }, [thoughts]);
 
   return (
-    <div className="grid grid-cols-2 gap-4">
-      {formattedThoughts.map((thought) => (
-        <div
-          key={thought.id}
-          className="bg-[#f9f9f9] shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300 flex flex-col"
-        >
-          <div className="text-gray-800 mb-2 prose max-w-none">
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm, remarkMath]}
-              rehypePlugins={[rehypeKatex]}
-              components={{
-                code({
-                  inline,
-                  className,
-                  children,
-                  ...props
-                }: {
-                  inline?: boolean;
-                  className?: string;
-                  children?: React.ReactNode;
-                } & React.HTMLAttributes<HTMLElement>) {
-                  const match = /language-(\w+)/.exec(className || "");
-                  return !inline && match ? (
-                    <SyntaxHighlighter
-                      style={tomorrow as { [key: string]: React.CSSProperties }}
-                      language={match[1]}
-                      PreTag="div"
-                    >
-                      {String(children).replace(/\n$/, "")}
-                    </SyntaxHighlighter>
-                  ) : (
-                    <code className={className} {...props}>
-                      {children}
-                    </code>
-                  );
-                },
-                a: ({ children, ...props }) => (
-                  <a
-                    {...props}
-                    className="text-gray-400 no-underline hover:text-gray-600 hover:underline hover:underline-offset-4 transition-colors duration-200 break-words"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {children}
-                  </a>
-                ),
-                blockquote: ({ children }) => (
-                  <div className="pl-4 border-l-4 border-gray-200 text-gray-400">
-                    {children}
-                  </div>
-                ),
-              }}
-            >
-              {thought.content}
-            </ReactMarkdown>
-          </div>
-          <small className="text-gray-500 self-end mt-2">
-            {thought.formattedTimestamp}
-          </small>
+    <div className="max-w-2xl mx-auto p-4">
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-2">
+        <div className="flex flex-col gap-2">
+          {formattedThoughts.filter((_, index) => index % 2 !== 0).map((thought) => (
+            <ThoughtCard
+              key={thought.id}
+              thought={thought}
+              onDelete={() => {}}
+              onEdit={() => {}}
+            />
+          ))}
         </div>
-      ))}
+        <div className="flex flex-col gap-2">
+          {thoughts.filter((_, index) => index % 2 === 0).map((thought) => (
+            <ThoughtCard
+              key={thought.id}
+              thought={thought}
+              onDelete={() => {}}
+              onEdit={() => {}}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

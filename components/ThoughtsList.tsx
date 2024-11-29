@@ -40,7 +40,7 @@ interface ThoughtCardProps {
   onEdit: (id: string) => void;
 }
 
-const ThoughtCard = ({ thought, onDelete, onEdit }: ThoughtCardProps) => {
+export const ThoughtCard = ({ thought, onDelete, onEdit }: ThoughtCardProps) => {
   const t = useTranslations("HomePage");
   
   return (
