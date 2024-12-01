@@ -8,6 +8,7 @@ export interface BlogPost {
   id: string;
   title: string;
   content: string;
+  imageUrl: string | null;
   date: string;
 }
 
@@ -23,6 +24,14 @@ function getOctokit(accessToken: string | undefined) {
     throw new Error('Access token is required');
   }
   return new Octokit({ auth: accessToken });
+}
+
+const getFirstImageURLFrom = (content: string): string | null => {
+  // Regular expression to match URLs ending with common image extensions
+  const imgRegex = /(https?:\/\/[^\s]+?\.(?:png|jpg|jpeg|gif|webp))/i;
+  const match = imgRegex.exec(content);
+
+  return match ? match[1] : null; // Return the URL if found, otherwise null
 }
 
 async function getRepoInfo(accessToken: string | undefined) {
@@ -198,6 +207,7 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
                 id: file.name.replace('.md', ''),
                 title,
                 content,
+                imageUrl: getFirstImageURLFrom(content),
                 date,
               };
             }
@@ -254,6 +264,7 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
       id,
       title,
       content,
+      imageUrl: getFirstImageURLFrom(content),
       date,
     };
   } catch (error) {
