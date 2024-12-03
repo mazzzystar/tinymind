@@ -493,7 +493,7 @@ export default function Editor({
             <Button
               type="submit"
               disabled={isLoading || isImageUploading}
-              className="px-12 py-5 bg-black hover:bg-gray-800"
+              className="px-12 py-5 bg-black hover:bg-gray-800 text-white"
             >
               {isLoading ? (
                 <>
