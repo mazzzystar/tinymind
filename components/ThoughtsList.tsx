@@ -46,11 +46,7 @@ export const ThoughtCard = ({ thought, onDelete, onEdit }: ThoughtCardProps) => 
   return (
     <div
       key={thought.id}
-      className="relative flex flex-col justify-center p-4 
-                 bg-[#f6f8fa] rounded-lg text-[#333333] font-sans text-base leading-4
-                 transition-all duration-300 ease-in-out
-                 hover:shadow-lg overflow-auto h-fit"
-    >
+      className="relative flex flex-col justify-center p-4 rounded-lg leading-4 transition-all duration-300 ease-in-out hover:shadow-lg overflow-auto h-fit bg-white">
       <div className="text-gray-800 mb-2 prose max-w-none">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

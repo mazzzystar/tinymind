@@ -78,7 +78,7 @@ export default async function RootLayout({
         gtag('js', new Date());
         gtag('config', 'G-1MF16MH92D');
       `}</Script>
-      <body className={gowun_wodum.className}>
+      <body className={`${gowun_wodum.className} bg-[#f6f8fa]`}>
         <NextIntlClientProvider messages={messages}>
           <SessionProvider>
             <Header iconUrl={iconPath} username={username} />
