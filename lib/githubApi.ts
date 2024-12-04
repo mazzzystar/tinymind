@@ -27,11 +27,13 @@ function getOctokit(accessToken: string | undefined) {
 }
 
 const getFirstImageURLFrom = (content: string): string | null => {
-  // Regular expression to match URLs ending with common image extensions
   const imgRegex = /(https?:\/\/[^\s]+?\.(?:png|jpg|jpeg|gif|webp))/i;
   const match = imgRegex.exec(content);
-
-  return match ? match[1] : null; // Return the URL if found, otherwise null
+  if (match) {
+    const url = match[1]
+    return url.startsWith('https://github') ? `${url}?raw=true` : url
+  }
+  return null
 }
 
 async function getRepoInfo(accessToken: string | undefined) {
