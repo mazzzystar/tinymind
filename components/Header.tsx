@@ -127,10 +127,12 @@ export default function Header({ username, iconUrl }: HeaderProps) {
               alt="Blogger Avatar"
               href={navigationPath}
             />
-            <UserInfo 
+            {
+              latestThought && <UserInfo 
               displayName={displayName}
               latestThought={latestThought}
             />
+            }
           </div>
           <nav className="hidden">
             <Link href="/blog" className="text-gray-600 hover:text-gray-900">
