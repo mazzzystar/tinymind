@@ -1,9 +1,7 @@
 import { Octokit } from '@octokit/rest'
 import path from 'path'
 import { getCachedOrFetch } from './cache'
-import { rateLimiter } from './limiter'
 
-// Add this type definition at the top of the file
 type UpdateFileParams = Parameters<Octokit['repos']['createOrUpdateFileContents']>[0]
 
 export interface BlogPost {
@@ -205,37 +203,9 @@ async function initializeGitHubStructure(octokit: Octokit, owner: string, repo: 
   await ensureContentStructure(octokit, owner, repo)
 }
 
-
-
-// Wrap API calls with rate limiter
-async function getRepoInfoWithRateLimit(accessToken: string | undefined) {
-  const octokit = getOctokit(accessToken)
-  await rateLimiter(octokit)
-  return getRepoInfo(accessToken)
-}
-
-async function ensureRepoExistsWithRateLimit(octokit: Octokit, owner: string, repo: string) {
-  await rateLimiter(octokit)
-  return ensureRepoExists(octokit, owner, repo)
-}
-
-async function ensureContentStructureWithRateLimit(octokit: Octokit, owner: string, repo: string) {
-  await rateLimiter(octokit)
-  return ensureContentStructure(octokit, owner, repo)
-}
-
-async function initializeGitHubStructureWithRateLimit(
-  octokit: Octokit,
-  owner: string,
-  repo: string
-) {
-  await rateLimiter(octokit)
-  return initializeGitHubStructure(octokit, owner, repo)
-}
-
 export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
   const octokit = getOctokit(accessToken)
-  const { owner, repo } = await getRepoInfoWithRateLimit(accessToken)
+  const { owner, repo } = await getRepoInfo(accessToken)
 
   return getCachedOrFetch(`blogPosts-${owner}-${repo}`, async () => {
     try {
@@ -311,42 +281,45 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
   if (!accessToken) {
     throw new Error('Access token is required')
   }
-  const octokit = getOctokit(accessToken)
-  const { owner, repo } = await getRepoInfoWithRateLimit(accessToken)
 
-  try {
-    // Fetch the file content
-    const contentResponse = await octokit.repos.getContent({
-      owner,
-      repo,
-      path: `content/blog/${decodeURIComponent(id)}.md`,
-    })
+  return getCachedOrFetch(`content/blog/${decodeURIComponent(id)}.md`, async () => {
+    const octokit = getOctokit(accessToken)
+    const { owner, repo } = await getRepoInfo(accessToken)
 
-    if (Array.isArray(contentResponse.data) || !('content' in contentResponse.data)) {
-      throw new Error('Unexpected response from GitHub API')
+    try {
+      // Fetch the file content
+      const contentResponse = await octokit.repos.getContent({
+        owner,
+        repo,
+        path: `content/blog/${decodeURIComponent(id)}.md`,
+      })
+
+      if (Array.isArray(contentResponse.data) || !('content' in contentResponse.data)) {
+        throw new Error('Unexpected response from GitHub API')
+      }
+
+      const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf-8')
+
+      // Parse the title from the content
+      const titleMatch = content.match(/title:\s*(.+)/)
+      const title = titleMatch ? titleMatch[1] : id
+
+      // Parse the date from the content
+      const dateMatch = content.match(/date:\s*(.+)/)
+      const date = dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString()
+
+      return {
+        id,
+        title,
+        content,
+        imageUrl: getFirstImageURLFrom(content),
+        date,
+      }
+    } catch (error) {
+      console.error('Error fetching blog post:', error)
+      return null
     }
-
-    const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf-8')
-
-    // Parse the title from the content
-    const titleMatch = content.match(/title:\s*(.+)/)
-    const title = titleMatch ? titleMatch[1] : id
-
-    // Parse the date from the content
-    const dateMatch = content.match(/date:\s*(.+)/)
-    const date = dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString()
-
-    return {
-      id,
-      title,
-      content,
-      imageUrl: getFirstImageURLFrom(content),
-      date,
-    }
-  } catch (error) {
-    console.error('Error fetching blog post:', error)
-    return null
-  }
+  })
 }
 
 export async function getThoughts(accessToken: string | undefined): Promise<Thought[]> {
@@ -354,7 +327,7 @@ export async function getThoughts(accessToken: string | undefined): Promise<Thou
     throw new Error('Access token is required')
   }
   const octokit = getOctokit(accessToken)
-  const { owner, repo } = await getRepoInfoWithRateLimit(accessToken)
+  const { owner, repo } = await getRepoInfo(accessToken)
 
   try {
     const response = await octokit.repos.getContent({
@@ -383,8 +356,8 @@ export async function createBlogPost(
   accessToken: string
 ): Promise<void> {
   const octokit = getOctokit(accessToken)
-  const { owner, repo } = await getRepoInfoWithRateLimit(accessToken)
-  await initializeGitHubStructureWithRateLimit(octokit, owner, repo)
+  const { owner, repo } = await getRepoInfo(accessToken)
+  await initializeGitHubStructure(octokit, owner, repo)
 
   const path = `content/blog/${title.toLowerCase().replace(/\s+/g, '-')}.md`
   const date = new Date().toISOString() // Store full ISO string
@@ -417,10 +390,10 @@ export async function createThought(
   console.log('Octokit instance created')
 
   try {
-    const { owner, repo } = await getRepoInfoWithRateLimit(accessToken)
+    const { owner, repo } = await getRepoInfo(accessToken)
     console.log('Repo info:', { owner, repo })
 
-    await initializeGitHubStructureWithRateLimit(octokit, owner, repo)
+    await initializeGitHubStructure(octokit, owner, repo)
     console.log('GitHub structure initialized')
 
     let thoughts: Thought[] = []
@@ -493,10 +466,10 @@ export async function deleteThought(id: string, accessToken: string): Promise<vo
   console.log('Octokit instance created')
 
   try {
-    const { owner, repo } = await getRepoInfoWithRateLimit(accessToken)
+    const { owner, repo } = await getRepoInfo(accessToken)
     console.log('Repo info:', { owner, repo })
 
-    await initializeGitHubStructureWithRateLimit(octokit, owner, repo)
+    await initializeGitHubStructure(octokit, owner, repo)
     console.log('GitHub structure initialized')
 
     let thoughts: Thought[] = []
@@ -553,10 +526,10 @@ export async function updateThought(
   console.log('Octokit instance created')
 
   try {
-    const { owner, repo } = await getRepoInfoWithRateLimit(accessToken)
+    const { owner, repo } = await getRepoInfo(accessToken)
     console.log('Repo info:', { owner, repo })
 
-    await initializeGitHubStructureWithRateLimit(octokit, owner, repo)
+    await initializeGitHubStructure(octokit, owner, repo)
     console.log('GitHub structure initialized')
 
     let thoughts: Thought[] = []
@@ -616,7 +589,7 @@ export async function deleteBlogPost(id: string, accessToken: string): Promise<v
   const octokit = getOctokit(accessToken)
 
   try {
-    const { owner, repo } = await getRepoInfoWithRateLimit(accessToken)
+    const { owner, repo } = await getRepoInfo(accessToken)
 
     // Decode the ID and create the file path
     const decodedId = decodeURIComponent(id)
@@ -651,6 +624,36 @@ export async function deleteBlogPost(id: string, accessToken: string): Promise<v
   }
 }
 
+async function getContent(octokit: Octokit, owner: string, repo: string, path: string) {
+  const response = await octokit.repos.getContent({ owner, repo, path })
+  if (Array.isArray(response.data) || !('content' in response.data)) {
+    throw new Error('Unexpected response from GitHub API')
+  }
+  return Buffer.from(response.data.content, 'base64').toString('utf-8')
+}
+
+async function updateFileContents(
+  octokit: Octokit,
+  owner: string,
+  repo: string,
+  path: string,
+  message: string,
+  content: string,
+  sha?: string
+) {
+  const params: UpdateFileParams = {
+    owner,
+    repo,
+    path,
+    message,
+    content: Buffer.from(content).toString('base64'),
+  }
+  if (sha) {
+    params.sha = sha
+  }
+  await octokit.repos.createOrUpdateFileContents(params)
+}
+
 export async function updateBlogPost(
   id: string,
   title: string,
@@ -664,47 +667,31 @@ export async function updateBlogPost(
   const octokit = getOctokit(accessToken)
 
   try {
-    const { owner, repo } = await getRepoInfoWithRateLimit(accessToken)
+    const { owner, repo } = await getRepoInfo(accessToken)
 
     // Get the current file to retrieve its SHA and content
-    const currentFile = await octokit.repos.getContent({
-      owner,
-      repo,
-      path: `content/blog/${id}.md`,
-    })
+    const existingContent = await getContent(octokit, owner, repo, `content/blog/${id}.md`)
+    const dateMatch = existingContent.match(/date:\s*(.+)/)
+    const date = dateMatch ? dateMatch[1] : new Date().toISOString()
 
-    if (Array.isArray(currentFile.data) || !('sha' in currentFile.data)) {
-      throw new Error('Unexpected response when fetching current blog post')
-    }
-
-    if ('content' in currentFile.data) {
-      const existingContent = Buffer.from(currentFile.data.content, 'base64').toString('utf-8')
-
-      // Extract the original date from the existing content
-      const dateMatch = existingContent.match(/date:\s*(.+)/)
-      const date = dateMatch ? dateMatch[1] : new Date().toISOString()
-
-      const updatedContent = `---
+    const updatedContent = `---
 title: ${title}
 date: ${date}
 ---
 
 ${content}`
 
-      // Update the blog post file
-      await octokit.repos.createOrUpdateFileContents({
-        owner,
-        repo,
-        path: `content/blog/${id}.md`,
-        message: 'Update blog post',
-        content: Buffer.from(updatedContent).toString('base64'),
-        sha: currentFile.data.sha,
-      })
+    // Update the blog post file
+    await updateFileContents(
+      octokit,
+      owner,
+      repo,
+      `content/blog/${id}.md`,
+      'Update blog post',
+      updatedContent
+    )
 
-      console.log('Blog post updated successfully')
-    } else {
-      throw new Error('Unexpected response when fetching current blog post')
-    }
+    console.log('Blog post updated successfully')
   } catch (error) {
     console.error('Error updating blog post:', error)
     throw error
@@ -720,7 +707,7 @@ export async function uploadImage(file: File, accessToken: string): Promise<stri
   console.log('Octokit instance created')
 
   try {
-    const { owner, repo } = await getRepoInfoWithRateLimit(accessToken)
+    const { owner, repo } = await getRepoInfo(accessToken)
     console.log('Repo info:', { owner, repo })
 
     // Get the default branch
@@ -728,7 +715,7 @@ export async function uploadImage(file: File, accessToken: string): Promise<stri
     const defaultBranch = repoData.default_branch
     console.log('Default branch:', defaultBranch)
 
-    await initializeGitHubStructureWithRateLimit(octokit, owner, repo)
+    await initializeGitHubStructure(octokit, owner, repo)
     console.log('GitHub structure initialized')
 
     // Generate a unique filename
@@ -814,51 +801,53 @@ export async function getBlogPostsPublic(
   owner: string,
   repo: string
 ): Promise<BlogPost[]> {
-  try {
-    const response = await octokit.repos.getContent({
-      owner,
-      repo,
-      path: 'content/blog',
-    })
+  return getCachedOrFetch(`blogPosts-${owner}-${repo}`, async () => {
+    try {
+      const response = await octokit.repos.getContent({
+        owner,
+        repo,
+        path: 'content/blog',
+      })
 
-    if (!Array.isArray(response.data)) {
+      if (!Array.isArray(response.data)) {
+        return []
+      }
+
+      const posts = await Promise.all(
+        response.data
+          .filter((file) => file.type === 'file' && file.name.endsWith('.md'))
+          .map(async (file) => {
+            const contentResponse = await octokit.repos.getContent({
+              owner,
+              repo,
+              path: `content/blog/${file.name}`,
+            })
+
+            if ('content' in contentResponse.data) {
+              const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf-8')
+              const titleMatch = content.match(/title:\s*(.+)/)
+              const dateMatch = content.match(/date:\s*(.+)/)
+
+              return {
+                id: file.name.replace('.md', ''),
+                title: titleMatch
+                  ? decodeURIComponent(titleMatch[1])
+                  : decodeURIComponent(file.name.replace('.md', '')),
+                content,
+                imageUrl: getFirstImageURLFrom(content),
+                date: dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString(),
+              }
+            }
+            return undefined
+          })
+      )
+
+      return posts.filter((post): post is BlogPost => post !== undefined)
+    } catch (error) {
+      console.error('Error fetching public blog posts:', error)
       return []
     }
-
-    const posts = await Promise.all(
-      response.data
-        .filter((file) => file.type === 'file' && file.name.endsWith('.md'))
-        .map(async (file) => {
-          const contentResponse = await octokit.repos.getContent({
-            owner,
-            repo,
-            path: `content/blog/${file.name}`,
-          })
-
-          if ('content' in contentResponse.data) {
-            const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf-8')
-            const titleMatch = content.match(/title:\s*(.+)/)
-            const dateMatch = content.match(/date:\s*(.+)/)
-
-            return {
-              id: file.name.replace('.md', ''),
-              title: titleMatch
-                ? decodeURIComponent(titleMatch[1])
-                : decodeURIComponent(file.name.replace('.md', '')),
-              content,
-              imageUrl: getFirstImageURLFrom(content),
-              date: dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString(),
-            }
-          }
-          return undefined
-        })
-    )
-
-    return posts.filter((post): post is BlogPost => post !== undefined)
-  } catch (error) {
-    console.error('Error fetching public blog posts:', error)
-    return []
-  }
+  })
 }
 
 export async function getThoughtsPublic(
@@ -903,7 +892,7 @@ export async function getIconUrls(
     // Assuming access tokens are longer than usernames
     try {
       octokit = getOctokit(usernameOrAccessToken)
-      const repoInfo = await getRepoInfoWithRateLimit(usernameOrAccessToken)
+      const repoInfo = await getRepoInfo(usernameOrAccessToken)
       owner = repoInfo.owner
       repo = repoInfo.repo
     } catch (error) {
