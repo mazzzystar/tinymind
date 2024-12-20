@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import Giscus from '@giscus/react'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
@@ -76,6 +77,20 @@ export function BlogPostContent({ title, date, content, headerContent }: BlogPos
           </ReactMarkdown>
         </div>
       </CardContent>
+      <Giscus
+        repo="metrue/discussions"
+        repoId='R_kgDOHH4v0Q'
+        category='Announcements'
+        categoryId='DIC_kwDOHH4v0c4CObFA'
+        mapping='pathname'
+        strict='0'
+        reactionsEnabled='0'
+        emitMetadata='0'
+        inputPosition='bottom'
+        theme='light'
+        lang='en'
+        loading='lazy'
+      />
     </Card>
   )
 }
