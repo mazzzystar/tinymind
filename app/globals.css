@@ -58,7 +58,6 @@
   body {
     @apply bg-background text-foreground;
     line-height: 1.62em;
-    padding: 0 2.5em;
     margin: 0;
     font-size: 18px;
     word-wrap: break-word;
