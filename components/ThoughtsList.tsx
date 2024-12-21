@@ -49,20 +49,27 @@ export const ThoughtCard = ({ thought, onDelete, onEdit }: ThoughtCardProps) => 
       className='relative flex flex-col justify-center p-4 rounded-lg leading-4 transition-all duration-300 ease-in-out hover:shadow-lg overflow-auto h-fit bg-white font-light	font-mono'
     >
       <div className='text-gray-800 mb-2 prose max-w-none'>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant='ghost'
-              className='text-gray-700 hover:text-black float-right bg-transparent'
-            >
-              <AiOutlineEllipsis className='h-5 w-5' />{' '}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onSelect={() => onDelete(thought.id)}>{t('delete')}</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onEdit(thought.id)}>{t('edit')}</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div>
+          <small className='text-gray-500 self-end mt-2'>
+            {getRelativeTimeString(thought.timestamp)}
+          </small>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant='ghost'
+                className='text-gray-700 hover:text-black float-right bg-transparent'
+              >
+                <AiOutlineEllipsis className='h-5 w-5' />{' '}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onSelect={() => onDelete(thought.id)}>
+                {t('delete')}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onEdit(thought.id)}>{t('edit')}</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         <ReactMarkdown
           remarkPlugins={[remarkGfm, remarkMath]}
           rehypePlugins={[rehypeKatex]}
@@ -110,9 +117,6 @@ export const ThoughtCard = ({ thought, onDelete, onEdit }: ThoughtCardProps) => 
           {thought.content}
         </ReactMarkdown>
       </div>
-      <small className='text-gray-500 self-end mt-2'>
-        {getRelativeTimeString(thought.timestamp)}
-      </small>
     </div>
   )
 }
