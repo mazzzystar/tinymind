@@ -71,6 +71,13 @@ export function BlogPostContent({ title, date, content, headerContent }: BlogPos
               blockquote: ({ children }) => (
                 <div className='pl-4 border-l-4 border-gray-200 text-gray-400'>{children}</div>
               ),
+              img: ({ children, ...props }) => (
+                <div className="flex justify-center">
+                  <img {...props} className='h-auto rounded-lg'>
+                    {children}
+                  </img>
+                </div>
+              ),
             }}
           >
             {content}
@@ -78,7 +85,7 @@ export function BlogPostContent({ title, date, content, headerContent }: BlogPos
         </div>
       </CardContent>
       <Giscus
-        repo="metrue/discussions"
+        repo='metrue/discussions'
         repoId='R_kgDOHH4v0Q'
         category='Announcements'
         categoryId='DIC_kwDOHH4v0c4CObFA'
