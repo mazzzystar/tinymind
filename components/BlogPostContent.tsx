@@ -73,7 +73,7 @@ export function BlogPostContent({ title, date, content, headerContent }: BlogPos
               ),
               img: ({ children, ...props }) => (
                 <div className="flex justify-center">
-                  <img {...props} className='h-auto rounded-lg'>
+                  <img {...props} className='h-auto rounded-lg max-w-[min(100%,32em)]'>
                     {children}
                   </img>
                 </div>
