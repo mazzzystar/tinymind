@@ -16,7 +16,7 @@ export const BlogCard = ({ post, username }: { post: BlogPost; username: string 
   >
     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
     <Link
-      href={`/${username}/blog/${encodeURIComponent(post.id)}`}
+      href={`/blog/${encodeURIComponent(post.id)}`}
       className="large-load medium-load small-loads relative z-10 flex flex-col justify-end p-6"
       aria-label={post.title}
     >

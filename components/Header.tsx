@@ -113,8 +113,7 @@ export default function Header({ username, iconUrl }: HeaderProps) {
     fetchLatestThought();
   }, [session, status, username]);
 
-  const isOwnProfile = userLogin === username;
-  const navigationPath = isOwnProfile ? "/" : username ? `/${username}` : "/";
+  const navigationPath =  "/";
   const displayName = username || userLogin || "Anonymous";
 
   return (
