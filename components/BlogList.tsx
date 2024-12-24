@@ -35,14 +35,14 @@ export default function BlogList({ posts }: { posts: BlogPost[] }) {
         {
           sorted
             .filter((_, index) => index % 2 === 0)
-            .map((post) => <BlogCard key={post.id} post={post} username={'metrue'} />)
+            .map((post) => <BlogCard key={post.id} post={post} />)
         }
         </div>
         <div className="flex flex-col gap-2">
         { 
           sorted
             .filter((_, index) => index % 2 !== 0)
-            .map((post) => <BlogCard key={post.id} post={post} username={'metrue'} />)
+            .map((post) => <BlogCard key={post.id} post={post} />)
         }
         </div>
       </div>
