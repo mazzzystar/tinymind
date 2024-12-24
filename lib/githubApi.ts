@@ -629,7 +629,10 @@ async function getContent(octokit: Octokit, owner: string, repo: string, path: s
   if (Array.isArray(response.data) || !('content' in response.data)) {
     throw new Error('Unexpected response from GitHub API')
   }
-  return Buffer.from(response.data.content, 'base64').toString('utf-8')
+  return {
+    content: Buffer.from(response.data.content, 'base64').toString('utf-8'),
+    sha: response.data.sha,
+  }
 }
 
 async function updateFileContents(
@@ -670,7 +673,12 @@ export async function updateBlogPost(
     const { owner, repo } = await getRepoInfo(accessToken)
 
     // Get the current file to retrieve its SHA and content
-    const existingContent = await getContent(octokit, owner, repo, `content/blog/${id}.md`)
+    const { content: existingContent, sha } = await getContent(
+      octokit,
+      owner,
+      repo,
+      `content/blog/${id}.md`
+    )
     const dateMatch = existingContent.match(/date:\s*(.+)/)
     const date = dateMatch ? dateMatch[1] : new Date().toISOString()
 
@@ -688,7 +696,8 @@ ${content}`
       repo,
       `content/blog/${id}.md`,
       'Update blog post',
-      updatedContent
+      updatedContent,
+      sha
     )
 
     console.log('Blog post updated successfully')
