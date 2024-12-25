@@ -139,7 +139,7 @@ export const PostContainer = ({ post }: { post: BlogPost }) => {
       title={decodedTitle}
       date={post.date}
       content={contentWithoutFrontmatter}
-      headerContent={headerContent}
+      headerContent={status === 'authenticated' ? headerContent : null}
     />
   )
 }

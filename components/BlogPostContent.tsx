@@ -23,11 +23,13 @@ interface BlogPostContentProps {
 
 export function BlogPostContent({ title, date, content, headerContent }: BlogPostContentProps) {
   return (
-    <Card className='max-w-3xl mx-auto mt-8 font-light font-mono'>
+    <Card className='max-w-3xl mx-auto mt-8 font-mono'>
       <CardHeader className='flex justify-between items-start'>
         <div>
           <CardTitle className='text-3xl font-bold'>{title}</CardTitle>
-          <p className='text-sm text-gray-500'>{format(new Date(date), 'MMMM d, yyyy')}</p>
+          <time className='text-xs text-gray-400' data-status-datetime=''>
+            {format(new Date(date), 'MMMM d, yyyy')}
+          </time>
         </div>
         {headerContent}
       </CardHeader>
