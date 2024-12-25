@@ -1,43 +1,18 @@
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
 import BlogList from "@/components/BlogList";
-import GitHubSignInButton from "@/components/GitHubSignInButton";
-import { getBlogPosts, getBlogPostsPublic } from "@/lib/githubApi";
-import { Octokit } from "@octokit/rest";
-import PublicBlogList from "@/components/PublicBlogList";
+import { authOptions } from "@/lib/auth";
+import { createGitHubAPIClient } from '@/lib/client'
+import { getServerSession } from "next-auth/next";
 
 export const revalidate = 60;
 
 export default async function BlogPage() {
   const session = await getServerSession(authOptions);
 
-  if (!session || !session.accessToken) {
-    const username = process.env.GITHUB_USERNAME ?? '';
-    
-    if (username) {
-      const octokit = new Octokit();
-      const blogPosts = await getBlogPostsPublic(
-        octokit,
-        username,
-        "tinymind-blog"
-      );
+  const client = createGitHubAPIClient(session?.accessToken ?? '');
 
-      return (
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          <div className="max-w-2xl mx-auto">
-            <PublicBlogList posts={blogPosts} />
-          </div>
-        </div>
-      );
-    } else {
-      return (
-        <GitHubSignInButton />
-      );
-    }
-  }
-
+  const username = process.env.GITHUB_USERNAME ?? '';
   try {
-    const posts = await getBlogPosts(session.accessToken);
+    const posts = await client.getBlogPosts(username ?? '', "tinymind-blog");
     return <BlogList posts={posts} />;
   } catch (error) {
     console.error("Error fetching blog posts:", error);

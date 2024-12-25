@@ -1,14 +1,18 @@
+'use client'
+
+import 'katex/dist/katex.min.css'
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+
+import Giscus from '@giscus/react'
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import Giscus from '@giscus/react'
-import remarkMath from 'remark-math'
-import rehypeKatex from 'rehype-katex'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { format } from 'date-fns'
-import 'katex/dist/katex.min.css'
+import rehypeKatex from 'rehype-katex'
+import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
+import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 interface BlogPostContentProps {
   title: string
@@ -69,14 +73,19 @@ export function BlogPostContent({ title, date, content, headerContent }: BlogPos
                 </a>
               ),
               blockquote: ({ children }) => (
-                <div className='pl-4 border-l-4 border-gray-200 text-gray-400'>{children}</div>
+                <blockquote className='pl-4 border-l-4 border-gray-200 text-gray-400'>
+                  {children}
+                </blockquote>
               ),
               img: ({ children, ...props }) => (
-                <div className="flex justify-center">
-                  <img {...props} className='h-auto rounded-lg max-w-[min(100%,32em)]'>
-                    {children}
-                  </img>
-                </div>
+                <figure className='flex justify-center'>
+                  <img
+                    {...props}
+                    alt='image'
+                    className='h-auto rounded-lg max-w-[min(100%,32em)]'
+                  />
+                  {children && <figcaption>{children}</figcaption>}
+                </figure>
               ),
             }}
           >

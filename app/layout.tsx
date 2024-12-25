@@ -1,17 +1,19 @@
-import type { Metadata } from "next";
-import { gowun_wodum } from "@/components/ui/font";
 import "./globals.css";
-import Header from "@/components/Header";
-import { SessionProvider } from "../components/SessionProvider";
-import Script from "next/script";
-import { NextIntlClientProvider } from "next-intl";
+
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
-import { Toaster } from "@/components/ui/toaster";
-import Head from "next/head";
+
 import CreateButton from "@/components/CreateButton";
+import Head from "next/head";
+import Header from "@/components/Header";
+import type { Metadata } from "next";
+import { NextIntlClientProvider } from "next-intl";
+import Script from "next/script";
+import { SessionProvider } from "../components/SessionProvider";
+import { Toaster } from "@/components/ui/toaster";
+import { authOptions } from "@/lib/auth";
 import { getIconUrls } from "@/lib/githubApi";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { gowun_wodum } from "@/components/ui/font";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("metadata");

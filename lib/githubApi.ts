@@ -262,9 +262,7 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
           })
       )
 
-      const filteredPosts = posts.filter((post): post is BlogPost => post !== undefined)
-      console.log('Filtered posts:', filteredPosts)
-      return filteredPosts
+      return posts.filter((post): post is BlogPost => post !== undefined)
     } catch (error) {
       console.error('Error fetching blog posts:', error)
       // If the blog directory doesn't exist, return an empty array
@@ -279,7 +277,7 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
 
 export async function getBlogPost(id: string, accessToken: string): Promise<BlogPost | null> {
   if (!accessToken) {
-    throw new Error('Access token is required')
+    //
   }
 
   return getCachedOrFetch(`content/blog/${decodeURIComponent(id)}.md`, async () => {
