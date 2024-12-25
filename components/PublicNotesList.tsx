@@ -1,20 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import "katex/dist/katex.min.css";
-import { Thought } from "@/lib/githubApi";
+
+import { useEffect, useState } from "react";
+
+import { Note } from "@/lib/types";
+import { NoteCard } from "./NotesList"; // Import NoteCard from NotesList
 import { formatTimestamp } from "@/utils/dateFormatting";
-import { ThoughtCard } from "./ThoughtsList"; // Import ThoughtCard from ThoughtsList
 
-type FormattedThought = Thought & { formattedTimestamp: string };
+type FormattedNote = Note & { formattedTimestamp: string };
 
-export default function PublicThoughtsList({
+export default function PublicNotesList({
   thoughts,
 }: {
-  thoughts: Thought[];
+  thoughts: Note[];
 }) {
-  const [formattedThoughts, setFormattedThoughts] = useState<
-    FormattedThought[]
+  const [formattedNotes, setFormattedNotes] = useState<
+    FormattedNote[]
   >([]);
 
   useEffect(() => {
@@ -22,15 +24,15 @@ export default function PublicThoughtsList({
       ...thought,
       formattedTimestamp: formatTimestamp(thought.timestamp),
     }));
-    setFormattedThoughts(formatted);
+    setFormattedNotes(formatted);
   }, [thoughts]);
 
   return (
     <div className="max-w-2xl mx-auto p-4">
       <div className="grid grid-cols-2 md:grid-cols-2 gap-2">
         <div className="flex flex-col gap-2">
-          {formattedThoughts.filter((_, index) => index % 2 !== 0).map((thought) => (
-            <ThoughtCard
+          {formattedNotes.filter((_, index) => index % 2 !== 0).map((thought) => (
+            <NoteCard
               key={thought.id}
               thought={thought}
               onDelete={() => {}}
@@ -40,7 +42,7 @@ export default function PublicThoughtsList({
         </div>
         <div className="flex flex-col gap-2">
           {thoughts.filter((_, index) => index % 2 === 0).map((thought) => (
-            <ThoughtCard
+            <NoteCard
               key={thought.id}
               thought={thought}
               onDelete={() => {}}

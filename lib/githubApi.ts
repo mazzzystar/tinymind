@@ -1,6 +1,6 @@
 import { Octokit } from '@octokit/rest'
-import path from 'path'
 import { getCachedOrFetch } from './cache'
+import path from 'path'
 
 type UpdateFileParams = Parameters<Octokit['repos']['createOrUpdateFileContents']>[0]
 
@@ -320,34 +320,6 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
       return null
     }
   })
-}
-
-export async function getThoughts(accessToken: string | undefined): Promise<Thought[]> {
-  if (!accessToken) {
-    throw new Error('Access token is required')
-  }
-  const octokit = getOctokit(accessToken)
-  const { owner, repo } = await getRepoInfo(accessToken)
-
-  try {
-    const response = await octokit.repos.getContent({
-      owner,
-      repo,
-      path: 'content/thoughts.json',
-    })
-
-    if (Array.isArray(response.data) || !('content' in response.data)) {
-      throw new Error('Unexpected response from GitHub API')
-    }
-
-    const content = Buffer.from(response.data.content, 'base64').toString('utf-8')
-    const thoughts = JSON.parse(content) as Thought[]
-
-    return thoughts
-  } catch (error) {
-    console.error('Error fetching thoughts:', error)
-    throw error
-  }
 }
 
 export async function createBlogPost(
@@ -857,30 +829,6 @@ export async function getBlogPostsPublic(
       return []
     }
   })
-}
-
-export async function getThoughtsPublic(
-  octokit: Octokit,
-  owner: string,
-  repo: string
-): Promise<Thought[]> {
-  try {
-    const response = await octokit.repos.getContent({
-      owner,
-      repo,
-      path: 'content/thoughts.json',
-    })
-
-    if (Array.isArray(response.data) || !('content' in response.data)) {
-      return []
-    }
-
-    const content = Buffer.from(response.data.content, 'base64').toString('utf-8')
-    return JSON.parse(content) as Thought[]
-  } catch (error) {
-    console.error('Error fetching public thoughts:', error)
-    return []
-  }
 }
 
 export async function getUserLogin(accessToken: string): Promise<string> {

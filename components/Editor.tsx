@@ -1,30 +1,33 @@
 "use client";
 
-import React from "react";
-import { useState, useEffect, useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import "katex/dist/katex.min.css";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
+import { Button } from "@/components/ui/button";
 import { CgImage } from "react-icons/cg";
-import { useTranslations } from "next-intl";
+import { GrInfo } from "react-icons/gr";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Loader2 } from "lucide-react";
+import React from "react";
 import ReactMarkdown from "react-markdown";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { Textarea } from "@/components/ui/textarea";
+import { Tooltip } from "react-tooltip";
+import { createGitHubAPIClient } from "@/lib/client"
+import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
-import { getThoughts, uploadImage } from "@/lib/githubApi";
+import remarkMath from "remark-math";
+import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { uploadImage } from "@/lib/githubApi";
+import { useDropzone } from "react-dropzone";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/components/ui/use-toast";
-import { useDropzone } from "react-dropzone";
-import { Tooltip } from "react-tooltip";
-import { GrInfo } from "react-icons/gr";
-import "katex/dist/katex.min.css";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { useTranslations } from "next-intl";
 
 function removeFrontmatter(content: string): string {
   const frontmatterRegex = /^---\n([\s\S]*?)\n---\n/;
@@ -57,7 +60,7 @@ export default function Editor({
     async (id: string) => {
       if (!session?.accessToken) return;
       try {
-        const thoughts = await getThoughts(session.accessToken);
+        const thoughts = await createGitHubAPIClient(session.accessToken).getNotes()
         const thought = thoughts.find((t) => t.id === id);
         if (thought) {
           setContent(thought.content);

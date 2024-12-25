@@ -1,46 +1,48 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
-import { getThoughts, getThoughtsPublic, Thought } from '@/lib/githubApi'
-import { Octokit } from '@octokit/rest'
-import GitHubSignInButton from './GitHubSignInButton'
-import { useRouter } from 'next/navigation'
-import { useTranslations } from 'next-intl'
-import { Button } from '@/components/ui/button'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import 'katex/dist/katex.min.css'
+
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { AiOutlineEllipsis } from 'react-icons/ai'
-import { useToast } from '@/components/ui/use-toast'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogClose,
-} from '@/components/ui/dialog'
-import 'katex/dist/katex.min.css'
-import remarkMath from 'remark-math'
-import rehypeKatex from 'rehype-katex'
-import { getRelativeTimeString } from '@/utils/dateFormatting'
+import { useEffect, useState } from 'react'
 
-interface ThoughtCardProps {
-  thought: Thought
+import { AiOutlineEllipsis } from 'react-icons/ai'
+import { Button } from '@/components/ui/button'
+import GitHubSignInButton from './GitHubSignInButton'
+import { Note } from '@/lib/types'
+import ReactMarkdown from 'react-markdown'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { createGitHubAPIClient } from '@/lib/client'
+import { getRelativeTimeString } from '@/utils/dateFormatting'
+import rehypeKatex from 'rehype-katex'
+import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
+import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
+import { useToast } from '@/components/ui/use-toast'
+import { useTranslations } from 'next-intl'
+
+interface NoteCardProps {
+  thought: Note
   onDelete: (id: string) => void
   onEdit: (id: string) => void
 }
 
-export const ThoughtCard = ({ thought, onDelete, onEdit }: ThoughtCardProps) => {
+export const NoteCard = ({ thought, onDelete, onEdit }: NoteCardProps) => {
   const t = useTranslations('HomePage')
 
   return (
@@ -121,15 +123,15 @@ export const ThoughtCard = ({ thought, onDelete, onEdit }: ThoughtCardProps) => 
   )
 }
 
-interface ThoughtsListProps {
+interface NotesListProps {
   username: string
 }
 
-export default function ThoughtsList({ username }: ThoughtsListProps) {
-  const [thoughts, setThoughts] = useState<Thought[]>([])
+export default function NotesList({ username }: NotesListProps) {
+  const [thoughts, setNotes] = useState<Note[]>([])
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [thoughtToDelete, setThoughtToDelete] = useState<string | null>(null)
+  const [thoughtToDelete, setNoteToDelete] = useState<string | null>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const { data: session, status } = useSession()
   const router = useRouter()
@@ -137,20 +139,18 @@ export default function ThoughtsList({ username }: ThoughtsListProps) {
   const { toast } = useToast()
 
   useEffect(() => {
-    async function fetchThoughts() {
+    async function fetchNotes() {
       if (status === 'loading') return
       if (status === 'unauthenticated') {
         setIsLoading(false)
       }
 
       try {
-        const octokit = new Octokit()
-        const fetchedThoughts = session?.accessToken
-          ? await getThoughts(session.accessToken)
-          : username
-            ? await getThoughtsPublic(octokit, username, 'tinymind-blog')
-            : []
-        setThoughts(fetchedThoughts)
+        const fetchedNotes = await createGitHubAPIClient(session?.accessToken ?? '').getNotes(
+          username,
+          'tinymind-blog'
+        )
+        setNotes(fetchedNotes)
         setError(null)
       } catch (error) {
         console.error('Error fetching thoughts:', error)
@@ -161,17 +161,17 @@ export default function ThoughtsList({ username }: ThoughtsListProps) {
         ) {
           setError('authentication_failed')
         } else {
-          setThoughts([])
+          setNotes([])
         }
       } finally {
         setIsLoading(false)
       }
     }
 
-    fetchThoughts()
+    fetchNotes()
   }, [session, status, username])
 
-  const handleDeleteThought = async (id: string) => {
+  const handleDeleteNote = async (id: string) => {
     if (!session?.accessToken) {
       console.error('No access token available')
       return
@@ -184,7 +184,7 @@ export default function ThoughtsList({ username }: ThoughtsListProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          action: 'deleteThought',
+          action: 'deleteNote',
           id: id,
         }),
       })
@@ -193,7 +193,7 @@ export default function ThoughtsList({ username }: ThoughtsListProps) {
         throw new Error('Failed to delete thought')
       }
 
-      setThoughts(thoughts.filter((thought) => thought.id !== id))
+      setNotes(thoughts.filter((thought) => thought.id !== id))
 
       toast({
         title: t('success'),
@@ -209,7 +209,7 @@ export default function ThoughtsList({ username }: ThoughtsListProps) {
         duration: 3000,
       })
     } finally {
-      setThoughtToDelete(null)
+      setNoteToDelete(null)
       setIsDeleteDialogOpen(false)
     }
   }
@@ -219,7 +219,7 @@ export default function ThoughtsList({ username }: ThoughtsListProps) {
   }
 
   const handleDelete = (id: string) => {
-    setThoughtToDelete(id)
+    setNoteToDelete(id)
     setIsDeleteDialogOpen(true)
   }
 
@@ -244,12 +244,12 @@ export default function ThoughtsList({ username }: ThoughtsListProps) {
   if (thoughts.length === 0) {
     return (
       <div className='flex flex-col items-center mt-8 space-y-4'>
-        <p className='text-gray-500'>{t('noThoughtsYet')}</p>
+        <p className='text-gray-500'>{t('noNotesYet')}</p>
         <Button
           onClick={() => router.push('/editor?type=thought')}
           className='bg-black hover:bg-gray-800 text-white'
         >
-          {t('createThought')}
+          {t('createNote')}
         </Button>
       </div>
     )
@@ -262,7 +262,7 @@ export default function ThoughtsList({ username }: ThoughtsListProps) {
           {thoughts
             .filter((_, index) => index % 2 !== 0)
             .map((thought) => (
-              <ThoughtCard
+              <NoteCard
                 key={thought.id}
                 thought={thought}
                 onDelete={handleDelete}
@@ -274,7 +274,7 @@ export default function ThoughtsList({ username }: ThoughtsListProps) {
           {thoughts
             .filter((_, index) => index % 2 === 0)
             .map((thought) => (
-              <ThoughtCard
+              <NoteCard
                 key={thought.id}
                 thought={thought}
                 onDelete={handleDelete}
@@ -297,7 +297,7 @@ export default function ThoughtsList({ username }: ThoughtsListProps) {
               variant='destructive'
               onClick={() => {
                 if (thoughtToDelete) {
-                  handleDeleteThought(thoughtToDelete)
+                  handleDeleteNote(thoughtToDelete)
                 }
                 setIsDeleteDialogOpen(false)
               }}

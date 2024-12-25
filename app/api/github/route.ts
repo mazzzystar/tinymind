@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from "next-auth/next";
+import { createBlogPost, createThought, deleteBlogPost, deleteThought, getBlogPost, getBlogPosts, updateBlogPost, updateThought } from '@/lib/githubApi';
+
 import { authOptions } from "@/lib/auth";
-import { deleteThought, createBlogPost, createThought, getBlogPosts, getThoughts, updateThought, deleteBlogPost, updateBlogPost, getBlogPost } from '@/lib/githubApi';
+import { createGitHubAPIClient } from '@/lib/client';
+import { getServerSession } from "next-auth/next";
 
 export const dynamic = 'force-dynamic'; // Disable caching for this route
 export const revalidate = 60; // Revalidate every 60 seconds
@@ -82,7 +84,7 @@ export async function GET(request: NextRequest) {
         const post = await getBlogPost(id, session.accessToken);
         return NextResponse.json(post, { headers });
       case 'getThoughts':
-        const thoughts = await getThoughts(session.accessToken);
+        const thoughts = await createGitHubAPIClient(session.accessToken).getNotes()
         return NextResponse.json(thoughts, { headers });
       default:
         return NextResponse.json({ error: 'Invalid action' }, { status: 400, headers });
