@@ -34,14 +34,14 @@ function removeFrontmatter(content: string): string {
 export default function Editor({
   defaultType = "thought",
 }: {
-  defaultType?: "thought" | "blog";
+  defaultType?: "thought" | "blog" | "about";
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
   const [type, setType] = useState(
-    (searchParams.get("type") as "thought" | "blog") || defaultType
+    (searchParams.get("type") as "thought" | "blog" | "about") || defaultType
   );
   const [isPreview, setIsPreview] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -88,6 +88,22 @@ export default function Editor({
     [session?.accessToken]
   );
 
+  const fetchAboutPage = useCallback(async () => {
+    if (!session?.accessToken) return;
+    try {
+      const response = await fetch(`/api/github?action=getAboutPage`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch about page");
+      }
+      const aboutPage = await response.json();
+      if (aboutPage) {
+        setContent(aboutPage.content);
+      }
+    } catch (error) {
+      console.error("Error fetching about page:", error);
+    }
+  }, [session?.accessToken]);
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     params.set("type", type);
@@ -102,13 +118,20 @@ export default function Editor({
       } else if (type === "thought") {
         fetchThought(id);
       }
+    } else if (type === "about") {
+      fetchAboutPage();
     }
-  }, [type, router, searchParams, fetchThought, fetchBlogPost]);
+  }, [type, router, searchParams, fetchThought, fetchBlogPost, fetchAboutPage]);
 
-  const handleTypeChange = (value: "blog" | "thought") => {
+  const handleTypeChange = (value: "blog" | "thought" | "about") => {
     setType(value);
+    setTitle("");
+    setContent("");
     if (value === "blog") {
       setEditingThoughtId(null);
+    } else if (value === "about") {
+      setEditingThoughtId(null);
+      fetchAboutPage();
     }
   };
 
@@ -117,20 +140,29 @@ export default function Editor({
     setIsLoading(true);
     setIsSuccess(false);
     try {
+      let action: string;
+
+      if (type === "blog") {
+        action = editingThoughtId ? "updateBlogPost" : "createBlogPost";
+      } else if (type === "thought") {
+        action = editingThoughtId ? "updateThought" : "createThought";
+      } else {
+        // For about page
+        const aboutPageResponse = await fetch(
+          `/api/github?action=getAboutPage`
+        );
+        const aboutPageExists =
+          aboutPageResponse.ok && (await aboutPageResponse.json());
+        action = aboutPageExists ? "updateAboutPage" : "createAboutPage";
+      }
+
       const response = await fetch("/api/github", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          action:
-            type === "blog"
-              ? editingThoughtId
-                ? "updateBlogPost"
-                : "createBlogPost"
-              : editingThoughtId
-              ? "updateThought"
-              : "createThought",
+          action,
           id: editingThoughtId,
           title,
           content,
@@ -146,9 +178,12 @@ export default function Editor({
       setIsSuccess(true);
       toast({
         title: t("success"),
-        description: editingThoughtId
-          ? `${type === "blog" ? t("blogPostUpdated") : t("thoughtUpdated")}`
-          : `${type === "blog" ? t("blogPostCreated") : t("thoughtCreated")}`,
+        description:
+          type === "about"
+            ? t("aboutPageUpdated")
+            : editingThoughtId
+            ? `${type === "blog" ? t("blogPostUpdated") : t("thoughtUpdated")}`
+            : `${type === "blog" ? t("blogPostCreated") : t("thoughtCreated")}`,
         duration: 3000,
       });
 
@@ -159,6 +194,8 @@ export default function Editor({
           } else {
             router.push("/blog");
           }
+        } else if (type === "about") {
+          router.push("/about");
         } else {
           router.push("/thoughts");
         }
@@ -319,7 +356,11 @@ export default function Editor({
       <CardHeader className="border-b border-gray-100 pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="flex flex-col items-start">
-            {type === "blog" ? t("createBlogPost") : t("createThought")}
+            {type === "blog"
+              ? t("createBlogPost")
+              : type === "about"
+              ? t("editAboutPage")
+              : t("createThought")}
             <span className="mt-2 text-xs font-normal text-gray-400 flex items-center">
               <span className="text-gray-400">{t("publicContentWarning")}</span>
               <GrInfo
@@ -358,6 +399,16 @@ export default function Editor({
               />
               <Label htmlFor="thought" className="text-sm">
                 {t("thoughts")}
+              </Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem
+                value="about"
+                id="about"
+                className={type === "about" ? "text-white bg-black" : ""}
+              />
+              <Label htmlFor="about" className="text-sm">
+                {t("about")}
               </Label>
             </div>
           </RadioGroup>
@@ -477,7 +528,12 @@ export default function Editor({
                   setCursorPosition(e.currentTarget.selectionStart)
                 }
                 onPaste={handlePaste}
-                placeholder={t("writeContent")}
+                placeholder={
+                  type === "about"
+                    ? t("writeAboutPageContent") ||
+                      "Write about yourself in Markdown..."
+                    : t("writeContent")
+                }
                 className="min-h-[300px] border-0 focus:ring-0"
                 required
                 disabled={isLoading || isImageUploading}
@@ -492,7 +548,10 @@ export default function Editor({
 
           {isSuccess && (
             <div className="text-xs font-normal text-gray-400 text-center m-2">
-              {t("successPublished")}
+              {type === "about"
+                ? t("aboutPageSuccessMessage") ||
+                  "About page published successfully"
+                : t("successPublished")}
             </div>
           )}
 

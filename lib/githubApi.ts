@@ -18,6 +18,11 @@ export type Thought = {
   image?: string;
 };
 
+// Add interface for AboutPage
+export interface AboutPage {
+  content: string;
+}
+
 function getOctokit(accessToken: string | undefined) {
   if (!accessToken) {
     throw new Error('Access token is required');
@@ -882,5 +887,115 @@ async function getIconUrl(octokit: Octokit, owner: string, repo: string, path: s
   } catch (error) {
     console.warn(`No icon found in ${path}, using default:`, defaultPath);
     return defaultPath;
+  }
+}
+
+export async function getAboutPage(accessToken: string): Promise<AboutPage | null> {
+  if (!accessToken) {
+    throw new Error('Access token is required');
+  }
+  const octokit = getOctokit(accessToken);
+  const { owner, repo } = await getRepoInfo(accessToken);
+
+  try {
+    // Fetch the file content
+    const contentResponse = await octokit.repos.getContent({
+      owner,
+      repo,
+      path: 'content/about.md',
+    });
+
+    if (Array.isArray(contentResponse.data) || !('content' in contentResponse.data)) {
+      throw new Error('Unexpected response from GitHub API');
+    }
+
+    const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf-8');
+
+    return {
+      content,
+    };
+  } catch (error) {
+    console.error('Error fetching about page:', error);
+    if (error instanceof Error && 'status' in error && error.status === 404) {
+      // About page doesn't exist yet
+      return null;
+    }
+    throw error;
+  }
+}
+
+export async function createAboutPage(content: string, accessToken: string): Promise<void> {
+  const octokit = getOctokit(accessToken);
+  const { owner, repo } = await getRepoInfo(accessToken);
+  await initializeGitHubStructure(octokit, owner, repo);
+
+  const path = 'content/about.md';
+  
+  await octokit.repos.createOrUpdateFileContents({
+    owner,
+    repo,
+    path,
+    message: 'Create about page',
+    content: Buffer.from(content).toString('base64'),
+  });
+}
+
+export async function updateAboutPage(content: string, accessToken: string): Promise<void> {
+  if (!accessToken) {
+    throw new Error('Access token is required');
+  }
+  const octokit = getOctokit(accessToken);
+
+  try {
+    const { owner, repo } = await getRepoInfo(accessToken);
+
+    // Get the current file to retrieve its SHA
+    const currentFile = await octokit.repos.getContent({
+      owner,
+      repo,
+      path: 'content/about.md',
+    });
+
+    if (Array.isArray(currentFile.data) || !('sha' in currentFile.data)) {
+      throw new Error('Unexpected response when fetching current about page');
+    }
+
+    // Update the about page file
+    await octokit.repos.createOrUpdateFileContents({
+      owner,
+      repo,
+      path: 'content/about.md',
+      message: 'Update about page',
+      content: Buffer.from(content).toString('base64'),
+      sha: currentFile.data.sha,
+    });
+
+    console.log('About page updated successfully');
+  } catch (error) {
+    console.error('Error updating about page:', error);
+    throw error;
+  }
+}
+
+export async function getAboutPagePublic(octokit: Octokit, owner: string, repo: string): Promise<AboutPage | null> {
+  try {
+    const contentResponse = await octokit.repos.getContent({
+      owner,
+      repo,
+      path: 'content/about.md',
+    });
+
+    if (Array.isArray(contentResponse.data) || !('content' in contentResponse.data)) {
+      return null;
+    }
+
+    const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf-8');
+
+    return {
+      content,
+    };
+  } catch (error) {
+    console.error('Error fetching public about page:', error);
+    return null;
   }
 }

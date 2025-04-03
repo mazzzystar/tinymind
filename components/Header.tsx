@@ -49,11 +49,15 @@ export default function Header({
   const activeTab = isUserPage
     ? pathname.includes("/thoughts")
       ? "thoughts"
+      : pathname.includes("/about")
+      ? "about"
       : "blog"
     : pathname.startsWith("/blog") || searchParams.get("type") === "blog"
     ? "blog"
     : pathname.startsWith("/thoughts") || searchParams.get("type") === "thought"
     ? "thoughts"
+    : pathname.startsWith("/about") || searchParams.get("type") === "about"
+    ? "about"
     : "thoughts";
 
   return (
@@ -94,6 +98,17 @@ export default function Header({
               >
                 <Link href={isUserPage ? `/${username}/thoughts` : "/thoughts"}>
                   {t("thoughts")}
+                </Link>
+              </Button>
+              <Button
+                variant="ghost"
+                className={`text-lg font-normal ${
+                  activeTab === "about" ? "text-black" : "text-gray-300"
+                }`}
+                asChild
+              >
+                <Link href={isUserPage ? `/${username}/about` : "/about"}>
+                  {t("about")}
                 </Link>
               </Button>
             </div>

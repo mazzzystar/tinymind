@@ -9,7 +9,12 @@ export default async function EditorPage({
   searchParams: { type?: string };
 }) {
   const session = await getServerSession(authOptions);
-  const defaultType = searchParams.type === "blog" ? "blog" : "thought";
+  const defaultType =
+    searchParams.type === "blog"
+      ? "blog"
+      : searchParams.type === "about"
+      ? "about"
+      : "thought";
 
   if (!session) {
     return <GitHubSignInButton />;

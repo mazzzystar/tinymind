@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import { deleteThought, createBlogPost, createThought, getBlogPosts, getThoughts, updateThought, deleteBlogPost, updateBlogPost, getBlogPost } from '@/lib/githubApi';
+import { deleteThought, createBlogPost, createThought, getBlogPosts, getThoughts, updateThought, deleteBlogPost, updateBlogPost, getBlogPost, getAboutPage, createAboutPage, updateAboutPage } from '@/lib/githubApi';
 
 export const dynamic = 'force-dynamic'; // Disable caching for this route
 export const revalidate = 60; // Revalidate every 60 seconds
@@ -48,6 +48,12 @@ export async function POST(request: NextRequest) {
       case 'deleteThought':
         await deleteThought(data.id, session.accessToken);
         return NextResponse.json({ message: 'Thought deleted successfully' }, { headers });
+      case 'createAboutPage':
+        await createAboutPage(data.content, session.accessToken);
+        return NextResponse.json({ message: 'About page created successfully' }, { headers });
+      case 'updateAboutPage':
+        await updateAboutPage(data.content, session.accessToken);
+        return NextResponse.json({ message: 'About page updated successfully' }, { headers });
       default:
         return NextResponse.json({ error: 'Invalid action' }, { status: 400, headers });
     }
@@ -87,6 +93,9 @@ export async function GET(request: NextRequest) {
       case 'getThoughts':
         const thoughts = await getThoughts(session.accessToken);
         return NextResponse.json(thoughts, { headers });
+      case 'getAboutPage':
+        const aboutPage = await getAboutPage(session.accessToken);
+        return NextResponse.json(aboutPage, { headers });
       default:
         return NextResponse.json({ error: 'Invalid action' }, { status: 400, headers });
     }
