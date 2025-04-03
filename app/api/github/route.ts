@@ -28,10 +28,13 @@ export async function POST(request: NextRequest) {
 
     switch (action) {
       case 'createBlogPost':
-        await createBlogPost(data.title, data.content, session.accessToken);
-        return NextResponse.json({ message: 'Blog post created successfully' }, { headers });
+        const createResult = await createBlogPost(data.title, data.content, session.accessToken);
+        return NextResponse.json({ message: 'Blog post created successfully', newId: createResult.newId }, { headers });
       case 'updateBlogPost':
-        await updateBlogPost(data.id, data.title, data.content, session.accessToken);
+        const result = await updateBlogPost(data.id, data.title, data.content, session.accessToken);
+        if (result && result.newId) {
+          return NextResponse.json({ message: 'Blog post updated successfully', newId: result.newId }, { headers });
+        }
         return NextResponse.json({ message: 'Blog post updated successfully' }, { headers });
       case 'deleteBlogPost':
         await deleteBlogPost(data.id, session.accessToken);

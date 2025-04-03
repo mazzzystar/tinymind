@@ -292,12 +292,17 @@ export async function getThoughts(accessToken: string | undefined): Promise<Thou
   }
 }
 
-export async function createBlogPost(title: string, content: string, accessToken: string): Promise<void> {
+export async function createBlogPost(
+  title: string,
+  content: string,
+  accessToken: string
+): Promise<{ newId: string }> {
   const octokit = getOctokit(accessToken);
   const { owner, repo } = await getRepoInfo(accessToken);
   await initializeGitHubStructure(octokit, owner, repo);
 
-  const path = `content/blog/${title.toLowerCase().replace(/\s+/g, '-')}.md`;
+  const newId = title.toLowerCase().replace(/\s+/g, '-');
+  const path = `content/blog/${newId}.md`;
   const date = new Date().toISOString(); // Store full ISO string
   const fullContent = `---
 title: ${title}
@@ -313,6 +318,8 @@ ${content}`;
     message: `Add blog post: ${title}`,
     content: Buffer.from(fullContent).toString('base64'),
   });
+
+  return { newId };
 }
 
 export async function createThought(content: string, image: string | undefined, accessToken: string): Promise<void> {
@@ -575,7 +582,12 @@ export async function deleteBlogPost(id: string, accessToken: string): Promise<v
   }
 }
 
-export async function updateBlogPost(id: string, title: string, content: string, accessToken: string): Promise<void> {
+export async function updateBlogPost(
+  id: string,
+  title: string,
+  content: string,
+  accessToken: string
+): Promise<{ newId?: string }> {
   console.log('Updating blog post...');
   if (!accessToken) {
     throw new Error('Access token is required');
@@ -603,6 +615,10 @@ export async function updateBlogPost(id: string, title: string, content: string,
       const dateMatch = existingContent.match(/date:\s*(.+)/);
       const date = dateMatch ? dateMatch[1] : new Date().toISOString();
 
+      // Extract the original title from the existing content
+      const titleMatch = existingContent.match(/title:\s*(.+)/);
+      const originalTitle = titleMatch ? titleMatch[1] : id;
+
       const updatedContent = `---
 title: ${title}
 date: ${date}
@@ -610,17 +626,43 @@ date: ${date}
 
 ${content}`;
 
-      // Update the blog post file
-      await octokit.repos.createOrUpdateFileContents({
-        owner,
-        repo,
-        path: `content/blog/${id}.md`,
-        message: 'Update blog post',
-        content: Buffer.from(updatedContent).toString('base64'),
-        sha: currentFile.data.sha,
-      });
+      // Check if the title has changed
+      const newId = title.toLowerCase().replace(/\s+/g, '-');
+      if (originalTitle !== title && id !== newId) {
+        // Title has changed, create a new file with the new title
+        await octokit.repos.createOrUpdateFileContents({
+          owner,
+          repo,
+          path: `content/blog/${newId}.md`,
+          message: 'Update blog post with new title',
+          content: Buffer.from(updatedContent).toString('base64'),
+        });
 
-      console.log('Blog post updated successfully');
+        // Delete the old file
+        await octokit.repos.deleteFile({
+          owner,
+          repo,
+          path: `content/blog/${id}.md`,
+          message: 'Delete blog post with old title',
+          sha: currentFile.data.sha,
+        });
+
+        console.log('Blog post updated with new title successfully');
+        return { newId };
+      } else {
+        // Title hasn't changed or the ID is already matching the current title, just update the existing file
+        await octokit.repos.createOrUpdateFileContents({
+          owner,
+          repo,
+          path: `content/blog/${id}.md`,
+          message: 'Update blog post',
+          content: Buffer.from(updatedContent).toString('base64'),
+          sha: currentFile.data.sha,
+        });
+
+        console.log('Blog post updated successfully');
+        return {};
+      }
     } else {
       throw new Error('Unexpected response when fetching current blog post');
     }

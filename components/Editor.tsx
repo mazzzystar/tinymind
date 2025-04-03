@@ -141,6 +141,8 @@ export default function Editor({
         throw new Error(t("failedPublish"));
       }
 
+      const responseData = await response.json();
+
       setIsSuccess(true);
       toast({
         title: t("success"),
@@ -149,9 +151,14 @@ export default function Editor({
           : `${type === "blog" ? t("blogPostCreated") : t("thoughtCreated")}`,
         duration: 3000,
       });
+
       setTimeout(() => {
         if (type === "blog") {
-          router.push("/blog");
+          if (responseData.newId) {
+            router.push(`/blog/${responseData.newId}`);
+          } else {
+            router.push("/blog");
+          }
         } else {
           router.push("/thoughts");
         }
