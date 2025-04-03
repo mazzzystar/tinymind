@@ -12,6 +12,7 @@
     "writeContent": "Viết nội dung của bạn ở đây...(hỗ trợ Markdown)",
     "writeAboutPageContent": "Write about yourself in Markdown...",
     "enterTitle": "Nhập tiêu đề của bạn ở đây...",
+      "loadingContent": "Loading content...",
     "howItWorksTitle": "Cách hoạt động:",
     "howItWorksStep1": "Ủy quyền cho Tinymind truy cập vào các kho lưu trữ công khai của GitHub của bạn.",
     "howItWorksStep2": "Tinymind tạo một kho lưu trữ công khai có tên \"tinymind-blog\" trong tài khoản GitHub của bạn.",

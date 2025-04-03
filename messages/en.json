@@ -18,6 +18,7 @@
       "writeContent": "Write your content here...(Markdown supported)",
       "writeAboutPageContent": "Write about yourself in Markdown...",
       "enterTitle": "Enter your title here...",
+      "loadingContent": "Loading content...",
 
       "howItWorksTitle": "How it works:",
       "howItWorksStep1": "Authorize Tinymind to access your public GitHub repositories.",

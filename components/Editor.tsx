@@ -47,6 +47,7 @@ export default function Editor({
   const [isLoading, setIsLoading] = useState(false);
   const [isImageUploading, setIsImageUploading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isContentLoading, setIsContentLoading] = useState(false);
   const t = useTranslations("HomePage");
   const { data: session } = useSession();
   const [editingThoughtId, setEditingThoughtId] = useState<string | null>(null);
@@ -91,6 +92,7 @@ export default function Editor({
   const fetchAboutPage = useCallback(async () => {
     if (!session?.accessToken) return;
     try {
+      setIsContentLoading(true);
       const response = await fetch(`/api/github?action=getAboutPage`);
       if (!response.ok) {
         throw new Error("Failed to fetch about page");
@@ -101,6 +103,8 @@ export default function Editor({
       }
     } catch (error) {
       console.error("Error fetching about page:", error);
+    } finally {
+      setIsContentLoading(false);
     }
   }, [session?.accessToken]);
 
@@ -375,203 +379,212 @@ export default function Editor({
         </div>
       </CardHeader>
       <CardContent className="pt-4">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <RadioGroup
-            value={type}
-            onValueChange={handleTypeChange}
-            className="flex space-x-4"
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem
-                value="blog"
-                id="blog"
-                className={type === "blog" ? "text-white bg-black" : ""}
-              />
-              <Label htmlFor="blog" className="text-sm">
-                {t("blog")}
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem
-                value="thought"
-                id="thought"
-                className={type === "thought" ? "text-white bg-black" : ""}
-              />
-              <Label htmlFor="thought" className="text-sm">
-                {t("thoughts")}
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem
-                value="about"
-                id="about"
-                className={type === "about" ? "text-white bg-black" : ""}
-              />
-              <Label htmlFor="about" className="text-sm">
-                {t("about")}
-              </Label>
-            </div>
-          </RadioGroup>
+        {isContentLoading && type === "about" ? (
+          <div className="flex items-center justify-center h-64">
+            <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+            <span className="ml-2 text-gray-500">
+              {t("loadingContent") || "Loading content..."}
+            </span>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <RadioGroup
+              value={type}
+              onValueChange={handleTypeChange}
+              className="flex space-x-4"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem
+                  value="blog"
+                  id="blog"
+                  className={type === "blog" ? "text-white bg-black" : ""}
+                />
+                <Label htmlFor="blog" className="text-sm">
+                  {t("blog")}
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem
+                  value="thought"
+                  id="thought"
+                  className={type === "thought" ? "text-white bg-black" : ""}
+                />
+                <Label htmlFor="thought" className="text-sm">
+                  {t("thoughts")}
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem
+                  value="about"
+                  id="about"
+                  className={type === "about" ? "text-white bg-black" : ""}
+                />
+                <Label htmlFor="about" className="text-sm">
+                  {t("about")}
+                </Label>
+              </div>
+            </RadioGroup>
 
-          {type === "blog" && (
-            <Input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder={t("enterTitle")}
-              required
-              className="border-gray-200 focus:border-gray-300 focus:ring-gray-300"
-              disabled={isLoading || isImageUploading}
-            />
-          )}
+            {type === "blog" && (
+              <Input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder={t("enterTitle")}
+                required
+                className="border-gray-200 focus:border-gray-300 focus:ring-gray-300"
+                disabled={isLoading || isImageUploading}
+              />
+            )}
 
-          <div className="border rounded-md relative" {...getRootProps()}>
-            <input {...getInputProps()} />
-            <div className="flex border-b">
-              <button
-                type="button"
-                onClick={() => setIsPreview(false)}
-                className={`text-sm px-4 py-2 ${
-                  !isPreview ? "bg-gray-100" : ""
-                }`}
-                disabled={isLoading || isImageUploading}
-              >
-                {t("write")}
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsPreview(true)}
-                className={`text-sm px-4 py-2 ${
-                  isPreview ? "bg-gray-100 border-b-2 border-black" : ""
-                }`}
-                disabled={isLoading || isImageUploading}
-              >
-                {t("preview")}
-              </button>
-              <label
-                htmlFor="image-upload"
-                className="text-sm px-4 py-2 cursor-pointer hover:bg-gray-100"
-              >
-                <CgImage className="h-5 w-5" />
-                <input
-                  id="image-upload"
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => {
-                    if (e.target.files && e.target.files[0]) {
-                      handleImageUpload(e.target.files[0]);
-                    }
-                  }}
+            <div className="border rounded-md relative" {...getRootProps()}>
+              <input {...getInputProps()} />
+              <div className="flex border-b">
+                <button
+                  type="button"
+                  onClick={() => setIsPreview(false)}
+                  className={`text-sm px-4 py-2 ${
+                    !isPreview ? "bg-gray-100" : ""
+                  }`}
+                  disabled={isLoading || isImageUploading}
+                >
+                  {t("write")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsPreview(true)}
+                  className={`text-sm px-4 py-2 ${
+                    isPreview ? "bg-gray-100 border-b-2 border-black" : ""
+                  }`}
+                  disabled={isLoading || isImageUploading}
+                >
+                  {t("preview")}
+                </button>
+                <label
+                  htmlFor="image-upload"
+                  className="text-sm px-4 py-2 cursor-pointer hover:bg-gray-100"
+                >
+                  <CgImage className="h-5 w-5" />
+                  <input
+                    id="image-upload"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files[0]) {
+                        handleImageUpload(e.target.files[0]);
+                      }
+                    }}
+                    disabled={isLoading || isImageUploading}
+                  />
+                </label>
+              </div>
+              {isPreview ? (
+                <div className="p-4 prose max-w-none">
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm, remarkMath]}
+                    rehypePlugins={[rehypeKatex]}
+                    components={{
+                      code({
+                        inline,
+                        className,
+                        children,
+                        ...props
+                      }: {
+                        inline?: boolean;
+                        className?: string;
+                        children?: React.ReactNode;
+                      } & React.HTMLAttributes<HTMLElement>) {
+                        const match = /language-(\w+)/.exec(className || "");
+                        return !inline && match ? (
+                          <SyntaxHighlighter
+                            style={
+                              tomorrow as { [key: string]: React.CSSProperties }
+                            }
+                            language={match[1]}
+                            PreTag="div"
+                          >
+                            {String(children).replace(/\n$/, "")}
+                          </SyntaxHighlighter>
+                        ) : (
+                          <code className={className} {...props}>
+                            {children}
+                          </code>
+                        );
+                      },
+                      a: ({ children, ...props }) => (
+                        <a
+                          {...props}
+                          className="text-gray-400 no-underline hover:text-gray-600 hover:underline hover:underline-offset-4 transition-colors duration-200 break-words"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {children}
+                        </a>
+                      ),
+                      blockquote: ({ children }) => (
+                        <div className="pl-4 border-l-4 border-gray-200 text-gray-400">
+                          {children}
+                        </div>
+                      ),
+                    }}
+                  >
+                    {content}
+                  </ReactMarkdown>
+                </div>
+              ) : (
+                <Textarea
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  onSelect={(e) =>
+                    setCursorPosition(e.currentTarget.selectionStart)
+                  }
+                  onPaste={handlePaste}
+                  placeholder={
+                    type === "about"
+                      ? t("writeAboutPageContent") ||
+                        "Write about yourself in Markdown..."
+                      : t("writeContent")
+                  }
+                  className="min-h-[300px] border-0 focus:ring-0"
+                  required
                   disabled={isLoading || isImageUploading}
                 />
-              </label>
-            </div>
-            {isPreview ? (
-              <div className="p-4 prose max-w-none">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm, remarkMath]}
-                  rehypePlugins={[rehypeKatex]}
-                  components={{
-                    code({
-                      inline,
-                      className,
-                      children,
-                      ...props
-                    }: {
-                      inline?: boolean;
-                      className?: string;
-                      children?: React.ReactNode;
-                    } & React.HTMLAttributes<HTMLElement>) {
-                      const match = /language-(\w+)/.exec(className || "");
-                      return !inline && match ? (
-                        <SyntaxHighlighter
-                          style={
-                            tomorrow as { [key: string]: React.CSSProperties }
-                          }
-                          language={match[1]}
-                          PreTag="div"
-                        >
-                          {String(children).replace(/\n$/, "")}
-                        </SyntaxHighlighter>
-                      ) : (
-                        <code className={className} {...props}>
-                          {children}
-                        </code>
-                      );
-                    },
-                    a: ({ children, ...props }) => (
-                      <a
-                        {...props}
-                        className="text-gray-400 no-underline hover:text-gray-600 hover:underline hover:underline-offset-4 transition-colors duration-200 break-words"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {children}
-                      </a>
-                    ),
-                    blockquote: ({ children }) => (
-                      <div className="pl-4 border-l-4 border-gray-200 text-gray-400">
-                        {children}
-                      </div>
-                    ),
-                  }}
-                >
-                  {content}
-                </ReactMarkdown>
-              </div>
-            ) : (
-              <Textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                onSelect={(e) =>
-                  setCursorPosition(e.currentTarget.selectionStart)
-                }
-                onPaste={handlePaste}
-                placeholder={
-                  type === "about"
-                    ? t("writeAboutPageContent") ||
-                      "Write about yourself in Markdown..."
-                    : t("writeContent")
-                }
-                className="min-h-[300px] border-0 focus:ring-0"
-                required
-                disabled={isLoading || isImageUploading}
-              />
-            )}
-            {isDragActive && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50">
-                <p className="text-lg font-semibold">{t("dropImageHere")}</p>
-              </div>
-            )}
-          </div>
-
-          {isSuccess && (
-            <div className="text-xs font-normal text-gray-400 text-center m-2">
-              {type === "about"
-                ? t("aboutPageSuccessMessage") ||
-                  "About page published successfully"
-                : t("successPublished")}
-            </div>
-          )}
-
-          <div className="flex justify-center">
-            <Button
-              type="submit"
-              disabled={isLoading || isImageUploading}
-              className="px-12 py-5 bg-black hover:bg-gray-800"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t("publishing")}
-                </>
-              ) : (
-                t("publish")
               )}
-            </Button>
-          </div>
-        </form>
+              {isDragActive && (
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50">
+                  <p className="text-lg font-semibold">{t("dropImageHere")}</p>
+                </div>
+              )}
+            </div>
+
+            {isSuccess && (
+              <div className="text-xs font-normal text-gray-400 text-center m-2">
+                {type === "about"
+                  ? t("aboutPageSuccessMessage") ||
+                    "About page published successfully"
+                  : t("successPublished")}
+              </div>
+            )}
+
+            <div className="flex justify-center">
+              <Button
+                type="submit"
+                disabled={isLoading || isImageUploading}
+                className="px-12 py-5 bg-black hover:bg-gray-800"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {t("publishing")}
+                  </>
+                ) : (
+                  t("publish")
+                )}
+              </Button>
+            </div>
+          </form>
+        )}
       </CardContent>
     </Card>
   );

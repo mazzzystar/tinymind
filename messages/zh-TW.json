@@ -12,6 +12,7 @@
       "writeContent": "在這裡寫下內容...(支援Markdown)",
     "writeAboutPageContent": "Write about yourself in Markdown...",
       "enterTitle": "在這裡輸入標題...",
+      "loadingContent": "Loading content...",
       "howItWorksTitle": "工作原理：",
       "howItWorksStep1": "授權 Tinymind 訪問您的公共 GitHub 儲存庫。",
       "howItWorksStep2": "Tinymind 在您的 GitHub 帳戶中創建一個名為 \"tinymind-blog\" 的公共儲存庫。",

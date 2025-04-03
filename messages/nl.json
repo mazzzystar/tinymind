@@ -12,6 +12,7 @@
     "writeContent": "Schrijf je inhoud hier...(Markdown ondersteund)",
     "writeAboutPageContent": "Write about yourself in Markdown...",
     "enterTitle": "Voer hier je titel in...",
+      "loadingContent": "Loading content...",
     "howItWorksTitle": "Hoe het werkt:",
     "howItWorksStep1": "Geef Tinymind toestemming om toegang te krijgen tot je openbare GitHub-repositories.",
     "howItWorksStep2": "Tinymind maakt een openbaar repository genaamd \"tinymind-blog\" in je GitHub-account.",

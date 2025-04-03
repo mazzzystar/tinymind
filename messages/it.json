@@ -12,6 +12,7 @@
     "writeContent": "Scrivi il tuo contenuto qui...(supporta Markdown)",
     "writeAboutPageContent": "Scrivi di te stesso in Markdown...",
     "enterTitle": "Inserisci il tuo titolo qui...",
+      "loadingContent": "Loading content...",
     "howItWorksTitle": "Come funziona:",
     "howItWorksStep1": "Autorizza Tinymind ad accedere ai tuoi repository GitHub pubblici.",
     "howItWorksStep2": "Tinymind crea un repository pubblico chiamato \"tinymind-blog\" nel tuo account GitHub.",

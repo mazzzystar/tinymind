@@ -6,13 +6,20 @@ import remarkGfm from "remark-gfm";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import GitHubSignInButton from "@/components/GitHubSignInButton";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { FiEdit } from "react-icons/fi";
+import { getTranslations } from "next-intl/server";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
 
 export const revalidate = 60;
 
 export default async function AboutPage() {
   const session = await getServerSession(authOptions);
+  const t = await getTranslations("HomePage");
 
   if (!session || !session.accessToken) {
     return <GitHubSignInButton />;
@@ -26,19 +33,66 @@ export default async function AboutPage() {
         <Card className="shadow-sm border border-gray-100">
           <CardHeader className="border-b border-gray-100 pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle>About</CardTitle>
+              <h1 className="text-3xl font-bold">{t("about")}</h1>
               <Button variant="outline" asChild size="sm">
                 <Link href="/editor?type=about">
                   <FiEdit className="mr-1" />
-                  Edit
+                  {t("edit")}
                 </Link>
               </Button>
             </div>
           </CardHeader>
           <CardContent className="py-6">
             {aboutPage ? (
-              <div className="prose max-w-none">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              <div className="prose max-w-none text-gray-800">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm, remarkMath]}
+                  rehypePlugins={[rehypeKatex]}
+                  components={{
+                    code({
+                      inline,
+                      className,
+                      children,
+                      ...props
+                    }: {
+                      inline?: boolean;
+                      className?: string;
+                      children?: React.ReactNode;
+                    } & React.HTMLAttributes<HTMLElement>) {
+                      const match = /language-(\w+)/.exec(className || "");
+                      return !inline && match ? (
+                        <SyntaxHighlighter
+                          style={
+                            tomorrow as { [key: string]: React.CSSProperties }
+                          }
+                          language={match[1]}
+                          PreTag="div"
+                        >
+                          {String(children).replace(/\n$/, "")}
+                        </SyntaxHighlighter>
+                      ) : (
+                        <code className={className} {...props}>
+                          {children}
+                        </code>
+                      );
+                    },
+                    a: ({ children, ...props }) => (
+                      <a
+                        {...props}
+                        className="text-gray-400 no-underline hover:text-gray-600 hover:underline hover:underline-offset-4 transition-colors duration-200 break-words"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {children}
+                      </a>
+                    ),
+                    blockquote: ({ children }) => (
+                      <div className="pl-4 border-l-4 border-gray-200 text-gray-400">
+                        {children}
+                      </div>
+                    ),
+                  }}
+                >
                   {aboutPage.content}
                 </ReactMarkdown>
               </div>
@@ -48,7 +102,9 @@ export default async function AboutPage() {
                   You haven&apos;t created an about page yet.
                 </p>
                 <Button asChild>
-                  <Link href="/editor?type=about">Create About Page</Link>
+                  <Link href="/editor?type=about">
+                    {t("createAboutPage") || "Create About Page"}
+                  </Link>
                 </Button>
               </div>
             )}
