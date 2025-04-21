@@ -23,6 +23,7 @@ export default function Header({
   const t = useTranslations("HomePage");
   const [userLogin, setUserLogin] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string>("/icon.jpg");
+  const [activeTab, setActiveTab] = useState<string>("thoughts");
 
   useEffect(() => {
     if (username) {
@@ -46,19 +47,24 @@ export default function Header({
   }, [iconUrl]);
 
   // Determine the active tab based on the current pathname
-  const activeTab = isUserPage
-    ? pathname.includes("/thoughts")
+  useEffect(() => {
+    const newActiveTab = isUserPage
+      ? pathname.includes("/thoughts")
+        ? "thoughts"
+        : pathname.includes("/about")
+        ? "about"
+        : "blog"
+      : pathname.startsWith("/blog") || searchParams.get("type") === "blog"
+      ? "blog"
+      : pathname.startsWith("/thoughts") ||
+        searchParams.get("type") === "thought"
       ? "thoughts"
-      : pathname.includes("/about")
+      : pathname.startsWith("/about") || searchParams.get("type") === "about"
       ? "about"
-      : "blog"
-    : pathname.startsWith("/blog") || searchParams.get("type") === "blog"
-    ? "blog"
-    : pathname.startsWith("/thoughts") || searchParams.get("type") === "thought"
-    ? "thoughts"
-    : pathname.startsWith("/about") || searchParams.get("type") === "about"
-    ? "about"
-    : "thoughts";
+      : "thoughts";
+
+    setActiveTab(newActiveTab);
+  }, [pathname, searchParams, isUserPage]);
 
   return (
     <header className="fixed top-0 left-0 right-0 py-4 bg-card border-b border-gray-100 z-10">
@@ -80,7 +86,7 @@ export default function Header({
             <div className="flex space-x-2 sm:space-x-4">
               <Button
                 variant="ghost"
-                className={`text-lg font-normal border-0${
+                className={`text-lg font-normal border-0 ${
                   activeTab === "blog" ? "text-black" : "text-gray-300"
                 }`}
                 asChild
