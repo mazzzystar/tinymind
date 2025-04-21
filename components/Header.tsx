@@ -61,7 +61,7 @@ export default function Header({
     : "thoughts";
 
   return (
-    <header className="fixed top-0 left-0 right-0 py-4 bg-card shadow z-10">
+    <header className="fixed top-0 left-0 right-0 py-4 bg-card border-b border-gray-100 z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <Link
@@ -80,7 +80,7 @@ export default function Header({
             <div className="flex space-x-2 sm:space-x-4">
               <Button
                 variant="ghost"
-                className={`text-lg font-normal ${
+                className={`text-lg font-normal border-0${
                   activeTab === "blog" ? "text-black" : "text-gray-300"
                 }`}
                 asChild
@@ -91,7 +91,7 @@ export default function Header({
               </Button>
               <Button
                 variant="ghost"
-                className={`text-lg font-normal ${
+                className={`text-lg font-normal border-0 ${
                   activeTab === "thoughts" ? "text-black" : "text-gray-300"
                 }`}
                 asChild
@@ -102,7 +102,7 @@ export default function Header({
               </Button>
               <Button
                 variant="ghost"
-                className={`text-lg font-normal ${
+                className={`text-lg font-normal border-0 ${
                   activeTab === "about" ? "text-black" : "text-gray-300"
                 }`}
                 asChild
