@@ -83,7 +83,7 @@ export default function Header({
             />
           </Link>
           <div className="flex-grow flex justify-center">
-            <div className="flex space-x-2 sm:space-x-4">
+            <div className="flex space-x-2 sm:space-x-4 w-full justify-center">
               <Button
                 variant="ghost"
                 className={`text-lg font-normal border-0 ${
