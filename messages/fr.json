@@ -13,6 +13,8 @@
     "writeAboutPageContent": "Écrivez à propos de vous en Markdown...",
     "enterTitle": "Entrez votre titre ici...",
       "loadingContent": "Loading content...",
+      "showMore": "Afficher plus",
+      "showLess": "Afficher moins",
     "howItWorksTitle": "Comment ça marche :",
     "howItWorksStep1": "Autorisez Tinymind à accéder à vos dépôts GitHub publics.",
     "howItWorksStep2": "Tinymind crée un dépôt public nommé \"tinymind-blog\" dans votre compte GitHub.",

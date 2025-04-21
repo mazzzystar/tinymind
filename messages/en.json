@@ -19,6 +19,8 @@
       "writeAboutPageContent": "Write about yourself in Markdown...",
       "enterTitle": "Enter your title here...",
       "loadingContent": "Loading content...",
+      "showMore": "Show More",
+      "showLess": "Show Less",
 
       "howItWorksTitle": "How it works:",
       "howItWorksStep1": "Authorize Tinymind to access your public GitHub repositories.",

@@ -13,6 +13,8 @@
       "writeAboutPageContent": "Schreiben Sie über sich in Markdown...",
       "enterTitle": "Titel hier eingeben...",
       "loadingContent": "Loading content...",
+      "showMore": "Mehr anzeigen",
+      "showLess": "Weniger anzeigen",
       "howItWorksTitle": "So funktioniert es:",
       "howItWorksStep1": "Autorisieren Sie Tinymind, auf Ihre öffentlichen GitHub-Repositories zuzugreifen.",
       "howItWorksStep2": "Tinymind erstellt ein öffentliches Repository namens \"tinymind-blog\" in Ihrem GitHub-Konto.",

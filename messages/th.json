@@ -13,6 +13,8 @@
     "writeAboutPageContent": "Write about yourself in Markdown...",
     "enterTitle": "ป้อนชื่อเรื่องของคุณที่นี่...",
       "loadingContent": "Loading content...",
+      "showMore": "แสดงเพิ่มเติม",
+      "showLess": "แสดงน้อยลง",
     "howItWorksTitle": "วิธีการทำงาน:",
     "howItWorksStep1": "อนุญาตให้ Tinymind เข้าถึงที่เก็บ GitHub สาธารณะของคุณ",
     "howItWorksStep2": "Tinymind สร้างที่เก็บสาธารณะชื่อ \"tinymind-blog\" ในบัญชี GitHub ของคุณ",

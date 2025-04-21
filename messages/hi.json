@@ -13,6 +13,8 @@
     "writeAboutPageContent": "Write about yourself in Markdown...",
     "enterTitle": "अपना शीर्षक यहाँ दर्ज करें...",
       "loadingContent": "Loading content...",
+      "showMore": "और दिखाएं",
+      "showLess": "कम दिखाएं",
     "howItWorksTitle": "यह कैसे काम करता है:",
     "howItWorksStep1": "Tinymind को अपने सार्वजनिक GitHub रिपॉजिटरीज तक पहुंच की अनुमति दें।",
     "howItWorksStep2": "Tinymind आपके GitHub खाते में \"tinymind-blog\" नाम का एक सार्वजनिक रिपॉजिटरी बनाता है।",

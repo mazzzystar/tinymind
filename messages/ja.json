@@ -13,6 +13,8 @@
     "writeAboutPageContent": "あなた自身についてMarkdownで記述...",
     "enterTitle": "タイトルを入力...",
       "loadingContent": "Loading content...",
+      "showMore": "もっと見る",
+      "showLess": "表示を減らす",
     "howItWorksTitle": "使い方：",
     "howItWorksStep1": "Tinymindにあなたの公開GitHubリポジトリへのアクセスを許可します。",
     "howItWorksStep2": "TinymindはあなたのGitHubアカウントに\"tinymind-blog\"という名前の公開リポジトリを作成します。",

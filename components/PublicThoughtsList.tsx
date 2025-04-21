@@ -10,6 +10,9 @@ import { Thought } from "@/lib/githubApi";
 import { formatTimestamp } from "@/utils/dateFormatting";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { Button } from "@/components/ui/button";
+import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+import { useTranslations } from "next-intl";
 
 type FormattedThought = Thought & { formattedTimestamp: string };
 
@@ -21,6 +24,33 @@ export default function PublicThoughtsList({
   const [formattedThoughts, setFormattedThoughts] = useState<
     FormattedThought[]
   >([]);
+  const [expandedThoughts, setExpandedThoughts] = useState<
+    Record<string, boolean>
+  >({});
+  const t = useTranslations("HomePage");
+
+  // Check if thought content is long (more than 20 lines)
+  const isLongThought = (content: string): boolean => {
+    return content.split("\n").length > 20;
+  };
+
+  // Toggle expanded state for a thought
+  const toggleThoughtExpansion = (id: string) => {
+    setExpandedThoughts((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
+  // Get the content to display (truncated or full)
+  const getDisplayContent = (thought: Thought) => {
+    if (!isLongThought(thought.content) || expandedThoughts[thought.id]) {
+      return thought.content;
+    }
+
+    // Get first 15 lines if the thought is long and not expanded
+    return thought.content.split("\n").slice(0, 15).join("\n") + "\n...";
+  };
 
   useEffect(() => {
     const formatted = thoughts.map((thought) => ({
@@ -84,8 +114,26 @@ export default function PublicThoughtsList({
                 ),
               }}
             >
-              {thought.content}
+              {getDisplayContent(thought)}
             </ReactMarkdown>
+
+            {isLongThought(thought.content) && (
+              <Button
+                variant="ghost"
+                className="mt-2 text-gray-500 hover:text-gray-700 flex items-center justify-center w-full"
+                onClick={() => toggleThoughtExpansion(thought.id)}
+              >
+                {expandedThoughts[thought.id] ? (
+                  <>
+                    <FiChevronUp className="mr-2" /> {t("showLess")}
+                  </>
+                ) : (
+                  <>
+                    <FiChevronDown className="mr-2" /> {t("showMore")}
+                  </>
+                )}
+              </Button>
+            )}
           </div>
           <small className="text-gray-500 self-end mt-2">
             {thought.formattedTimestamp}

@@ -14,6 +14,8 @@
       "writeAboutPageContent": "用Markdown写下关于你自己的内容...",
       "enterTitle": "在这里输入标题...",
       "loadingContent": "Loading content...",
+      "showMore": "显示更多",
+      "showLess": "显示更少",
       "howItWorksTitle": "工作原理：",
       "howItWorksStep1": "授权 Tinymind 访问您的公共 GitHub 仓库。",
       "howItWorksStep2": "Tinymind 在您的 GitHub 账户中创建一个名为 \"tinymind-blog\" 的公共仓库。",

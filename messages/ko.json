@@ -13,6 +13,8 @@
     "writeAboutPageContent": "Write about yourself in Markdown...",
     "enterTitle": "여기에 제목을 입력하세요...",
       "loadingContent": "Loading content...",
+      "showMore": "더 보기",
+      "showLess": "간략히 보기",
     "howItWorksTitle": "작동 방식:",
     "howItWorksStep1": "Tinymind에 귀하의 공개 GitHub 저장소에 접근할 수 있는 권한을 부여합니다.",
     "howItWorksStep2": "Tinymind가 귀하의 GitHub 계정에 \"tinymind-blog\"라는 이름의 공개 저장소를 생성합니다.",

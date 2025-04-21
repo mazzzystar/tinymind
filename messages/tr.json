@@ -13,6 +13,8 @@
     "writeAboutPageContent": "Write about yourself in Markdown...",
     "enterTitle": "Başlığınızı buraya girin...",
       "loadingContent": "Loading content...",
+      "showMore": "Daha fazla göster",
+      "showLess": "Daha az göster",
     "howItWorksTitle": "Nasıl çalışır:",
     "howItWorksStep1": "Tinymind'in genel GitHub depolarınıza erişmesine izin verin.",
     "howItWorksStep2": "Tinymind, GitHub hesabınızda \"tinymind-blog\" adlı bir genel depo oluşturur.",

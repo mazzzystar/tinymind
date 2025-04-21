@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AiOutlineEllipsis } from "react-icons/ai";
+import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Dialog,
@@ -39,10 +40,36 @@ export default function ThoughtsList() {
   const [isLoading, setIsLoading] = useState(true);
   const [thoughtToDelete, setThoughtToDelete] = useState<string | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [expandedThoughts, setExpandedThoughts] = useState<
+    Record<string, boolean>
+  >({});
   const { data: session, status } = useSession();
   const router = useRouter();
   const t = useTranslations("HomePage");
   const { toast } = useToast();
+
+  // Check if thought content is long (more than 20 lines)
+  const isLongThought = (content: string): boolean => {
+    return content.split("\n").length > 20;
+  };
+
+  // Toggle expanded state for a thought
+  const toggleThoughtExpansion = (id: string) => {
+    setExpandedThoughts((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
+  // Get the content to display (truncated or full)
+  const getDisplayContent = (thought: Thought) => {
+    if (!isLongThought(thought.content) || expandedThoughts[thought.id]) {
+      return thought.content;
+    }
+
+    // Get first 15 lines if the thought is long and not expanded
+    return thought.content.split("\n").slice(0, 15).join("\n") + "\n...";
+  };
 
   useEffect(() => {
     async function fetchThoughts() {
@@ -265,8 +292,26 @@ export default function ThoughtsList() {
                   ),
                 }}
               >
-                {thought.content}
+                {getDisplayContent(thought)}
               </ReactMarkdown>
+
+              {isLongThought(thought.content) && (
+                <Button
+                  variant="ghost"
+                  className="mt-2 text-gray-500 hover:text-gray-700 flex items-center justify-center w-full"
+                  onClick={() => toggleThoughtExpansion(thought.id)}
+                >
+                  {expandedThoughts[thought.id] ? (
+                    <>
+                      <FiChevronUp className="mr-2" /> {t("showLess")}
+                    </>
+                  ) : (
+                    <>
+                      <FiChevronDown className="mr-2" /> {t("showMore")}
+                    </>
+                  )}
+                </Button>
+              )}
             </div>
             <small className="text-gray-500 self-end mt-2">
               {formatTimestamp(thought.timestamp)}
