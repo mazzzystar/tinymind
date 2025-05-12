@@ -13,8 +13,16 @@ import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Button } from "@/components/ui/button";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { useTranslations } from "next-intl";
+import { transformGithubImageUrl } from "@/lib/urlUtils";
+import React, { HTMLAttributes } from "react";
 
 type FormattedThought = Thought & { formattedTimestamp: string };
+
+interface CodeProps extends HTMLAttributes<HTMLElement> {
+  inline?: boolean;
+  className?: string;
+  children?: React.ReactNode;
+}
 
 export default function PublicThoughtsList({
   thoughts,
@@ -72,16 +80,12 @@ export default function PublicThoughtsList({
               remarkPlugins={[remarkGfm, remarkMath]}
               rehypePlugins={[rehypeKatex]}
               components={{
-                code({
+                code: ({
                   inline,
                   className,
                   children,
                   ...props
-                }: {
-                  inline?: boolean;
-                  className?: string;
-                  children?: React.ReactNode;
-                } & React.HTMLAttributes<HTMLElement>) {
+                }: CodeProps) => {
                   const match = /language-(\w+)/.exec(className || "");
                   return !inline && match ? (
                     <SyntaxHighlighter
@@ -112,6 +116,16 @@ export default function PublicThoughtsList({
                     {children}
                   </div>
                 ),
+                img: (props) => {
+                  const transformedSrc = transformGithubImageUrl(props.src);
+                  return (
+                    <img
+                      {...props}
+                      src={transformedSrc}
+                      alt={props.alt || "image"}
+                    />
+                  );
+                },
               }}
             >
               {getDisplayContent(thought)}

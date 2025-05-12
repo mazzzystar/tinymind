@@ -33,6 +33,15 @@ import "katex/dist/katex.min.css";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import { formatTimestamp } from "@/utils/dateFormatting";
+import { transformGithubImageUrl } from "@/lib/urlUtils";
+import React, { HTMLAttributes } from "react";
+
+// Interface for code component props if not already defined elsewhere
+interface CodeProps extends HTMLAttributes<HTMLElement> {
+  inline?: boolean;
+  className?: string;
+  children?: React.ReactNode;
+}
 
 export default function ThoughtsList() {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
@@ -248,16 +257,12 @@ export default function ThoughtsList() {
                 remarkPlugins={[remarkGfm, remarkMath]}
                 rehypePlugins={[rehypeKatex]}
                 components={{
-                  code({
+                  code: ({
                     inline,
                     className,
                     children,
                     ...props
-                  }: {
-                    inline?: boolean;
-                    className?: string;
-                    children?: React.ReactNode;
-                  } & React.HTMLAttributes<HTMLElement>) {
+                  }: CodeProps) => {
                     const match = /language-(\w+)/.exec(className || "");
                     return !inline && match ? (
                       <SyntaxHighlighter
@@ -290,6 +295,16 @@ export default function ThoughtsList() {
                       {children}
                     </div>
                   ),
+                  img: (props) => {
+                    const transformedSrc = transformGithubImageUrl(props.src);
+                    return (
+                      <img
+                        {...props}
+                        src={transformedSrc}
+                        alt={props.alt || "image"}
+                      />
+                    );
+                  },
                 }}
               >
                 {getDisplayContent(thought)}

@@ -98,8 +98,18 @@ async function getIconPaths(accessToken: string | undefined) {
   const defaultAppleTouchIconPath = "/icon-144.jpg";
 
   if (accessToken) {
-    const iconUrls = await getIconUrls(accessToken);
-    return iconUrls;
+    try {
+      const iconUrls = await getIconUrls(accessToken);
+      // Ensure that the returned paths are not empty or problematic before using them
+      return {
+        iconPath: iconUrls.iconPath || defaultIconPath,
+        appleTouchIconPath:
+          iconUrls.appleTouchIconPath || defaultAppleTouchIconPath,
+      };
+    } catch (error) {
+      console.error("Error in getIconPaths while calling getIconUrls:", error);
+      // Fallback to truly generic defaults if getIconUrls itself throws an unhandled error
+    }
   }
 
   return {

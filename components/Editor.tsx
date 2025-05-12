@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { HTMLAttributes } from "react";
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -25,10 +25,17 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { transformGithubImageUrl } from "@/lib/urlUtils";
 
 function removeFrontmatter(content: string): string {
   const frontmatterRegex = /^---\n([\s\S]*?)\n---\n/;
   return content.replace(frontmatterRegex, "");
+}
+
+interface CodeProps extends HTMLAttributes<HTMLElement> {
+  inline?: boolean;
+  className?: string;
+  children?: React.ReactNode;
 }
 
 export default function Editor({
@@ -485,16 +492,12 @@ export default function Editor({
                     remarkPlugins={[remarkGfm, remarkMath]}
                     rehypePlugins={[rehypeKatex]}
                     components={{
-                      code({
+                      code: ({
                         inline,
                         className,
                         children,
                         ...props
-                      }: {
-                        inline?: boolean;
-                        className?: string;
-                        children?: React.ReactNode;
-                      } & React.HTMLAttributes<HTMLElement>) {
+                      }: CodeProps) => {
                         const match = /language-(\w+)/.exec(className || "");
                         return !inline && match ? (
                           <SyntaxHighlighter
@@ -527,6 +530,18 @@ export default function Editor({
                           {children}
                         </div>
                       ),
+                      img: (props) => {
+                        const transformedSrc = transformGithubImageUrl(
+                          props.src
+                        );
+                        return (
+                          <img
+                            {...props}
+                            src={transformedSrc}
+                            alt={props.alt || "image"}
+                          />
+                        );
+                      },
                     }}
                   >
                     {content}

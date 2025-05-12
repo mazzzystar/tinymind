@@ -8,12 +8,20 @@ import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import "katex/dist/katex.min.css";
+import { transformGithubImageUrl } from "@/lib/urlUtils";
+import { HTMLAttributes } from "react";
 
 interface BlogPostContentProps {
   title: string;
   date: string;
   content: string;
   headerContent?: React.ReactNode;
+}
+
+interface CodeProps extends HTMLAttributes<HTMLElement> {
+  inline?: boolean;
+  className?: string;
+  children?: React.ReactNode;
 }
 
 export function BlogPostContent({
@@ -39,16 +47,7 @@ export function BlogPostContent({
             remarkPlugins={[remarkGfm, remarkMath]}
             rehypePlugins={[rehypeKatex]}
             components={{
-              code({
-                inline,
-                className,
-                children,
-                ...props
-              }: {
-                inline?: boolean;
-                className?: string;
-                children?: React.ReactNode;
-              } & React.HTMLAttributes<HTMLElement>) {
+              code: ({ inline, className, children, ...props }: CodeProps) => {
                 const match = /language-(\w+)/.exec(className || "");
                 return !inline && match ? (
                   <SyntaxHighlighter
@@ -79,6 +78,16 @@ export function BlogPostContent({
                   {children}
                 </div>
               ),
+              img: (props) => {
+                const transformedSrc = transformGithubImageUrl(props.src);
+                return (
+                  <img
+                    {...props}
+                    src={transformedSrc}
+                    alt={props.alt || "image"}
+                  />
+                );
+              },
             }}
           >
             {content}

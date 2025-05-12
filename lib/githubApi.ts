@@ -725,18 +725,9 @@ export async function uploadImage(
 
     console.log('Image uploaded successfully');
 
-    // Modify the returned URL to use the correct format
-    const rawUrl = response.data.content?.download_url;
-    if (rawUrl) {
-      const parts = rawUrl.split('/');
-      const username = parts[3];
-      const repo = parts[4];
-      const path = parts.slice(6).join('/');
-      
-      return `https://github.com/${username}/${repo}/blob/${defaultBranch}/${path}?raw=true`;
-    }
+    // Construct the direct raw.githubusercontent.com URL
+    return `https://raw.githubusercontent.com/${owner}/${repo}/${defaultBranch}/${filePath}`;
 
-    throw new Error('Failed to get image URL');
   } catch (error) {
     console.error('Error uploading image:', error);
     throw error;
@@ -844,40 +835,49 @@ export async function getThoughtsPublic(octokit: Octokit, owner: string, repo: s
 }
 
 export async function getIconUrls(usernameOrAccessToken: string): Promise<{ iconPath: string; appleTouchIconPath: string }> {
-  let owner: string;
-  let repo: string;
+  let owner: string | null = null; // Initialize owner as null
+  let repo: string = 'tinymind-blog'; // Default repo name
   let octokit: Octokit | null = null;
 
-  // Check if the input is an access token or a username
-  if (usernameOrAccessToken.length > 40) { // Assuming access tokens are longer than usernames
+  const genericDefaultIconPath = "/icon.jpg"; // Truly generic icon
+  const genericDefaultAppleTouchIconPath = "/icon-144.jpg"; // Truly generic apple touch icon
+
+  // Check if the input is likely an access token or a username
+  if (usernameOrAccessToken && usernameOrAccessToken.length > 40 && usernameOrAccessToken.startsWith("gh")) { // More specific check for PATs
     try {
       octokit = getOctokit(usernameOrAccessToken);
-      const repoInfo = await getRepoInfo(usernameOrAccessToken);
-      owner = repoInfo.owner;
+      const repoInfo = await getRepoInfo(usernameOrAccessToken); // This uses the token to get actual user login
+      owner = repoInfo.owner; // Correct owner (username)
       repo = repoInfo.repo;
     } catch (error) {
-      console.error('Error getting authenticated user:', error);
-      // Fallback to using the access token as a username
-      owner = usernameOrAccessToken;
-      repo = 'tinymind-blog'; // Default repo name
+      console.error('Error getting authenticated user with token in getIconUrls:', error);
+      // If fetching user info with token fails, owner remains null
+      // We will use generic defaults later
+    }
+  } else if (usernameOrAccessToken) {
+    owner = usernameOrAccessToken; // Assumed to be a username
+  }
+
+  let iconPathToUse: string;
+  let appleTouchIconPathToUse: string;
+
+  if (owner) {
+    // If we have an owner (either from token or direct username), construct potential GitHub avatar URL
+    iconPathToUse = `https://github.com/${owner}.png`;
+    appleTouchIconPathToUse = `https://github.com/${owner}.png`; // Often the same for GitHub avatars
+
+    if (octokit) { // If octokit was initialized (meaning a token was likely provided and valid for repo access)
+      // Try to fetch custom icons from the repo, fall back to the GitHub avatar if not found
+      iconPathToUse = await getIconUrl(octokit, owner, repo, 'assets/icon.jpg', iconPathToUse);
+      appleTouchIconPathToUse = await getIconUrl(octokit, owner, repo, 'assets/icon-144.jpg', appleTouchIconPathToUse);
     }
   } else {
-    owner = usernameOrAccessToken;
-    repo = 'tinymind-blog'; // Default repo name
+    // If owner is still null (e.g., token was invalid or no usernameOrAccessToken provided), use generic defaults
+    iconPathToUse = genericDefaultIconPath;
+    appleTouchIconPathToUse = genericDefaultAppleTouchIconPath;
   }
 
-  const defaultIconPath = `https://github.com/${owner}.png`;
-  const defaultAppleTouchIconPath = `https://github.com/${owner}.png`;
-
-  let iconPath = defaultIconPath;
-  let appleTouchIconPath = defaultAppleTouchIconPath;
-
-  if (octokit) {
-    iconPath = await getIconUrl(octokit, owner, repo, 'assets/icon.jpg', defaultIconPath);
-    appleTouchIconPath = await getIconUrl(octokit, owner, repo, 'assets/icon-144.jpg', defaultAppleTouchIconPath);
-  }
-
-  return { iconPath, appleTouchIconPath };
+  return { iconPath: iconPathToUse, appleTouchIconPath: appleTouchIconPathToUse };
 }
 
 async function getIconUrl(octokit: Octokit, owner: string, repo: string, path: string, defaultPath: string): Promise<string> {
