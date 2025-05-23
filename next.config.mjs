@@ -31,6 +31,43 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      // Redirect www to non-www
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'www.tinymind.me',
+          },
+        ],
+        destination: 'https://tinymind.me/:path*',
+        permanent: true,
+      },
+      // Redirect old paths that are causing duplicate content issues
+      {
+        source: '/home',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/thoughts',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/blog',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/about',
+        destination: '/',
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
       {

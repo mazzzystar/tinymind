@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Allow all user profile pages
+Allow: /*/
+Allow: /*/blog/
+Allow: /*/thoughts/
+Allow: /*/about/
+
+# Disallow API endpoints that are causing 5xx errors
+Disallow: /api/
+Disallow: /_next/
+Disallow: /editor
+Disallow: /thoughts
+Disallow: /blog
+
+# Allow specific API endpoints that should be crawlable
+Allow: /api/manifest/
+
+Sitemap: https://tinymind.me/sitemap.xml 

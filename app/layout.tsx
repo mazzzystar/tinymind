@@ -26,14 +26,20 @@ export async function generateMetadata(): Promise<Metadata> {
     "Write and preserve your blogs, thoughts, and notes effortlessly. Sign in with GitHub to automatically sync your content to your own repository, ensuring your ideas are safely stored as long as GitHub exists.";
 
   const { iconPath } = await getIconPaths(session?.accessToken);
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://tinymind.me";
 
   return {
     title,
     description,
     manifest: "/manifest.json",
+    alternates: {
+      canonical: baseUrl,
+    },
     openGraph: {
       title,
       description,
+      url: baseUrl,
+      siteName: "TinyMind",
       images: [{ url: iconPath, width: 512, height: 512, alt: "App Logo" }],
       type: "website",
     },
@@ -42,6 +48,18 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       images: [iconPath],
+      site: "@tinymind",
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
   };
 }
