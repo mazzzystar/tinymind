@@ -1,6 +1,4 @@
 import { MetadataRoute } from 'next'
-import { Octokit } from '@octokit/rest'
-import { getBlogPostsPublic } from '@/lib/githubApi'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://tinymind.me'
@@ -22,10 +20,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // This is a simplified approach - in production you might want to maintain a list of active users
     // For now, we'll include some known users or implement a discovery mechanism
     const knownUsers = ['mazzzystar'] // You can expand this list or implement user discovery
-    
-    // Use authenticated GitHub token for higher rate limits
-    const githubToken = process.env.GITHUB_TOKEN;
-    const octokit = githubToken ? new Octokit({ auth: githubToken }) : new Octokit();
     
     for (const username of knownUsers) {
       try {
@@ -61,16 +55,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           priority: 0.5,
         })
 
-        // Get blog posts for this user
-        const blogPosts = await getBlogPostsPublic(octokit, username, 'tinymind-blog')
-        
-        for (const post of blogPosts) {
-          dynamicPages.push({
-            url: `${baseUrl}/${username}/blog/${encodeURIComponent(post.id)}`,
-            lastModified: new Date(post.date),
-            changeFrequency: 'monthly',
-            priority: 0.6,
-          })
+        // Use the authenticated API endpoint instead of direct GitHub calls
+        try {
+          const response = await fetch(`${baseUrl}/api/public-blog/${username}`)
+          if (response.ok) {
+            const blogPosts = await response.json()
+            
+            for (const post of blogPosts) {
+              dynamicPages.push({
+                url: `${baseUrl}/${username}/blog/${encodeURIComponent(post.id)}`,
+                lastModified: new Date(post.date),
+                changeFrequency: 'monthly',
+                priority: 0.6,
+              })
+            }
+          }
+        } catch (blogError) {
+          console.error(`Error fetching blog posts for ${username}:`, blogError)
         }
       } catch (error) {
         console.error(`Error fetching data for user ${username}:`, error)
