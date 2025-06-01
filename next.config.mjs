@@ -51,21 +51,6 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
-      {
-        source: '/thoughts',
-        destination: '/',
-        permanent: true,
-      },
-      {
-        source: '/blog',
-        destination: '/',
-        permanent: true,
-      },
-      {
-        source: '/about',
-        destination: '/',
-        permanent: true,
-      },
     ];
   },
   async rewrites() {
