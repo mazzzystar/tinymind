@@ -1,6 +1,4 @@
 import { Metadata } from "next";
-import { Octokit } from "@octokit/rest";
-import { getBlogPostsPublic } from "@/lib/githubApi";
 import BlogPostClient from "./BlogPostClient";
 
 function decodeContent(content: string): string {
@@ -32,10 +30,29 @@ export async function generateMetadata({
   params: { username: string; id: string };
 }): Promise<Metadata> {
   const { username, id } = params;
-  const octokit = new Octokit();
 
   try {
-    const posts = await getBlogPostsPublic(octokit, username, "tinymind-blog");
+    // Use the secure API endpoint instead of direct GitHub API call
+    const response = await fetch(
+      `${
+        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
+      }/api/public-blog/${username}`,
+      {
+        next: { revalidate: 300 }, // 5 minutes cache
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const posts: Array<{
+      id: string;
+      title: string;
+      content: string;
+      date: string;
+    }> = await response.json();
+
     const post = posts.find((p) => p.id === decodeContent(id));
 
     if (!post) {

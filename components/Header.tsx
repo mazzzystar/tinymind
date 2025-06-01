@@ -48,20 +48,38 @@ export default function Header({
 
   // Determine the active tab based on the current pathname
   useEffect(() => {
-    const newActiveTab = isUserPage
-      ? pathname.includes("/thoughts")
-        ? "thoughts"
-        : pathname.includes("/about")
-        ? "about"
-        : "blog"
-      : pathname.startsWith("/blog") || searchParams.get("type") === "blog"
-      ? "blog"
-      : pathname.startsWith("/thoughts") ||
+    let newActiveTab: string;
+
+    if (isUserPage) {
+      // For user pages like /username/blog, /username/thoughts, etc.
+      if (pathname.includes("/thoughts")) {
+        newActiveTab = "thoughts";
+      } else if (pathname.includes("/about")) {
+        newActiveTab = "about";
+      } else {
+        // Default to blog for user pages (includes /username, /username/blog, /username/blog/[id])
+        newActiveTab = "blog";
+      }
+    } else {
+      // For regular pages like /blog, /thoughts, /blog/[id], etc.
+      if (pathname.startsWith("/blog") || searchParams.get("type") === "blog") {
+        newActiveTab = "blog";
+      } else if (
+        pathname.startsWith("/thoughts") ||
+        pathname === "/" ||
         searchParams.get("type") === "thought"
-      ? "thoughts"
-      : pathname.startsWith("/about") || searchParams.get("type") === "about"
-      ? "about"
-      : "thoughts";
+      ) {
+        newActiveTab = "thoughts";
+      } else if (
+        pathname.startsWith("/about") ||
+        searchParams.get("type") === "about"
+      ) {
+        newActiveTab = "about";
+      } else {
+        // Default to thoughts for the main app
+        newActiveTab = "thoughts";
+      }
+    }
 
     setActiveTab(newActiveTab);
   }, [pathname, searchParams, isUserPage]);
