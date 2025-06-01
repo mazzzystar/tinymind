@@ -805,33 +805,39 @@ export async function getBlogPostsPublic(octokit: Octokit, owner: string, repo: 
       return [];
     }
 
-    const posts = await Promise.all(
-      response.data
-        .filter((file) => file.type === 'file' && file.name.endsWith('.md'))
-        .map(async (file) => {
-          const contentResponse = await octokit.repos.getContent({
-            owner,
-            repo,
-            path: `content/blog/${file.name}`,
-          });
+    const mdFiles = response.data.filter((file) => file.type === 'file' && file.name.endsWith('.md'));
+    const posts: BlogPost[] = [];
 
-          if ('content' in contentResponse.data) {
-            const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf-8');
-            const titleMatch = content.match(/title:\s*(.+)/);
-            const dateMatch = content.match(/date:\s*(.+)/);
+    // Process files sequentially to avoid rate limiting
+    for (const file of mdFiles) {
+      try {
+        const contentResponse = await octokit.repos.getContent({
+          owner,
+          repo,
+          path: `content/blog/${file.name}`,
+        });
 
-            return {
-              id: file.name.replace('.md', ''),
-              title: titleMatch ? titleMatch[1].trim() : file.name.replace('.md', ''),
-              content,
-              date: dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString(),
-            };
-          }
-          return undefined;
-        })
-    );
+        if ('content' in contentResponse.data) {
+          const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf-8');
+          const titleMatch = content.match(/title:\s*(.+)/);
+          const dateMatch = content.match(/date:\s*(.+)/);
 
-    return posts.filter((post): post is BlogPost => post !== undefined);
+          const post = {
+            id: file.name.replace('.md', ''),
+            title: titleMatch ? titleMatch[1].trim() : file.name.replace('.md', ''),
+            content,
+            date: dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString(),
+          };
+          
+          posts.push(post);
+        }
+      } catch (error) {
+        console.error(`Error processing file ${file.name}:`, error);
+        // Continue processing other files even if one fails
+      }
+    }
+
+    return posts;
   } catch (error) {
     console.error('Error fetching public blog posts:', error);
     return [];
