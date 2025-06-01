@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Octokit } from "@octokit/rest";
-import { BlogPost, getBlogPostsPublic } from "@/lib/githubApi";
+import { BlogPost } from "@/lib/githubApi";
 import { BlogPostContent } from "@/components/BlogPostContent";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
@@ -32,14 +31,18 @@ export default function BlogPostClient({
 
   useEffect(() => {
     const fetchPost = async () => {
-      const octokit = new Octokit();
       try {
-        const posts = await getBlogPostsPublic(
-          octokit,
-          username,
-          "tinymind-blog"
+        // Use the authenticated API endpoint instead of direct GitHub API
+        const response = await fetch(`/api/public-blog/${username}`);
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const posts = await response.json();
+        const foundPost = posts.find(
+          (p: BlogPost) => p.id === decodeURIComponent(id)
         );
-        const foundPost = posts.find((p) => p.id === decodeURIComponent(id));
         setPost(foundPost || null);
       } catch (error) {
         console.error("Error fetching blog post:", error);

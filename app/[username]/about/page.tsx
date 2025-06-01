@@ -1,6 +1,4 @@
 import { Metadata } from "next";
-import { Octokit } from "@octokit/rest";
-import { getAboutPagePublic } from "@/lib/githubApi";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -65,15 +63,25 @@ export default async function PublicAboutPage({
 }: {
   params: { username: string };
 }) {
-  const octokit = new Octokit();
   const username = params.username;
 
   try {
-    const aboutPage = await getAboutPagePublic(
-      octokit,
-      username,
-      "tinymind-blog"
+    // Use the authenticated API endpoint instead of direct GitHub API
+    const response = await fetch(
+      `${
+        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
+      }/api/public/${username}`,
+      {
+        next: { revalidate: 300 }, // 5 minutes cache
+      }
     );
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const aboutPage = data.aboutPage;
 
     if (!aboutPage) {
       return (

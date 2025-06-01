@@ -23,9 +23,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // For now, we'll include some known users or implement a discovery mechanism
     const knownUsers = ['mazzzystar'] // You can expand this list or implement user discovery
     
+    // Use authenticated GitHub token for higher rate limits
+    const githubToken = process.env.GITHUB_TOKEN;
+    const octokit = githubToken ? new Octokit({ auth: githubToken }) : new Octokit();
+    
     for (const username of knownUsers) {
-      const octokit = new Octokit()
-      
       try {
         // Add user homepage
         dynamicPages.push({
