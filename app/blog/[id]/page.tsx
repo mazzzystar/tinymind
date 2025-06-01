@@ -6,13 +6,8 @@ import { useRouter } from "next/navigation";
 import { BlogPostContent } from "@/components/BlogPostContent";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { AiOutlineEllipsis, AiOutlineLoading3Quarters } from "react-icons/ai";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { FiEdit, FiTrash2 } from "react-icons/fi";
 import {
   Dialog,
   DialogContent,
@@ -137,24 +132,24 @@ export default function BlogPost({ params }: { params: { id: string } }) {
   const contentWithoutFrontmatter = removeFrontmatter(decodedContent);
 
   const headerContent = (
-    <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <AiOutlineEllipsis className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem
-            onSelect={() => router.push(`/editor?type=blog&id=${params.id}`)}
-          >
-            {t("edit")}
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => setIsDeleteDialogOpen(true)}>
-            {t("delete")}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+    <div className="flex items-center gap-2">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => router.push(`/editor?type=blog&id=${params.id}`)}
+      >
+        <FiEdit className="h-4 w-4 mr-1" />
+        {t("edit")}
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => setIsDeleteDialogOpen(true)}
+      >
+        <FiTrash2 className="h-4 w-4 mr-1" />
+        {t("delete")}
+      </Button>
+
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -178,7 +173,7 @@ export default function BlogPost({ params }: { params: { id: string } }) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 
   return (
