@@ -4,14 +4,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { FaGithub } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { getUserLogin } from "@/lib/githubApi";
 
 export default function Header({
-  username,
+  username: propUsername,
   iconUrl,
 }: {
   username?: string;
@@ -19,78 +19,110 @@ export default function Header({
 }) {
   const { data: session } = useSession();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const t = useTranslations("HomePage");
   const [userLogin, setUserLogin] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string>("/icon.jpg");
-  const [activeTab, setActiveTab] = useState<string>("thoughts");
+
+  console.log("[Header] Initial props:", { propUsername, iconUrl });
+  console.log("[Header] Session data:", session);
 
   useEffect(() => {
-    if (username) {
-      setAvatarUrl(`https://github.com/${username}.png`);
-    } else if (session?.accessToken) {
+    if (session?.accessToken) {
       getUserLogin(session.accessToken).then((login) => {
+        console.log("[Header] Fetched userLogin:", login);
         setUserLogin(login);
-        setAvatarUrl(`https://github.com/${login}.png`);
+        if (propUsername) {
+          setAvatarUrl(`https://github.com/${propUsername}.png`);
+        } else if (login) {
+          setAvatarUrl(`https://github.com/${login}.png`);
+        } else {
+          setAvatarUrl("/icon.jpg");
+        }
       });
+    } else if (propUsername) {
+      setUserLogin(null);
+      setAvatarUrl(`https://github.com/${propUsername}.png`);
+    } else {
+      setUserLogin(null);
+      setAvatarUrl("/icon.jpg");
     }
-  }, [session, username]);
+  }, [session, propUsername]);
 
-  const isUserPage = !!username;
-  const isOwnProfile = userLogin === username;
-
-  // Use iconUrl if provided (for cases where we have a custom icon)
   useEffect(() => {
     if (iconUrl && iconUrl !== "/icon.jpg") {
       setAvatarUrl(iconUrl);
     }
   }, [iconUrl]);
 
-  // Determine the active tab based on the current pathname
-  useEffect(() => {
-    let newActiveTab: string;
+  const isLoggedIn = !!session?.user;
+  const viewingOwnProfile = isLoggedIn && !propUsername;
+  const viewingPublicProfile = !!propUsername;
 
-    if (isUserPage) {
-      // For user pages like /username/blog, /username/thoughts, etc.
-      if (pathname.includes("/thoughts")) {
-        newActiveTab = "thoughts";
-      } else if (pathname.includes("/about")) {
-        newActiveTab = "about";
-      } else {
-        // Default to blog for user pages (includes /username, /username/blog, /username/blog/[id])
-        newActiveTab = "blog";
-      }
-    } else {
-      // For regular pages like /blog, /thoughts, /blog/[id], etc.
-      if (pathname.startsWith("/blog") || searchParams.get("type") === "blog") {
-        newActiveTab = "blog";
-      } else if (
-        pathname.startsWith("/thoughts") ||
-        pathname === "/" ||
-        searchParams.get("type") === "thought"
-      ) {
-        newActiveTab = "thoughts";
-      } else if (
-        pathname.startsWith("/about") ||
-        searchParams.get("type") === "about"
-      ) {
-        newActiveTab = "about";
-      } else {
-        // Default to thoughts for the main app
-        newActiveTab = "thoughts";
-      }
+  console.log("[Header] Page context:", {
+    pathname,
+    isLoggedIn,
+    viewingOwnProfile,
+    viewingPublicProfile,
+    userLogin,
+    propUsername,
+  });
+
+  const getActiveTab = () => {
+    if (viewingPublicProfile) {
+      if (pathname === `/${propUsername}/thoughts`) return "thoughts";
+      if (pathname === `/${propUsername}/about`) return "about";
+      if (
+        pathname === `/${propUsername}` ||
+        pathname === `/${propUsername}/blog`
+      )
+        return "blog";
+      return "blog";
+    } else if (viewingOwnProfile) {
+      if (pathname === "/blog" || pathname.startsWith("/blog/")) return "blog";
+      if (pathname === "/about") return "about";
+      if (pathname === "/" || pathname === "/thoughts") return "thoughts";
+      return "thoughts";
     }
+    return "thoughts";
+  };
 
-    setActiveTab(newActiveTab);
-  }, [pathname, searchParams, isUserPage]);
+  const getNavUrls = () => {
+    if (viewingPublicProfile) {
+      return {
+        blog: `/${propUsername}/blog`,
+        thoughts: `/${propUsername}/thoughts`,
+        about: `/${propUsername}/about`,
+      };
+    } else {
+      return {
+        blog: "/blog",
+        thoughts: "/thoughts",
+        about: "/about",
+      };
+    }
+  };
+
+  const activeTab = getActiveTab();
+  const navUrls = getNavUrls();
+
+  console.log("[Header] Navigation state:", { activeTab, navUrls });
+
+  const handleTabClick = (tabName: string) => {
+    console.log(
+      `[Header] Clicked tab: ${tabName}, current pathname: ${pathname}, target URL: ${
+        navUrls[tabName as keyof typeof navUrls]
+      }`
+    );
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 py-4 bg-card border-b border-gray-100 z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <Link
-            href={isOwnProfile ? "/" : username ? `/${username}` : "/"}
+            href={viewingPublicProfile ? `/${propUsername}` : "/"}
             className=""
+            onClick={() => console.log("[Header] Clicked Home/Avatar link")}
           >
             <Image
               src={avatarUrl}
@@ -102,39 +134,42 @@ export default function Header({
           </Link>
           <div className="flex-grow flex justify-center">
             <div className="flex space-x-2 sm:space-x-4 w-full justify-center">
-              <Button
-                variant="ghost"
-                className={`text-lg font-normal border-0 ${
-                  activeTab === "blog" ? "text-black" : "text-gray-300"
-                }`}
-                asChild
-              >
-                <Link href={isUserPage ? `/${username}/blog` : "/blog"}>
+              <Link href={navUrls.blog} onClick={() => handleTabClick("blog")}>
+                <Button
+                  variant="ghost"
+                  className={`text-lg font-normal border-0 transition-colors duration-150 ${
+                    activeTab === "blog" ? "text-black" : "text-gray-300"
+                  }`}
+                >
                   {t("blog")}
-                </Link>
-              </Button>
-              <Button
-                variant="ghost"
-                className={`text-lg font-normal border-0 ${
-                  activeTab === "thoughts" ? "text-black" : "text-gray-300"
-                }`}
-                asChild
+                </Button>
+              </Link>
+              <Link
+                href={navUrls.thoughts}
+                onClick={() => handleTabClick("thoughts")}
               >
-                <Link href={isUserPage ? `/${username}/thoughts` : "/thoughts"}>
+                <Button
+                  variant="ghost"
+                  className={`text-lg font-normal border-0 transition-colors duration-150 ${
+                    activeTab === "thoughts" ? "text-black" : "text-gray-300"
+                  }`}
+                >
                   {t("thoughts")}
-                </Link>
-              </Button>
-              <Button
-                variant="ghost"
-                className={`text-lg font-normal border-0 ${
-                  activeTab === "about" ? "text-black" : "text-gray-300"
-                }`}
-                asChild
+                </Button>
+              </Link>
+              <Link
+                href={navUrls.about}
+                onClick={() => handleTabClick("about")}
               >
-                <Link href={isUserPage ? `/${username}/about` : "/about"}>
+                <Button
+                  variant="ghost"
+                  className={`text-lg font-normal border-0 transition-colors duration-150 ${
+                    activeTab === "about" ? "text-black" : "text-gray-300"
+                  }`}
+                >
                   {t("about")}
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             </div>
           </div>
           <Link
@@ -142,6 +177,7 @@ export default function Header({
             target="_blank"
             rel="noopener noreferrer"
             className="text-black hover:text-gray-500"
+            onClick={() => console.log("[Header] Clicked GitHub link")}
           >
             <FaGithub size={24} />
           </Link>
