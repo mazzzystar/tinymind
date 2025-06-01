@@ -31,6 +31,7 @@ function decodeContent(content: string): string {
     return decodeURIComponent(content);
   } catch (error) {
     console.error("Error decoding content:", error);
+    // Return the original content if decoding fails
     return content;
   }
 }
@@ -132,7 +133,6 @@ export default function BlogPost({ params }: { params: { id: string } }) {
     );
   }
 
-  const decodedTitle = decodeContent(post.title);
   const decodedContent = decodeContent(post.content);
   const contentWithoutFrontmatter = removeFrontmatter(decodedContent);
 
@@ -183,7 +183,7 @@ export default function BlogPost({ params }: { params: { id: string } }) {
 
   return (
     <BlogPostContent
-      title={decodedTitle}
+      title={post.title}
       date={post.date}
       content={contentWithoutFrontmatter}
       headerContent={headerContent}

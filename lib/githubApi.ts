@@ -161,6 +161,30 @@ async function initializeGitHubStructure(octokit: Octokit, owner: string, repo: 
   await ensureContentStructure(octokit, owner, repo);
 }
 
+// Function to generate safe file IDs from titles (handles multi-language content)
+function generateSafeId(title: string): string {
+  // Create a URL-safe ID that preserves meaning
+  let id = title
+    .toLowerCase()
+    // Replace spaces and problematic characters with hyphens
+    .replace(/\s+/g, '-')
+    // Remove characters that are not safe for file names, including Chinese punctuation
+    // Added Chinese punctuation: 《》？：。、，；''""（）【】〈〉「」『』！？
+    .replace(/[<>:"/\\|?*.,;!@#$%^&*()+={}[\]`~《》？：。、，；''""（）【】〈〉「」『』！]/g, '')
+    // Clean up multiple hyphens
+    .replace(/-+/g, '-')
+    // Remove leading/trailing hyphens
+    .replace(/^-|-$/g, '')
+    .trim();
+  
+  // If the result is empty or too short, generate a timestamp-based ID
+  if (!id || id.length < 1) {
+    id = `post-${Date.now()}`;
+  }
+  
+  return id;
+}
+
 export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
   const octokit = getOctokit(accessToken);
   const { owner, repo } = await getRepoInfo(accessToken);
@@ -197,9 +221,9 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
               const dateMatch = content.match(/date:\s*(.+)/);
               const date = dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString();
 
-              // Parse the title from the content
+              // Parse the title from the content (plain text, no URL decoding needed)
               const titleMatch = content.match(/title:\s*(.+)/);
-              const title = titleMatch ? titleMatch[1] : file.name.replace('.md', '');
+              const title = titleMatch ? titleMatch[1].trim() : file.name.replace('.md', '');
 
               return {
                 id: file.name.replace('.md', ''),
@@ -249,9 +273,9 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
 
     const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf-8');
 
-    // Parse the title from the content
+    // Parse the title from the content (plain text, no URL decoding needed)
     const titleMatch = content.match(/title:\s*(.+)/);
-    const title = titleMatch ? titleMatch[1] : id;
+    const title = titleMatch ? titleMatch[1].trim() : id;
 
     // Parse the date from the content
     const dateMatch = content.match(/date:\s*(.+)/);
@@ -306,7 +330,7 @@ export async function createBlogPost(
   const { owner, repo } = await getRepoInfo(accessToken);
   await initializeGitHubStructure(octokit, owner, repo);
 
-  const newId = title.toLowerCase().replace(/\s+/g, '-');
+  const newId = generateSafeId(title);
   const path = `content/blog/${newId}.md`;
   const date = new Date().toISOString(); // Store full ISO string
   const fullContent = `---
@@ -632,7 +656,7 @@ date: ${date}
 ${content}`;
 
       // Check if the title has changed
-      const newId = title.toLowerCase().replace(/\s+/g, '-');
+      const newId = generateSafeId(title);
       if (originalTitle !== title && id !== newId) {
         // Title has changed, create a new file with the new title
         await octokit.repos.createOrUpdateFileContents({
@@ -798,7 +822,7 @@ export async function getBlogPostsPublic(octokit: Octokit, owner: string, repo: 
 
             return {
               id: file.name.replace('.md', ''),
-              title: titleMatch ? decodeURIComponent(titleMatch[1]) : decodeURIComponent(file.name.replace('.md', '')),
+              title: titleMatch ? titleMatch[1].trim() : file.name.replace('.md', ''),
               content,
               date: dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString(),
             };
@@ -842,8 +866,16 @@ export async function getIconUrls(usernameOrAccessToken: string): Promise<{ icon
   const genericDefaultIconPath = "/icon.jpg"; // Truly generic icon
   const genericDefaultAppleTouchIconPath = "/icon-144.jpg"; // Truly generic apple touch icon
 
+  // Validate input
+  if (!usernameOrAccessToken || typeof usernameOrAccessToken !== 'string' || usernameOrAccessToken.trim() === '') {
+    return { 
+      iconPath: genericDefaultIconPath, 
+      appleTouchIconPath: genericDefaultAppleTouchIconPath 
+    };
+  }
+
   // Check if the input is likely an access token or a username
-  if (usernameOrAccessToken && usernameOrAccessToken.length > 40 && usernameOrAccessToken.startsWith("gh")) { // More specific check for PATs
+  if (usernameOrAccessToken.length > 40 && usernameOrAccessToken.startsWith("gh")) { // More specific check for PATs
     try {
       octokit = getOctokit(usernameOrAccessToken);
       const repoInfo = await getRepoInfo(usernameOrAccessToken); // This uses the token to get actual user login
@@ -851,10 +883,21 @@ export async function getIconUrls(usernameOrAccessToken: string): Promise<{ icon
       repo = repoInfo.repo;
     } catch (error) {
       console.error('Error getting authenticated user with token in getIconUrls:', error);
-      // If fetching user info with token fails, owner remains null
-      // We will use generic defaults later
+      // If fetching user info with token fails, return generic defaults
+      return { 
+        iconPath: genericDefaultIconPath, 
+        appleTouchIconPath: genericDefaultAppleTouchIconPath 
+      };
     }
-  } else if (usernameOrAccessToken) {
+  } else {
+    // Validate username format (basic check)
+    if (!/^[a-zA-Z0-9_-]+$/.test(usernameOrAccessToken)) {
+      console.warn('Invalid username format:', usernameOrAccessToken);
+      return { 
+        iconPath: genericDefaultIconPath, 
+        appleTouchIconPath: genericDefaultAppleTouchIconPath 
+      };
+    }
     owner = usernameOrAccessToken; // Assumed to be a username
   }
 
@@ -867,12 +910,17 @@ export async function getIconUrls(usernameOrAccessToken: string): Promise<{ icon
     appleTouchIconPathToUse = `https://github.com/${owner}.png`; // Often the same for GitHub avatars
 
     if (octokit) { // If octokit was initialized (meaning a token was likely provided and valid for repo access)
-      // Try to fetch custom icons from the repo, fall back to the GitHub avatar if not found
-      iconPathToUse = await getIconUrl(octokit, owner, repo, 'assets/icon.jpg', iconPathToUse);
-      appleTouchIconPathToUse = await getIconUrl(octokit, owner, repo, 'assets/icon-144.jpg', appleTouchIconPathToUse);
+      try {
+        // Try to fetch custom icons from the repo, fall back to the GitHub avatar if not found
+        iconPathToUse = await getIconUrl(octokit, owner, repo, 'assets/icon.jpg', iconPathToUse);
+        appleTouchIconPathToUse = await getIconUrl(octokit, owner, repo, 'assets/icon-144.jpg', appleTouchIconPathToUse);
+      } catch (error) {
+        console.error('Error fetching custom icons:', error);
+        // Keep using GitHub avatar URLs as fallback
+      }
     }
   } else {
-    // If owner is still null (e.g., token was invalid or no usernameOrAccessToken provided), use generic defaults
+    // If owner is still null, use generic defaults
     iconPathToUse = genericDefaultIconPath;
     appleTouchIconPathToUse = genericDefaultAppleTouchIconPath;
   }
@@ -882,8 +930,14 @@ export async function getIconUrls(usernameOrAccessToken: string): Promise<{ icon
 
 async function getIconUrl(octokit: Octokit, owner: string, repo: string, path: string, defaultPath: string): Promise<string> {
   try {
-    await octokit.repos.getContent({ owner, repo, path });
-    return `https://github.com/${owner}/${repo}/blob/main/${path}?raw=true`;
+    const response = await octokit.repos.getContent({ owner, repo, path });
+    
+    // Validate the response
+    if (Array.isArray(response.data) || !('content' in response.data)) {
+      return defaultPath;
+    }
+
+    return `https://raw.githubusercontent.com/${owner}/${repo}/main/${path}`;
   } catch (error) {
     console.warn(`No icon found in ${path}, using default:`, defaultPath);
     return defaultPath;

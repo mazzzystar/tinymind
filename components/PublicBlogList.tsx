@@ -25,6 +25,20 @@ export default function PublicBlogList({
     setSortedPosts(sorted);
   }, [posts]);
 
+  // Show message if no posts
+  if (posts.length === 0) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-12">
+        <div className="text-center">
+          <p className="text-gray-500">No blog posts yet.</p>
+          <p className="text-sm text-gray-400 mt-2">
+            {username} hasn&apos;t published any blog posts.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const groupedPosts = sortedPosts.reduce((acc, post) => {
     const year = new Date(post.date).getFullYear();
     if (!acc[year]) acc[year] = [];

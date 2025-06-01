@@ -8,6 +8,7 @@ function decodeContent(content: string): string {
     return decodeURIComponent(content);
   } catch (error) {
     console.error("Error decoding content:", error);
+    // Return the original content if decoding fails
     return content;
   }
 }
@@ -35,7 +36,7 @@ export async function generateMetadata({
 
   try {
     const posts = await getBlogPostsPublic(octokit, username, "tinymind-blog");
-    const post = posts.find((p) => p.id === decodeURIComponent(id));
+    const post = posts.find((p) => p.id === decodeContent(id));
 
     if (!post) {
       return {
@@ -43,7 +44,6 @@ export async function generateMetadata({
       };
     }
 
-    const decodedTitle = decodeContent(post.title);
     const decodedContent = decodeContent(post.content);
     const contentWithoutFrontmatter = removeFrontmatter(decodedContent);
 
@@ -68,10 +68,10 @@ export async function generateMetadata({
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://tinymind.me";
 
     return {
-      title: decodedTitle,
+      title: post.title,
       description,
       openGraph: {
-        title: decodedTitle,
+        title: post.title,
         description,
         type: "article",
         publishedTime: post.date,
@@ -81,13 +81,13 @@ export async function generateMetadata({
             url: imageUrl,
             width: 1200,
             height: 630,
-            alt: decodedTitle,
+            alt: post.title,
           },
         ],
       },
       twitter: {
         card: "summary_large_image",
-        title: decodedTitle,
+        title: post.title,
         description,
         images: [imageUrl],
         creator: `@${username}`,

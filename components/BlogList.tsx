@@ -6,14 +6,6 @@ import { BlogPost } from "@/lib/githubApi";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 
-function decodeTitle(title: string): string {
-  try {
-    return decodeURIComponent(title);
-  } catch {
-    return title;
-  }
-}
-
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   return date.toISOString().split("T")[0]; // Returns YYYY-MM-DD format
@@ -66,7 +58,7 @@ export default function BlogList({ posts }: { posts: BlogPost[] }) {
                   href={`/blog/${post.id.replace(".md", "")}`}
                   className="text-gray-700 hover:text-gray-400 transition-colors duration-200"
                 >
-                  {decodeTitle(post.title)}
+                  {post.title}
                 </Link>
                 <span className="flex-grow border-b border-dotted border-gray-300 mx-2" />{" "}
                 <span className="text-sm text-gray-400 font-light whitespace-nowrap">

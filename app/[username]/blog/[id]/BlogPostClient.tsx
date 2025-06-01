@@ -63,13 +63,12 @@ export default function BlogPostClient({
     return <div>Blog post not found</div>;
   }
 
-  const decodedTitle = decodeContent(post.title);
   const decodedContent = decodeContent(post.content);
   const contentWithoutFrontmatter = removeFrontmatter(decodedContent);
 
   return (
     <BlogPostContent
-      title={decodedTitle}
+      title={post.title}
       date={post.date}
       content={contentWithoutFrontmatter}
     />
