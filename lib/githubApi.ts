@@ -794,6 +794,76 @@ async function fileToBase64(file: File): Promise<string> {
   });
 }
 
+// **ULTRA-FAST VERSION**: Uses GitHub Tree API to get all files in one call
+export async function getBlogPostsPublicFast(octokit: Octokit, owner: string, repo: string): Promise<BlogPost[]> {
+  const cacheKey = `blog-posts-fast:${owner}:${repo}`;
+  
+  // Check cache first
+  const cachedData = apiCache.get<BlogPost[]>(cacheKey);
+  if (cachedData) {
+    return cachedData;
+  }
+
+  try {
+    // First get the tree to find all blog files in one API call
+    const treeResponse = await octokit.git.getTree({
+      owner,
+      repo,
+      tree_sha: 'main',
+      recursive: 'true'
+    });
+
+    const blogFiles = treeResponse.data.tree.filter(
+      (item) => item.path?.startsWith('content/blog/') && item.path.endsWith('.md') && item.type === 'blob'
+    );
+
+    if (blogFiles.length === 0) {
+      return [];
+    }
+
+    // Get all file contents in parallel using blob API (faster than content API)
+    const fetchPromises = blogFiles.map(async (file) => {
+      try {
+        if (!file.sha || !file.path) return null;
+        
+        const blobResponse = await octokit.git.getBlob({
+          owner,
+          repo,
+          file_sha: file.sha
+        });
+
+        const content = Buffer.from(blobResponse.data.content, 'base64').toString('utf-8');
+        const titleMatch = content.match(/title:\s*(.+)/);
+        const dateMatch = content.match(/date:\s*(.+)/);
+        const fileName = file.path.split('/').pop() || '';
+
+        return {
+          id: fileName.replace('.md', ''),
+          title: titleMatch ? titleMatch[1].trim() : fileName.replace('.md', ''),
+          content,
+          date: dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString(),
+        };
+      } catch (error) {
+        console.error(`Error processing file ${file.path}:`, error);
+        return null;
+      }
+    });
+
+    const posts = (await Promise.all(fetchPromises))
+      .filter((post): post is BlogPost => post !== null)
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    // Cache the result
+    apiCache.set(cacheKey, posts, 5 * 60 * 1000); // 5 minutes
+    return posts;
+  } catch (error: unknown) {
+    console.error('Error fetching blog posts with fast method:', error);
+    
+    // Fallback to regular method
+    return getBlogPostsPublic(octokit, owner, repo);
+  }
+}
+
 export async function getBlogPostsPublic(octokit: Octokit, owner: string, repo: string): Promise<BlogPost[]> {
   const cacheKey = `blog-posts:${owner}:${repo}`;
   
@@ -815,16 +885,10 @@ export async function getBlogPostsPublic(octokit: Octokit, owner: string, repo: 
     }
 
     const mdFiles = response.data.filter((file) => file.type === 'file' && file.name.endsWith('.md'));
-    const posts: BlogPost[] = [];
-
-    // Process files sequentially with delay to avoid rate limiting
-    for (const file of mdFiles) {
+    
+    // **PERFORMANCE OPTIMIZATION**: Fetch all files in parallel instead of sequentially
+    const fetchPromises = mdFiles.map(async (file) => {
       try {
-        // Add small delay between requests to be more respectful of rate limits
-        if (posts.length > 0) {
-          await new Promise(resolve => setTimeout(resolve, 100)); // 100ms delay
-        }
-        
         const contentResponse = await octokit.repos.getContent({
           owner,
           repo,
@@ -836,26 +900,24 @@ export async function getBlogPostsPublic(octokit: Octokit, owner: string, repo: 
           const titleMatch = content.match(/title:\s*(.+)/);
           const dateMatch = content.match(/date:\s*(.+)/);
 
-          const post = {
+          return {
             id: file.name.replace('.md', ''),
             title: titleMatch ? titleMatch[1].trim() : file.name.replace('.md', ''),
             content,
             date: dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString(),
           };
-          
-          posts.push(post);
         }
+        return null;
       } catch (error: unknown) {
         console.error(`Error processing file ${file.name}:`, error);
-        
-        // If we hit rate limit, stop processing and return what we have
-        if (error && typeof error === 'object' && 'status' in error && error.status === 403) {
-          console.warn('Rate limit hit, returning partial results');
-          break;
-        }
-        // Continue processing other files even if one fails
+        return null;
       }
-    }
+    });
+
+    // Wait for all promises to resolve
+    const posts = (await Promise.all(fetchPromises))
+      .filter((post): post is BlogPost => post !== null)
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // Sort by date desc
 
     // Cache the successful result
     apiCache.set(cacheKey, posts, 5 * 60 * 1000); // 5 minutes

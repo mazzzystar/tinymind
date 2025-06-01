@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Octokit } from '@octokit/rest';
-import { getBlogPostsPublic, BlogPost } from '@/lib/githubApi';
+import { getBlogPostsPublicFast, BlogPost } from '@/lib/githubApi';
 
 // Cache for blog posts with timestamps
 const blogCache = new Map<string, { data: BlogPost[], timestamp: number }>();
@@ -26,7 +26,8 @@ export async function GET(
       ? new Octokit({ auth: githubToken })
       : new Octokit();
 
-    const blogPosts = await getBlogPostsPublic(
+    // **PERFORMANCE**: Use the ultra-fast Tree API method
+    const blogPosts = await getBlogPostsPublicFast(
       octokit,
       username,
       'tinymind-blog'

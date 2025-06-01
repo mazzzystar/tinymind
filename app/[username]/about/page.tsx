@@ -2,8 +2,6 @@ import { Metadata } from "next";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
@@ -119,13 +117,9 @@ export default async function PublicAboutPage({
                 }: CodeProps) => {
                   const match = /language-(\w+)/.exec(className || "");
                   return !inline && match ? (
-                    <SyntaxHighlighter
-                      style={tomorrow as { [key: string]: React.CSSProperties }}
-                      language={match[1]}
-                      PreTag="div"
-                    >
-                      {String(children).replace(/\n$/, "")}
-                    </SyntaxHighlighter>
+                    <code className={className} {...props}>
+                      {children}
+                    </code>
                   ) : (
                     <code className={className} {...props}>
                       {children}
