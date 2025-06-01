@@ -1,5 +1,6 @@
 import { Octokit } from '@octokit/rest';
 import path from 'path';
+import { apiCache } from './cache';
 
 // Add this type definition at the top of the file
 type UpdateFileParams = Parameters<Octokit['repos']['createOrUpdateFileContents']>[0];
@@ -794,6 +795,14 @@ async function fileToBase64(file: File): Promise<string> {
 }
 
 export async function getBlogPostsPublic(octokit: Octokit, owner: string, repo: string): Promise<BlogPost[]> {
+  const cacheKey = `blog-posts:${owner}:${repo}`;
+  
+  // Check cache first
+  const cachedData = apiCache.get<BlogPost[]>(cacheKey);
+  if (cachedData) {
+    return cachedData;
+  }
+
   try {
     const response = await octokit.repos.getContent({
       owner,
@@ -808,9 +817,14 @@ export async function getBlogPostsPublic(octokit: Octokit, owner: string, repo: 
     const mdFiles = response.data.filter((file) => file.type === 'file' && file.name.endsWith('.md'));
     const posts: BlogPost[] = [];
 
-    // Process files sequentially to avoid rate limiting
+    // Process files sequentially with delay to avoid rate limiting
     for (const file of mdFiles) {
       try {
+        // Add small delay between requests to be more respectful of rate limits
+        if (posts.length > 0) {
+          await new Promise(resolve => setTimeout(resolve, 100)); // 100ms delay
+        }
+        
         const contentResponse = await octokit.repos.getContent({
           owner,
           repo,
@@ -831,15 +845,36 @@ export async function getBlogPostsPublic(octokit: Octokit, owner: string, repo: 
           
           posts.push(post);
         }
-      } catch (error) {
+      } catch (error: unknown) {
         console.error(`Error processing file ${file.name}:`, error);
+        
+        // If we hit rate limit, stop processing and return what we have
+        if (error && typeof error === 'object' && 'status' in error && error.status === 403) {
+          console.warn('Rate limit hit, returning partial results');
+          break;
+        }
         // Continue processing other files even if one fails
       }
     }
 
+    // Cache the successful result
+    apiCache.set(cacheKey, posts, 5 * 60 * 1000); // 5 minutes
     return posts;
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error fetching public blog posts:', error);
+    
+    // Try to return stale cached data as fallback
+    const staleData = apiCache.getStale<BlogPost[]>(cacheKey);
+    if (staleData) {
+      console.warn('Returning stale cached data due to error');
+      return staleData;
+    }
+    
+    // Re-throw rate limiting errors so they can be handled by the UI
+    if (error && typeof error === 'object' && 'status' in error && error.status === 403) {
+      throw error;
+    }
+    
     return [];
   }
 }
@@ -1057,5 +1092,102 @@ export async function getAboutPagePublic(octokit: Octokit, owner: string, repo: 
   } catch (error) {
     console.error('Error fetching public about page:', error);
     return null;
+  }
+}
+
+export async function getBlogPostsPublicLight(octokit: Octokit, owner: string, repo: string): Promise<BlogPost[]> {
+  const cacheKey = `blog-posts-light:${owner}:${repo}`;
+  
+  // Check cache first
+  const cachedData = apiCache.get<BlogPost[]>(cacheKey);
+  if (cachedData) {
+    return cachedData;
+  }
+
+  try {
+    const response = await octokit.repos.getContent({
+      owner,
+      repo,
+      path: 'content/blog',
+    });
+
+    if (!Array.isArray(response.data)) {
+      return [];
+    }
+
+    const mdFiles = response.data.filter((file) => file.type === 'file' && file.name.endsWith('.md'));
+    const posts: BlogPost[] = [];
+
+    // Only fetch first few files to get some content, rest just metadata
+    const MAX_FULL_CONTENT = 10; // Only fetch full content for first 10 posts
+    
+    for (let i = 0; i < mdFiles.length; i++) {
+      const file = mdFiles[i];
+      
+      try {
+        // Add small delay between requests
+        if (i > 0) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+
+        if (i < MAX_FULL_CONTENT) {
+          // Fetch full content for first few posts
+          const contentResponse = await octokit.repos.getContent({
+            owner,
+            repo,
+            path: `content/blog/${file.name}`,
+          });
+
+          if ('content' in contentResponse.data) {
+            const content = Buffer.from(contentResponse.data.content, 'base64').toString('utf-8');
+            const titleMatch = content.match(/title:\s*(.+)/);
+            const dateMatch = content.match(/date:\s*(.+)/);
+
+            posts.push({
+              id: file.name.replace('.md', ''),
+              title: titleMatch ? titleMatch[1].trim() : file.name.replace('.md', ''),
+              content,
+              date: dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString(),
+            });
+          }
+        } else {
+          // For remaining posts, just create basic metadata
+          posts.push({
+            id: file.name.replace('.md', ''),
+            title: file.name.replace('.md', '').replace(/-/g, ' '),
+            content: '', // Empty content for list view
+            date: new Date().toISOString(), // Default date
+          });
+        }
+      } catch (error: unknown) {
+        console.error(`Error processing file ${file.name}:`, error);
+        
+        // If we hit rate limit, stop and return what we have
+        if (error && typeof error === 'object' && 'status' in error && error.status === 403) {
+          console.warn('Rate limit hit in light mode, returning partial results');
+          break;
+        }
+      }
+    }
+
+    // Cache the result
+    apiCache.set(cacheKey, posts, 10 * 60 * 1000); // 10 minutes for light data
+    return posts;
+  } catch (error: unknown) {
+    console.error('Error fetching public blog posts (light):', error);
+    
+    // Try to return stale cached data as fallback
+    const staleData = apiCache.getStale<BlogPost[]>(cacheKey);
+    if (staleData) {
+      console.warn('Returning stale cached data (light) due to error');
+      return staleData;
+    }
+    
+    // Re-throw rate limiting errors
+    if (error && typeof error === 'object' && 'status' in error && error.status === 403) {
+      throw error;
+    }
+    
+    return [];
   }
 }
