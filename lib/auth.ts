@@ -13,13 +13,7 @@ declare module "next-auth" {
 export async function getSession(): Promise<Session | null> {
   const session = await getServerSession(authOptions) as Session | null
   if (!session) {
-    console.log('No session found')
     return null
-  }
-  if (!session.accessToken) {
-    console.log('Session found, but no access token')
-  } else {
-    console.log('Session found with access token')
   }
   return session
 }

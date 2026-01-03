@@ -1,41 +1,31 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import "katex/dist/katex.min.css";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { useState, useMemo } from "react";
 import { Thought } from "@/lib/githubApi";
 import { formatTimestamp } from "@/utils/dateFormatting";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Button } from "@/components/ui/button";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { useTranslations } from "next-intl";
-import { transformGithubImageUrl } from "@/lib/urlUtils";
-import React, { HTMLAttributes } from "react";
+import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
 
 type FormattedThought = Thought & { formattedTimestamp: string };
-
-interface CodeProps extends HTMLAttributes<HTMLElement> {
-  inline?: boolean;
-  className?: string;
-  children?: React.ReactNode;
-}
 
 export default function PublicThoughtsList({
   thoughts,
 }: {
   thoughts: Thought[];
 }) {
-  const [formattedThoughts, setFormattedThoughts] = useState<
-    FormattedThought[]
-  >([]);
   const [expandedThoughts, setExpandedThoughts] = useState<
     Record<string, boolean>
   >({});
   const t = useTranslations("HomePage");
+
+  // Memoize formatted thoughts instead of using useEffect + useState
+  const formattedThoughts = useMemo<FormattedThought[]>(() =>
+    thoughts.map((thought) => ({
+      ...thought,
+      formattedTimestamp: formatTimestamp(thought.timestamp),
+    })), [thoughts]);
 
   // Check if thought content is long (more than 20 lines)
   const isLongThought = (content: string): boolean => {
@@ -60,14 +50,6 @@ export default function PublicThoughtsList({
     return thought.content.split("\n").slice(0, 15).join("\n") + "\n...";
   };
 
-  useEffect(() => {
-    const formatted = thoughts.map((thought) => ({
-      ...thought,
-      formattedTimestamp: formatTimestamp(thought.timestamp),
-    }));
-    setFormattedThoughts(formatted);
-  }, [thoughts]);
-
   return (
     <div className="space-y-4">
       {formattedThoughts.map((thought) => (
@@ -76,60 +58,7 @@ export default function PublicThoughtsList({
           className="bg-[#f9f9f9] shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300 flex flex-col"
         >
           <div className="text-gray-800 mb-2 prose max-w-none">
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm, remarkMath]}
-              rehypePlugins={[rehypeKatex]}
-              components={{
-                code: ({
-                  inline,
-                  className,
-                  children,
-                  ...props
-                }: CodeProps) => {
-                  const match = /language-(\w+)/.exec(className || "");
-                  return !inline && match ? (
-                    <SyntaxHighlighter
-                      style={tomorrow as { [key: string]: React.CSSProperties }}
-                      language={match[1]}
-                      PreTag="div"
-                    >
-                      {String(children).replace(/\n$/, "")}
-                    </SyntaxHighlighter>
-                  ) : (
-                    <code className={className} {...props}>
-                      {children}
-                    </code>
-                  );
-                },
-                a: ({ children, ...props }) => (
-                  <a
-                    {...props}
-                    className="text-gray-400 no-underline hover:text-gray-600 hover:underline hover:underline-offset-4 transition-colors duration-200 break-words"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {children}
-                  </a>
-                ),
-                blockquote: ({ children }) => (
-                  <div className="pl-4 border-l-4 border-gray-200 text-gray-400">
-                    {children}
-                  </div>
-                ),
-                img: (props) => {
-                  const transformedSrc = transformGithubImageUrl(props.src);
-                  return (
-                    <img
-                      {...props}
-                      src={transformedSrc}
-                      alt={props.alt || "image"}
-                    />
-                  );
-                },
-              }}
-            >
-              {getDisplayContent(thought)}
-            </ReactMarkdown>
+            <MarkdownRenderer content={getDisplayContent(thought)} />
 
             {isLongThought(thought.content) && (
               <Button

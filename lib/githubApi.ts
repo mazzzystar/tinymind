@@ -1,9 +1,45 @@
 import { Octokit } from '@octokit/rest';
 import path from 'path';
-import { apiCache } from './cache';
+import { apiCache, BoundedCache } from './cache';
+import { withRetry } from './retry';
+import { validatePath } from './validation';
 
 // Add this type definition at the top of the file
 type UpdateFileParams = Parameters<Octokit['repos']['createOrUpdateFileContents']>[0];
+
+// Check if we're in development mode
+const isDev = process.env.NODE_ENV === 'development';
+
+// Cache for default branch names to reduce API calls
+const branchCache = new BoundedCache<string>(100, 10 * 60 * 1000); // 10 min TTL
+
+/**
+ * Get the default branch for a repo, with caching
+ */
+async function getDefaultBranch(octokit: Octokit, owner: string, repo: string): Promise<string> {
+  const cacheKey = `${owner}/${repo}`;
+  const cached = branchCache.get(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
+  const { data: repoData } = await octokit.repos.get({ owner, repo });
+  const branch = repoData.default_branch;
+  branchCache.set(cacheKey, branch);
+  return branch;
+}
+
+/**
+ * Type guard to check if an error is a GitHub API error with status code
+ */
+export function isGitHubError(error: unknown): error is { status: number; message?: string } {
+  return (
+    error !== null &&
+    typeof error === 'object' &&
+    'status' in error &&
+    typeof (error as { status: unknown }).status === 'number'
+  );
+}
 
 export interface BlogPost {
   id: string;
@@ -43,7 +79,10 @@ async function getRepoInfo(accessToken: string | undefined) {
       repo: 'tinymind-blog', // You might want to make this configurable
     };
   } catch (error) {
-    console.error('Error getting authenticated user:', error);
+    // Only log in development to avoid leaking sensitive info in production
+    if (isDev) {
+      console.error('Error getting authenticated user:', error);
+    }
     throw new Error('Failed to get authenticated user');
   }
 }
@@ -64,7 +103,6 @@ async function ensureRepoExists(octokit: Octokit, owner: string, repo: string) {
         repo,
         description: `https://tinymind.me/${userLogin}`,
       });
-      console.log(`Updated repository description to https://tinymind.me/${userLogin}`);
     }
   } catch (error) {
     if (error instanceof Error && 'status' in error && error.status === 404) {
@@ -72,7 +110,6 @@ async function ensureRepoExists(octokit: Octokit, owner: string, repo: string) {
         name: repo,
         auto_init: true,
       });
-      console.log(`Created new repository: ${repo}`);
     } else {
       throw error;
     }
@@ -81,10 +118,8 @@ async function ensureRepoExists(octokit: Octokit, owner: string, repo: string) {
   // Check if README.md exists and needs updating
   try {
     const { data: readmeContent } = await octokit.repos.getContent({ owner, repo, path: 'README.md' });
-    console.log('README content:', readmeContent);
     if ('content' in readmeContent) {
       const decodedContent = Buffer.from(readmeContent.content, 'base64').toString('utf-8');
-      console.log('README Decoded content:', decodedContent.trim());
       if (decodedContent.trim() === '' || decodedContent.trim() === '# tinymind-blog') {
         // README.md is empty or contains only the default repo name, update it
         await octokit.repos.createOrUpdateFileContents({
@@ -95,7 +130,6 @@ async function ensureRepoExists(octokit: Octokit, owner: string, repo: string) {
           content: Buffer.from('# TinyMind Blog\n\nWrite blog posts and thoughts at https://tinymind.me with data stored on GitHub.').toString('base64'),
           sha: readmeContent.sha,
         });
-        console.log('README.md updated with default content');
       }
     }
   } catch (error) {
@@ -116,45 +150,31 @@ async function ensureRepoExists(octokit: Octokit, owner: string, repo: string) {
 }
 
 async function ensureContentStructure(octokit: Octokit, owner: string, repo: string) {
-  async function createFileIfNotExists(octokit: Octokit, owner: string, repo: string, path: string, message: string, content: string) {
+  async function createFileIfNotExists(octokit: Octokit, owner: string, repo: string, filePath: string, message: string, content: string) {
     try {
       await octokit.repos.getContent({
         owner,
         repo,
-        path,
+        path: filePath,
       });
-      console.log(`File ${path} already exists.`);
     } catch (error) {
       if (error instanceof Error && 'status' in error && error.status === 404) {
-        console.log(`Creating file ${path}...`);
-        try {
-          await octokit.repos.createOrUpdateFileContents({
-            owner,
-            repo,
-            path,
-            message,
-            content: Buffer.from(content).toString('base64'), // Encode content to Base64
-          });
-          console.log(`File ${path} created successfully.`);
-        } catch (createError) {
-          console.error(`Error creating file ${path}:`, createError);
-          throw createError;
-        }
+        await octokit.repos.createOrUpdateFileContents({
+          owner,
+          repo,
+          path: filePath,
+          message,
+          content: Buffer.from(content).toString('base64'),
+        });
       } else {
-        console.error(`Error checking file ${path}:`, error);
         throw error;
       }
     }
   }
 
-  try {
-    await createFileIfNotExists(octokit, owner, repo, 'content/.gitkeep', 'Initialize content directory', '');
-    await createFileIfNotExists(octokit, owner, repo, 'content/blog/.gitkeep', 'Initialize blog directory', '');
-    await createFileIfNotExists(octokit, owner, repo, 'content/thoughts.json', 'Initialize thoughts.json', '[]');
-  } catch (error) {
-    console.error('Error ensuring content structure:', error);
-    throw error;
-  }
+  await createFileIfNotExists(octokit, owner, repo, 'content/.gitkeep', 'Initialize content directory', '');
+  await createFileIfNotExists(octokit, owner, repo, 'content/blog/.gitkeep', 'Initialize blog directory', '');
+  await createFileIfNotExists(octokit, owner, repo, 'content/thoughts.json', 'Initialize thoughts.json', '[]');
 }
 
 async function initializeGitHubStructure(octokit: Octokit, owner: string, repo: string) {
@@ -172,17 +192,24 @@ function generateSafeId(title: string): string {
     // Remove characters that are not safe for file names, including Chinese punctuation
     // Added Chinese punctuation: 《》？：。、，；''""（）【】〈〉「」『』！？
     .replace(/[<>:"/\\|?*.,;!@#$%^&*()+={}[\]`~《》？：。、，；''""（）【】〈〉「」『』！]/g, '')
+    // Remove path traversal attempts
+    .replace(/\.\./g, '')
     // Clean up multiple hyphens
     .replace(/-+/g, '-')
     // Remove leading/trailing hyphens
     .replace(/^-|-$/g, '')
     .trim();
-  
+
   // If the result is empty or too short, generate a timestamp-based ID
   if (!id || id.length < 1) {
     id = `post-${Date.now()}`;
   }
-  
+
+  // Limit length to 200 characters to prevent filesystem issues
+  if (id.length > 200) {
+    id = id.substring(0, 200).replace(/-$/, '');
+  }
+
   return id;
 }
 
@@ -197,10 +224,7 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
       path: 'content/blog',
     });
 
-    console.log('GitHub API response:', response);
-
     if (!Array.isArray(response.data)) {
-      console.warn('Unexpected response from GitHub API: data is not an array');
       return [];
     }
 
@@ -233,20 +257,16 @@ export async function getBlogPosts(accessToken: string): Promise<BlogPost[]> {
                 date,
               };
             }
-          } catch (error) {
-            console.error(`Error fetching content for ${file.name}:`, error);
+          } catch {
+            // Silently skip files that fail to load
           }
         })
     );
 
-    const filteredPosts = posts.filter((post): post is BlogPost => post !== undefined);
-    console.log('Filtered posts:', filteredPosts);
-    return filteredPosts;
+    return posts.filter((post): post is BlogPost => post !== undefined);
   } catch (error) {
-    console.error('Error fetching blog posts:', error);
     // If the blog directory doesn't exist, return an empty array
     if (error instanceof Error && 'status' in error && error.status === 404) {
-      console.log('Blog directory does not exist, returning empty array');
       return [];
     }
     throw error;
@@ -257,6 +277,10 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
   if (!accessToken) {
     throw new Error('Access token is required');
   }
+
+  // Validate path to prevent directory traversal
+  const safeId = validatePath(id);
+
   const octokit = getOctokit(accessToken);
   const { owner, repo } = await getRepoInfo(accessToken);
 
@@ -265,7 +289,7 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
     const contentResponse = await octokit.repos.getContent({
       owner,
       repo,
-      path: `content/blog/${decodeURIComponent(id)}.md`,
+      path: `content/blog/${safeId}.md`,
     });
 
     if (Array.isArray(contentResponse.data) || !('content' in contentResponse.data)) {
@@ -288,8 +312,7 @@ export async function getBlogPost(id: string, accessToken: string): Promise<Blog
       content,
       date,
     };
-  } catch (error) {
-    console.error('Error fetching blog post:', error);
+  } catch {
     return null;
   }
 }
@@ -301,25 +324,18 @@ export async function getThoughts(accessToken: string | undefined): Promise<Thou
   const octokit = getOctokit(accessToken);
   const { owner, repo } = await getRepoInfo(accessToken);
 
-  try {
-    const response = await octokit.repos.getContent({
-      owner,
-      repo,
-      path: 'content/thoughts.json',
-    });
+  const response = await octokit.repos.getContent({
+    owner,
+    repo,
+    path: 'content/thoughts.json',
+  });
 
-    if (Array.isArray(response.data) || !('content' in response.data)) {
-      throw new Error('Unexpected response from GitHub API');
-    }
-
-    const content = Buffer.from(response.data.content, 'base64').toString('utf-8');
-    const thoughts = JSON.parse(content) as Thought[];
-
-    return thoughts;
-  } catch (error) {
-    console.error('Error fetching thoughts:', error);
-    throw error;
+  if (Array.isArray(response.data) || !('content' in response.data)) {
+    throw new Error('Unexpected response from GitHub API');
   }
+
+  const content = Buffer.from(response.data.content, 'base64').toString('utf-8');
+  return JSON.parse(content) as Thought[];
 }
 
 export async function createBlogPost(
@@ -353,28 +369,20 @@ ${content}`;
 }
 
 export async function createThought(content: string, image: string | undefined, accessToken: string): Promise<void> {
-  console.log('Creating thought...');
   if (!accessToken) {
     throw new Error('Access token is required');
   }
   const octokit = getOctokit(accessToken);
   const { owner, repo } = await getRepoInfo(accessToken);
   await initializeGitHubStructure(octokit, owner, repo);
-  console.log('Octokit instance created');
 
-  try {
-    const { owner, repo } = await getRepoInfo(accessToken);
-    console.log('Repo info:', { owner, repo });
-
-    await initializeGitHubStructure(octokit, owner, repo);
-    console.log('GitHub structure initialized');
-
+  // Use retry logic to handle race conditions
+  await withRetry(async () => {
     let thoughts: Thought[] = [];
     let existingSha: string | undefined;
 
     // Try to fetch existing thoughts
     try {
-      console.log('Fetching existing thoughts...');
       const response = await octokit.repos.getContent({
         owner,
         repo,
@@ -385,15 +393,12 @@ export async function createThought(content: string, image: string | undefined, 
         const existingContent = Buffer.from(response.data.content, 'base64').toString('utf-8');
         thoughts = JSON.parse(existingContent) as Thought[];
         existingSha = response.data.sha;
-        console.log('Existing thoughts fetched');
       }
     } catch (error) {
-      if (error instanceof Error && 'status' in error && error.status === 404) {
-        console.log('thoughts.json does not exist, creating a new file');
-      } else {
-        console.error('Error fetching existing thoughts:', error);
+      if (!(error instanceof Error && 'status' in error && error.status === 404)) {
         throw error;
       }
+      // thoughts.json does not exist, will create new
     }
 
     // Create new thought
@@ -407,7 +412,6 @@ export async function createThought(content: string, image: string | undefined, 
     // Add new thought to the beginning of the array
     thoughts.unshift(newThought);
 
-    console.log('Updating thoughts file...');
     // Create or update the file with all thoughts
     const updateParams: UpdateFileParams = {
       owner,
@@ -422,35 +426,24 @@ export async function createThought(content: string, image: string | undefined, 
     }
 
     await octokit.repos.createOrUpdateFileContents(updateParams);
-
-    console.log('Thought created successfully');
-  } catch (error) {
-    console.error('Error creating thought:', error);
-    throw error;
-  }
+  }, { maxAttempts: 3 });
 }
 
 export async function deleteThought(id: string, accessToken: string): Promise<void> {
-  console.log('Deleting thought...');
   if (!accessToken) {
     throw new Error('Access token is required');
   }
   const octokit = getOctokit(accessToken);
-  console.log('Octokit instance created');
+  const { owner, repo } = await getRepoInfo(accessToken);
+  await initializeGitHubStructure(octokit, owner, repo);
 
-  try {
-    const { owner, repo } = await getRepoInfo(accessToken);
-    console.log('Repo info:', { owner, repo });
-
-    await initializeGitHubStructure(octokit, owner, repo);
-    console.log('GitHub structure initialized');
-
+  // Use retry logic to handle race conditions
+  await withRetry(async () => {
     let thoughts: Thought[] = [];
     let existingSha: string | undefined;
 
-    // Try to fetch existing thoughts
+    // Fetch existing thoughts
     try {
-      console.log('Fetching existing thoughts...');
       const response = await octokit.repos.getContent({
         owner,
         repo,
@@ -461,23 +454,16 @@ export async function deleteThought(id: string, accessToken: string): Promise<vo
         const existingContent = Buffer.from(response.data.content, 'base64').toString('utf-8');
         thoughts = JSON.parse(existingContent) as Thought[];
         existingSha = response.data.sha;
-        console.log('Existing thoughts fetched');
       }
     } catch (error) {
-      if (error instanceof Error && 'status' in error && error.status === 404) {
-        console.log('thoughts.json does not exist, creating a new file');
-      } else {
-        console.error('Error fetching existing thoughts:', error);
+      if (!(error instanceof Error && 'status' in error && error.status === 404)) {
         throw error;
       }
     }
 
-    console.log(thoughts);
     const newThoughts = thoughts.filter((t) => t.id !== id);
-    console.log(newThoughts);
 
-    console.log('Updating thoughts file...');
-    // Create or update the file with all thoughts
+    // Update the file with remaining thoughts
     const updateParams: UpdateFileParams = {
       owner,
       repo,
@@ -491,12 +477,7 @@ export async function deleteThought(id: string, accessToken: string): Promise<vo
     }
 
     await octokit.repos.createOrUpdateFileContents(updateParams);
-
-    console.log('Thought deleted successfully');
-  } catch (error) {
-    console.error('Error deleting thought:', error);
-    throw error;
-  }
+  }, { maxAttempts: 3 });
 }
 
 export async function getUserLogin(accessToken: string): Promise<string> {
@@ -506,20 +487,15 @@ export async function getUserLogin(accessToken: string): Promise<string> {
 }
 
 export async function updateThought(id: string, content: string, accessToken: string): Promise<void> {
-  console.log('Updating thought...');
   if (!accessToken) {
     throw new Error('Access token is required');
   }
   const octokit = getOctokit(accessToken);
-  console.log('Octokit instance created');
+  const { owner, repo } = await getRepoInfo(accessToken);
+  await initializeGitHubStructure(octokit, owner, repo);
 
-  try {
-    const { owner, repo } = await getRepoInfo(accessToken);
-    console.log('Repo info:', { owner, repo });
-
-    await initializeGitHubStructure(octokit, owner, repo);
-    console.log('GitHub structure initialized');
-
+  // Use retry logic to handle race conditions
+  await withRetry(async () => {
     let thoughts: Thought[] = [];
     let existingSha: string | undefined;
 
@@ -534,7 +510,6 @@ export async function updateThought(id: string, content: string, accessToken: st
       const existingContent = Buffer.from(response.data.content, 'base64').toString('utf-8');
       thoughts = JSON.parse(existingContent) as Thought[];
       existingSha = response.data.sha;
-      console.log('Existing thoughts fetched');
     }
 
     // Find and update the thought
@@ -546,10 +521,8 @@ export async function updateThought(id: string, content: string, accessToken: st
     thoughts[thoughtIndex] = {
       ...thoughts[thoughtIndex],
       content,
-      // Removed the timestamp update to keep the original timestamp
     };
 
-    console.log('Updating thoughts file...');
     // Update the file with all thoughts
     const updateParams: UpdateFileParams = {
       owner,
@@ -561,55 +534,40 @@ export async function updateThought(id: string, content: string, accessToken: st
     };
 
     await octokit.repos.createOrUpdateFileContents(updateParams);
-
-    console.log('Thought updated successfully');
-  } catch (error) {
-    console.error('Error updating thought:', error);
-    throw error;
-  }
+  }, { maxAttempts: 3 });
 }
 
 export async function deleteBlogPost(id: string, accessToken: string): Promise<void> {
-  console.log('Deleting blog post...');
   if (!accessToken) {
     throw new Error('Access token is required');
   }
+
+  // Validate path to prevent directory traversal
+  const safeId = validatePath(id);
+
   const octokit = getOctokit(accessToken);
+  const { owner, repo } = await getRepoInfo(accessToken);
+  const filePath = `content/blog/${safeId}.md`;
 
-  try {
-    const { owner, repo } = await getRepoInfo(accessToken);
+  // Get the current file to retrieve its SHA
+  const currentFile = await octokit.repos.getContent({
+    owner,
+    repo,
+    path: filePath,
+  });
 
-    // Decode the ID and create the file path
-    const decodedId = decodeURIComponent(id);
-    const path = `content/blog/${decodedId}.md`;
-
-    console.log(`Attempting to delete file: ${path}`);
-
-    // Get the current file to retrieve its SHA
-    const currentFile = await octokit.repos.getContent({
-      owner,
-      repo,
-      path,
-    });
-
-    if (Array.isArray(currentFile.data) || !('sha' in currentFile.data)) {
-      throw new Error('Unexpected response when fetching current blog post');
-    }
-
-    // Delete the blog post file
-    await octokit.repos.deleteFile({
-      owner,
-      repo,
-      path,
-      message: 'Delete blog post',
-      sha: currentFile.data.sha,
-    });
-
-    console.log('Blog post deleted successfully');
-  } catch (error) {
-    console.error('Error deleting blog post:', error);
-    throw error;
+  if (Array.isArray(currentFile.data) || !('sha' in currentFile.data)) {
+    throw new Error('Unexpected response when fetching current blog post');
   }
+
+  // Delete the blog post file
+  await octokit.repos.deleteFile({
+    owner,
+    repo,
+    path: filePath,
+    message: 'Delete blog post',
+    sha: currentFile.data.sha,
+  });
 }
 
 export async function updateBlogPost(
@@ -618,145 +576,128 @@ export async function updateBlogPost(
   content: string,
   accessToken: string
 ): Promise<{ newId?: string }> {
-  console.log('Updating blog post...');
   if (!accessToken) {
     throw new Error('Access token is required');
   }
+
+  // Validate path to prevent directory traversal
+  const safeId = validatePath(id);
+
   const octokit = getOctokit(accessToken);
+  const { owner, repo } = await getRepoInfo(accessToken);
 
-  try {
-    const { owner, repo } = await getRepoInfo(accessToken);
-
+  // Use retry logic to handle race conditions
+  return await withRetry(async () => {
     // Get the current file to retrieve its SHA and content
     const currentFile = await octokit.repos.getContent({
       owner,
       repo,
-      path: `content/blog/${id}.md`,
+      path: `content/blog/${safeId}.md`,
     });
 
     if (Array.isArray(currentFile.data) || !('sha' in currentFile.data)) {
       throw new Error('Unexpected response when fetching current blog post');
     }
 
-    if ('content' in currentFile.data) {
-      const existingContent = Buffer.from(currentFile.data.content, 'base64').toString('utf-8');
+    if (!('content' in currentFile.data)) {
+      throw new Error('Unexpected response when fetching current blog post');
+    }
 
-      // Extract the original date from the existing content
-      const dateMatch = existingContent.match(/date:\s*(.+)/);
-      const date = dateMatch ? dateMatch[1] : new Date().toISOString();
+    const existingContent = Buffer.from(currentFile.data.content, 'base64').toString('utf-8');
 
-      // Extract the original title from the existing content
-      const titleMatch = existingContent.match(/title:\s*(.+)/);
-      const originalTitle = titleMatch ? titleMatch[1] : id;
+    // Extract the original date from the existing content
+    const dateMatch = existingContent.match(/date:\s*(.+)/);
+    const date = dateMatch ? dateMatch[1] : new Date().toISOString();
 
-      const updatedContent = `---
+    // Extract the original title from the existing content
+    const titleMatch = existingContent.match(/title:\s*(.+)/);
+    const originalTitle = titleMatch ? titleMatch[1] : safeId;
+
+    const updatedContent = `---
 title: ${title}
 date: ${date}
 ---
 
 ${content}`;
 
-      // Check if the title has changed
-      const newId = generateSafeId(title);
-      if (originalTitle !== title && id !== newId) {
-        // Title has changed, create a new file with the new title
-        await octokit.repos.createOrUpdateFileContents({
-          owner,
-          repo,
-          path: `content/blog/${newId}.md`,
-          message: 'Update blog post with new title',
-          content: Buffer.from(updatedContent).toString('base64'),
-        });
+    // Check if the title has changed
+    const newId = generateSafeId(title);
+    if (originalTitle !== title && safeId !== newId) {
+      // Title has changed, create a new file with the new title first
+      await octokit.repos.createOrUpdateFileContents({
+        owner,
+        repo,
+        path: `content/blog/${newId}.md`,
+        message: 'Update blog post with new title',
+        content: Buffer.from(updatedContent).toString('base64'),
+      });
 
-        // Delete the old file
-        await octokit.repos.deleteFile({
-          owner,
-          repo,
-          path: `content/blog/${id}.md`,
-          message: 'Delete blog post with old title',
-          sha: currentFile.data.sha,
-        });
+      // Then delete the old file
+      await octokit.repos.deleteFile({
+        owner,
+        repo,
+        path: `content/blog/${safeId}.md`,
+        message: 'Delete blog post with old title',
+        sha: currentFile.data.sha,
+      });
 
-        console.log('Blog post updated with new title successfully');
-        return { newId };
-      } else {
-        // Title hasn't changed or the ID is already matching the current title, just update the existing file
-        await octokit.repos.createOrUpdateFileContents({
-          owner,
-          repo,
-          path: `content/blog/${id}.md`,
-          message: 'Update blog post',
-          content: Buffer.from(updatedContent).toString('base64'),
-          sha: currentFile.data.sha,
-        });
-
-        console.log('Blog post updated successfully');
-        return {};
-      }
+      return { newId };
     } else {
-      throw new Error('Unexpected response when fetching current blog post');
+      // Title hasn't changed, just update the existing file
+      await octokit.repos.createOrUpdateFileContents({
+        owner,
+        repo,
+        path: `content/blog/${safeId}.md`,
+        message: 'Update blog post',
+        content: Buffer.from(updatedContent).toString('base64'),
+        sha: currentFile.data.sha,
+      });
+
+      return {};
     }
-  } catch (error) {
-    console.error('Error updating blog post:', error);
-    throw error;
-  }
+  }, { maxAttempts: 3 });
 }
 
 export async function uploadImage(
   file: File,
   accessToken: string
 ): Promise<string> {
-  console.log('Uploading image...');
   if (!accessToken) {
     throw new Error('Access token is required');
   }
   const octokit = getOctokit(accessToken);
-  console.log('Octokit instance created');
 
-  try {
-    const { owner, repo } = await getRepoInfo(accessToken);
-    console.log('Repo info:', { owner, repo });
+  const { owner, repo } = await getRepoInfo(accessToken);
 
-    // Get the default branch
-    const { data: repoData } = await octokit.repos.get({ owner, repo });
-    const defaultBranch = repoData.default_branch;
-    console.log('Default branch:', defaultBranch);
+  // Get the default branch with caching
+  const defaultBranch = await getDefaultBranch(octokit, owner, repo);
 
-    await initializeGitHubStructure(octokit, owner, repo);
-    console.log('GitHub structure initialized');
+  await initializeGitHubStructure(octokit, owner, repo);
 
-    // Generate a unique filename
-    const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-    const id = Date.now().toString();
-    const ext = path.extname(file.name);
-    const filename = `${id}${ext}`;
-    const filePath = `assets/images/${date}/${filename}`;
+  // Generate a unique filename
+  const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  const id = Date.now().toString();
+  const ext = path.extname(file.name);
+  const filename = `${id}${ext}`;
+  const filePath = `assets/images/${date}/${filename}`;
 
-    // Ensure the directory exists
-    await ensureDirectoryExists(octokit, owner, repo, `assets/images/${date}`);
+  // Ensure the directory exists
+  await ensureDirectoryExists(octokit, owner, repo, `assets/images/${date}`);
 
-    // Convert file to base64
-    const content = await fileToBase64(file);
+  // Convert file to base64
+  const content = await fileToBase64(file);
 
-    // Upload the file
-    const response = await octokit.repos.createOrUpdateFileContents({
-      owner,
-      repo,
-      path: filePath,
-      message: `Upload image: ${filename}`,
-      content,
-    });
-    console.log(response);
+  // Upload the file
+  await octokit.repos.createOrUpdateFileContents({
+    owner,
+    repo,
+    path: filePath,
+    message: `Upload image: ${filename}`,
+    content,
+  });
 
-    console.log('Image uploaded successfully');
-
-    // Construct the direct raw.githubusercontent.com URL
-    return `https://raw.githubusercontent.com/${owner}/${repo}/${defaultBranch}/${filePath}`;
-
-  } catch (error) {
-    console.error('Error uploading image:', error);
-    throw error;
-  }
+  // Construct the direct raw.githubusercontent.com URL
+  return `https://raw.githubusercontent.com/${owner}/${repo}/${defaultBranch}/${filePath}`;
 }
 
 async function ensureDirectoryExists(octokit: Octokit, owner: string, repo: string, path: string) {
@@ -797,7 +738,7 @@ async function fileToBase64(file: File): Promise<string> {
 // **ULTRA-FAST VERSION**: Uses GitHub Tree API to get all files in one call
 export async function getBlogPostsPublicFast(octokit: Octokit, owner: string, repo: string): Promise<BlogPost[]> {
   const cacheKey = `blog-posts-fast:${owner}:${repo}`;
-  
+
   // Check cache first
   const cachedData = apiCache.get<BlogPost[]>(cacheKey);
   if (cachedData) {
@@ -805,11 +746,14 @@ export async function getBlogPostsPublicFast(octokit: Octokit, owner: string, re
   }
 
   try {
+    // Get the repo's default branch with caching
+    const defaultBranch = await getDefaultBranch(octokit, owner, repo);
+
     // First get the tree to find all blog files in one API call
     const treeResponse = await octokit.git.getTree({
       owner,
       repo,
-      tree_sha: 'main',
+      tree_sha: defaultBranch,
       recursive: 'true'
     });
 
@@ -825,7 +769,7 @@ export async function getBlogPostsPublicFast(octokit: Octokit, owner: string, re
     const fetchPromises = blogFiles.map(async (file) => {
       try {
         if (!file.sha || !file.path) return null;
-        
+
         const blobResponse = await octokit.git.getBlob({
           owner,
           repo,
@@ -844,7 +788,9 @@ export async function getBlogPostsPublicFast(octokit: Octokit, owner: string, re
           date: dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString(),
         };
       } catch (error) {
-        console.error(`Error processing file ${file.path}:`, error);
+        if (isDev) {
+          console.warn(`Failed to load blog post ${file.path}:`, error);
+        }
         return null;
       }
     });
@@ -856,9 +802,7 @@ export async function getBlogPostsPublicFast(octokit: Octokit, owner: string, re
     // Cache the result
     apiCache.set(cacheKey, posts, 5 * 60 * 1000); // 5 minutes
     return posts;
-  } catch (error: unknown) {
-    console.error('Error fetching blog posts with fast method:', error);
-    
+  } catch {
     // Fallback to regular method
     return getBlogPostsPublic(octokit, owner, repo);
   }
@@ -908,8 +852,10 @@ export async function getBlogPostsPublic(octokit: Octokit, owner: string, repo: 
           };
         }
         return null;
-      } catch (error: unknown) {
-        console.error(`Error processing file ${file.name}:`, error);
+      } catch (error) {
+        if (isDev) {
+          console.warn(`Failed to load blog post ${file.name}:`, error);
+        }
         return null;
       }
     });
@@ -923,20 +869,17 @@ export async function getBlogPostsPublic(octokit: Octokit, owner: string, repo: 
     apiCache.set(cacheKey, posts, 5 * 60 * 1000); // 5 minutes
     return posts;
   } catch (error: unknown) {
-    console.error('Error fetching public blog posts:', error);
-    
     // Try to return stale cached data as fallback
     const staleData = apiCache.getStale<BlogPost[]>(cacheKey);
     if (staleData) {
-      console.warn('Returning stale cached data due to error');
       return staleData;
     }
-    
+
     // Re-throw rate limiting errors so they can be handled by the UI
-    if (error && typeof error === 'object' && 'status' in error && error.status === 403) {
+    if (isGitHubError(error) && error.status === 403) {
       throw error;
     }
-    
+
     return [];
   }
 }
@@ -955,8 +898,7 @@ export async function getThoughtsPublic(octokit: Octokit, owner: string, repo: s
 
     const content = Buffer.from(response.data.content, 'base64').toString('utf-8');
     return JSON.parse(content) as Thought[];
-  } catch (error) {
-    console.error('Error fetching public thoughts:', error);
+  } catch {
     return [];
   }
 }
@@ -984,21 +926,19 @@ export async function getIconUrls(usernameOrAccessToken: string): Promise<{ icon
       const repoInfo = await getRepoInfo(usernameOrAccessToken); // This uses the token to get actual user login
       owner = repoInfo.owner; // Correct owner (username)
       repo = repoInfo.repo;
-    } catch (error) {
-      console.error('Error getting authenticated user with token in getIconUrls:', error);
+    } catch {
       // If fetching user info with token fails, return generic defaults
-      return { 
-        iconPath: genericDefaultIconPath, 
-        appleTouchIconPath: genericDefaultAppleTouchIconPath 
+      return {
+        iconPath: genericDefaultIconPath,
+        appleTouchIconPath: genericDefaultAppleTouchIconPath
       };
     }
   } else {
     // Validate username format (basic check)
     if (!/^[a-zA-Z0-9_-]+$/.test(usernameOrAccessToken)) {
-      console.warn('Invalid username format:', usernameOrAccessToken);
-      return { 
-        iconPath: genericDefaultIconPath, 
-        appleTouchIconPath: genericDefaultAppleTouchIconPath 
+      return {
+        iconPath: genericDefaultIconPath,
+        appleTouchIconPath: genericDefaultAppleTouchIconPath
       };
     }
     owner = usernameOrAccessToken; // Assumed to be a username
@@ -1014,11 +954,13 @@ export async function getIconUrls(usernameOrAccessToken: string): Promise<{ icon
 
     if (octokit) { // If octokit was initialized (meaning a token was likely provided and valid for repo access)
       try {
+        // Get default branch once for both icon lookups (uses cache)
+        const defaultBranch = await getDefaultBranch(octokit, owner, repo);
+
         // Try to fetch custom icons from the repo, fall back to the GitHub avatar if not found
-        iconPathToUse = await getIconUrl(octokit, owner, repo, 'assets/icon.jpg', iconPathToUse);
-        appleTouchIconPathToUse = await getIconUrl(octokit, owner, repo, 'assets/icon-144.jpg', appleTouchIconPathToUse);
-      } catch (error) {
-        console.error('Error fetching custom icons:', error);
+        iconPathToUse = await getIconUrl(octokit, owner, repo, defaultBranch, 'assets/icon.jpg', iconPathToUse);
+        appleTouchIconPathToUse = await getIconUrl(octokit, owner, repo, defaultBranch, 'assets/icon-144.jpg', appleTouchIconPathToUse);
+      } catch {
         // Keep using GitHub avatar URLs as fallback
       }
     }
@@ -1031,18 +973,17 @@ export async function getIconUrls(usernameOrAccessToken: string): Promise<{ icon
   return { iconPath: iconPathToUse, appleTouchIconPath: appleTouchIconPathToUse };
 }
 
-async function getIconUrl(octokit: Octokit, owner: string, repo: string, path: string, defaultPath: string): Promise<string> {
+async function getIconUrl(octokit: Octokit, owner: string, repo: string, branch: string, iconPath: string, defaultPath: string): Promise<string> {
   try {
-    const response = await octokit.repos.getContent({ owner, repo, path });
-    
+    const response = await octokit.repos.getContent({ owner, repo, path: iconPath });
+
     // Validate the response
     if (Array.isArray(response.data) || !('content' in response.data)) {
       return defaultPath;
     }
 
-    return `https://raw.githubusercontent.com/${owner}/${repo}/main/${path}`;
-  } catch (error) {
-    console.warn(`No icon found in ${path}, using default:`, defaultPath);
+    return `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${iconPath}`;
+  } catch {
     return defaultPath;
   }
 }
@@ -1072,8 +1013,7 @@ export async function getAboutPage(accessToken: string): Promise<AboutPage | nul
       content,
     };
   } catch (error) {
-    console.error('Error fetching about page:', error);
-    if (error instanceof Error && 'status' in error && error.status === 404) {
+    if (isGitHubError(error) && error.status === 404) {
       // About page doesn't exist yet
       return null;
     }
@@ -1102,36 +1042,28 @@ export async function updateAboutPage(content: string, accessToken: string): Pro
     throw new Error('Access token is required');
   }
   const octokit = getOctokit(accessToken);
+  const { owner, repo } = await getRepoInfo(accessToken);
 
-  try {
-    const { owner, repo } = await getRepoInfo(accessToken);
+  // Get the current file to retrieve its SHA
+  const currentFile = await octokit.repos.getContent({
+    owner,
+    repo,
+    path: 'content/about.md',
+  });
 
-    // Get the current file to retrieve its SHA
-    const currentFile = await octokit.repos.getContent({
-      owner,
-      repo,
-      path: 'content/about.md',
-    });
-
-    if (Array.isArray(currentFile.data) || !('sha' in currentFile.data)) {
-      throw new Error('Unexpected response when fetching current about page');
-    }
-
-    // Update the about page file
-    await octokit.repos.createOrUpdateFileContents({
-      owner,
-      repo,
-      path: 'content/about.md',
-      message: 'Update about page',
-      content: Buffer.from(content).toString('base64'),
-      sha: currentFile.data.sha,
-    });
-
-    console.log('About page updated successfully');
-  } catch (error) {
-    console.error('Error updating about page:', error);
-    throw error;
+  if (Array.isArray(currentFile.data) || !('sha' in currentFile.data)) {
+    throw new Error('Unexpected response when fetching current about page');
   }
+
+  // Update the about page file
+  await octokit.repos.createOrUpdateFileContents({
+    owner,
+    repo,
+    path: 'content/about.md',
+    message: 'Update about page',
+    content: Buffer.from(content).toString('base64'),
+    sha: currentFile.data.sha,
+  });
 }
 
 export async function getAboutPagePublic(octokit: Octokit, owner: string, repo: string): Promise<AboutPage | null> {
@@ -1151,8 +1083,7 @@ export async function getAboutPagePublic(octokit: Octokit, owner: string, repo: 
     return {
       content,
     };
-  } catch (error) {
-    console.error('Error fetching public about page:', error);
+  } catch {
     return null;
   }
 }
@@ -1222,11 +1153,8 @@ export async function getBlogPostsPublicLight(octokit: Octokit, owner: string, r
           });
         }
       } catch (error: unknown) {
-        console.error(`Error processing file ${file.name}:`, error);
-        
         // If we hit rate limit, stop and return what we have
-        if (error && typeof error === 'object' && 'status' in error && error.status === 403) {
-          console.warn('Rate limit hit in light mode, returning partial results');
+        if (isGitHubError(error) && error.status === 403) {
           break;
         }
       }
@@ -1236,20 +1164,17 @@ export async function getBlogPostsPublicLight(octokit: Octokit, owner: string, r
     apiCache.set(cacheKey, posts, 10 * 60 * 1000); // 10 minutes for light data
     return posts;
   } catch (error: unknown) {
-    console.error('Error fetching public blog posts (light):', error);
-    
     // Try to return stale cached data as fallback
     const staleData = apiCache.getStale<BlogPost[]>(cacheKey);
     if (staleData) {
-      console.warn('Returning stale cached data (light) due to error');
       return staleData;
     }
-    
+
     // Re-throw rate limiting errors
-    if (error && typeof error === 'object' && 'status' in error && error.status === 403) {
+    if (isGitHubError(error) && error.status === 403) {
       throw error;
     }
-    
+
     return [];
   }
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { memo, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { BlogPost } from "@/lib/githubApi";
@@ -11,9 +12,33 @@ function formatDate(dateString: string): string {
   return date.toISOString().split("T")[0]; // Returns YYYY-MM-DD format
 }
 
-export default function BlogList({ posts }: { posts: BlogPost[] }) {
+function BlogListComponent({ posts }: { posts: BlogPost[] }) {
   const router = useRouter();
   const t = useTranslations("HomePage");
+
+  // Memoize sorting and grouping - must be before any early returns per React rules of hooks
+  const { groupedPosts, sortedYears } = useMemo(() => {
+    if (posts.length === 0) {
+      return { groupedPosts: {} as Record<number, BlogPost[]>, sortedYears: [] as string[] };
+    }
+
+    const sortedPosts = [...posts].sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+
+    const grouped = sortedPosts.reduce((acc, post) => {
+      const year = new Date(post.date).getFullYear();
+      if (!acc[year]) acc[year] = [];
+      acc[year].push(post);
+      return acc;
+    }, {} as Record<number, BlogPost[]>);
+
+    const years = Object.keys(grouped).sort(
+      (a, b) => Number(b) - Number(a)
+    );
+
+    return { groupedPosts: grouped, sortedYears: years };
+  }, [posts]);
 
   if (posts.length === 0) {
     return (
@@ -29,21 +54,6 @@ export default function BlogList({ posts }: { posts: BlogPost[] }) {
     );
   }
 
-  const sortedPosts = [...posts].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
-
-  const groupedPosts = sortedPosts.reduce((acc, post) => {
-    const year = new Date(post.date).getFullYear();
-    if (!acc[year]) acc[year] = [];
-    acc[year].push(post);
-    return acc;
-  }, {} as Record<number, BlogPost[]>);
-
-  const sortedYears = Object.keys(groupedPosts).sort(
-    (a, b) => Number(b) - Number(a)
-  );
-
   return (
     <div className="max-w-2xl mx-auto px-4 py-12">
       {sortedYears.map((year) => (
@@ -52,7 +62,7 @@ export default function BlogList({ posts }: { posts: BlogPost[] }) {
             {year}
           </h2>
           <ul className="space-y-4">
-            {groupedPosts[Number(year)].map((post) => (
+            {groupedPosts[Number(year)]?.map((post) => (
               <li key={post.id} className="flex items-center">
                 <Link
                   href={`/blog/${post.id.replace(".md", "")}`}
@@ -72,3 +82,5 @@ export default function BlogList({ posts }: { posts: BlogPost[] }) {
     </div>
   );
 }
+
+export default memo(BlogListComponent);

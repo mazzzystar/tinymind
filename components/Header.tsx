@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { FaGithub } from "react-icons/fa";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { getUserLogin } from "@/lib/githubApi";
 
 export default function Header({
@@ -20,17 +20,11 @@ export default function Header({
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const t = useTranslations("HomePage");
-  const [userLogin, setUserLogin] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string>("/icon.jpg");
-
-  console.log("[Header] Initial props:", { propUsername, iconUrl });
-  console.log("[Header] Session data:", session, "Status:", status);
 
   useEffect(() => {
     if (session?.accessToken) {
       getUserLogin(session.accessToken).then((login) => {
-        console.log("[Header] Fetched userLogin:", login);
-        setUserLogin(login);
         if (propUsername) {
           setAvatarUrl(`https://github.com/${propUsername}.png`);
         } else if (login) {
@@ -40,10 +34,8 @@ export default function Header({
         }
       });
     } else if (propUsername) {
-      setUserLogin(null);
       setAvatarUrl(`https://github.com/${propUsername}.png`);
     } else {
-      setUserLogin(null);
       setAvatarUrl("/icon.jpg");
     }
   }, [session, propUsername]);
@@ -56,21 +48,9 @@ export default function Header({
 
   const isLoggedIn = !!session?.user && status === "authenticated";
   const isOnPublicProfilePage = !!propUsername;
-  const isViewingOwnPublicProfile = isLoggedIn && propUsername === userLogin;
-  const isOnPrivatePages = !propUsername;
 
-  console.log("[Header] Page context:", {
-    pathname,
-    isLoggedIn,
-    isOnPublicProfilePage,
-    isViewingOwnPublicProfile,
-    isOnPrivatePages,
-    userLogin,
-    propUsername,
-    sessionStatus: status,
-  });
-
-  const getActiveTab = () => {
+  // Memoize active tab calculation
+  const activeTab = useMemo(() => {
     if (isOnPublicProfilePage) {
       if (pathname === `/${propUsername}/thoughts`) return "thoughts";
       if (pathname === `/${propUsername}/about`) return "about";
@@ -86,9 +66,10 @@ export default function Header({
       if (pathname === "/" || pathname === "/thoughts") return "thoughts";
       return "thoughts";
     }
-  };
+  }, [isOnPublicProfilePage, pathname, propUsername]);
 
-  const getNavUrls = () => {
+  // Memoize navigation URLs
+  const navUrls = useMemo(() => {
     if (isOnPublicProfilePage) {
       return {
         blog: `/${propUsername}/blog`,
@@ -102,29 +83,7 @@ export default function Header({
         about: "/about",
       };
     }
-  };
-
-  const activeTab = getActiveTab();
-  const navUrls = getNavUrls();
-
-  console.log("[Header] Navigation state:", { activeTab, navUrls });
-
-  const handleTabClick = (tabName: string) => {
-    const targetUrl = navUrls[tabName as keyof typeof navUrls];
-    console.log(
-      `[Header] Clicked tab: ${tabName}, current pathname: ${pathname}, target URL: ${targetUrl}`
-    );
-
-    if (
-      !isOnPublicProfilePage &&
-      !isLoggedIn &&
-      (tabName === "blog" || tabName === "about")
-    ) {
-      console.warn(
-        `[Header] Warning: Navigating to ${tabName} but user is not authenticated. This may show login page.`
-      );
-    }
-  };
+  }, [isOnPublicProfilePage, propUsername]);
 
   const shouldShowTabs = isLoggedIn || isOnPublicProfilePage;
 
@@ -135,7 +94,6 @@ export default function Header({
           <Link
             href={isOnPublicProfilePage ? `/${propUsername}` : "/"}
             className=""
-            onClick={() => console.log("[Header] Clicked Home/Avatar link")}
           >
             <Image
               src={avatarUrl}
@@ -150,7 +108,6 @@ export default function Header({
               <div className="flex space-x-2 sm:space-x-4 w-full justify-center">
                 <Link
                   href={navUrls.blog}
-                  onClick={() => handleTabClick("blog")}
                 >
                   <Button
                     variant="ghost"
@@ -163,7 +120,6 @@ export default function Header({
                 </Link>
                 <Link
                   href={navUrls.thoughts}
-                  onClick={() => handleTabClick("thoughts")}
                 >
                   <Button
                     variant="ghost"
@@ -176,7 +132,6 @@ export default function Header({
                 </Link>
                 <Link
                   href={navUrls.about}
-                  onClick={() => handleTabClick("about")}
                 >
                   <Button
                     variant="ghost"
@@ -195,7 +150,6 @@ export default function Header({
             target="_blank"
             rel="noopener noreferrer"
             className="text-black hover:text-gray-500"
-            onClick={() => console.log("[Header] Clicked GitHub link")}
           >
             <FaGithub size={24} />
           </Link>

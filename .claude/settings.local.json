@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(grep:*)",
+      "Bash(git -C /Users/mazzystar/Documents/Code/GPT4-written/tinymind log --oneline)",
+      "Bash(find:*)",
+      "Bash(npm run build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfix: security, performance, and reliability improvements\n\nSecurity:\n- Add Zod validation schemas for all API inputs\n- Prevent path traversal attacks with strict path validation\n- Remove stack trace exposure in API error responses\n- Guard console.error to prevent sensitive data leaks in production\n- Add CORS origin validation \\(reject wildcards, validate URL format\\)\n- Fix empty string image URL validation bypass\n\nPerformance:\n- Create shared MarkdownRenderer component with memoized plugins\n- Add React.memo to list components \\(BlogList, PublicBlogList, etc.\\)\n- Replace useEffect+useState with useMemo for sorting/formatting\n- Cache default branch names to reduce GitHub API calls\n- Add bounded LRU cache with TTL for translations\n\nReliability:\n- Add retry logic with exponential backoff for GitHub API\n- Skip retry on rate limit errors \\(403/429 with headers\\)\n- Fix cache interval race condition with HMR cleanup\n- Implement granular cache invalidation by user\n- Add getStale\\(\\) for stale-while-revalidate patterns\n- Fix useToast infinite re-subscription loop\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
+    ]
+  }
+}

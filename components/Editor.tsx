@@ -1,6 +1,6 @@
 "use client";
 
-import React, { HTMLAttributes } from "react";
+import React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -12,30 +12,17 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { CgImage } from "react-icons/cg";
 import { useTranslations } from "next-intl";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import { getThoughts, uploadImage } from "@/lib/githubApi";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/components/ui/use-toast";
 import { useDropzone } from "react-dropzone";
 import { Tooltip } from "react-tooltip";
 import { GrInfo } from "react-icons/gr";
-import "katex/dist/katex.min.css";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { transformGithubImageUrl } from "@/lib/urlUtils";
+import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
 
 function removeFrontmatter(content: string): string {
   const frontmatterRegex = /^---\n([\s\S]*?)\n---\n/;
   return content.replace(frontmatterRegex, "");
-}
-
-interface CodeProps extends HTMLAttributes<HTMLElement> {
-  inline?: boolean;
-  className?: string;
-  children?: React.ReactNode;
 }
 
 export default function Editor({
@@ -488,64 +475,7 @@ export default function Editor({
               </div>
               {isPreview ? (
                 <div className="p-4 prose max-w-none">
-                  <ReactMarkdown
-                    remarkPlugins={[remarkGfm, remarkMath]}
-                    rehypePlugins={[rehypeKatex]}
-                    components={{
-                      code: ({
-                        inline,
-                        className,
-                        children,
-                        ...props
-                      }: CodeProps) => {
-                        const match = /language-(\w+)/.exec(className || "");
-                        return !inline && match ? (
-                          <SyntaxHighlighter
-                            style={
-                              tomorrow as { [key: string]: React.CSSProperties }
-                            }
-                            language={match[1]}
-                            PreTag="div"
-                          >
-                            {String(children).replace(/\n$/, "")}
-                          </SyntaxHighlighter>
-                        ) : (
-                          <code className={className} {...props}>
-                            {children}
-                          </code>
-                        );
-                      },
-                      a: ({ children, ...props }) => (
-                        <a
-                          {...props}
-                          className="text-gray-400 no-underline hover:text-gray-600 hover:underline hover:underline-offset-4 transition-colors duration-200 break-words"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {children}
-                        </a>
-                      ),
-                      blockquote: ({ children }) => (
-                        <div className="pl-4 border-l-4 border-gray-200 text-gray-400">
-                          {children}
-                        </div>
-                      ),
-                      img: (props) => {
-                        const transformedSrc = transformGithubImageUrl(
-                          props.src
-                        );
-                        return (
-                          <img
-                            {...props}
-                            src={transformedSrc}
-                            alt={props.alt || "image"}
-                          />
-                        );
-                      },
-                    }}
-                  >
-                    {content}
-                  </ReactMarkdown>
+                  <MarkdownRenderer content={content} />
                 </div>
               ) : (
                 <Textarea

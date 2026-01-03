@@ -1,51 +1,61 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { match } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 import { getIconUrls } from '@/lib/githubApi';
+import { BoundedCache } from '@/lib/cache';
 
 const locales = [
-  'en', 'zh', 'zh-HK', 'zh-TW', 'ar', 'de', 'es', 'fr', 'hi', 'id', 'it', 'ja', 
+  'en', 'zh', 'zh-HK', 'zh-TW', 'ar', 'de', 'es', 'fr', 'hi', 'id', 'it', 'ja',
   'ko', 'nl', 'pl', 'pt', 'ru', 'th', 'tr', 'vi'
 ];
 
+// Bounded cache for translations (max 25 locales, 5 min TTL)
+const translationsCache = new BoundedCache<unknown>(25, 5 * 60 * 1000);
+
+// Default translations fallback
+const defaultTranslations = {
+  HomePage: {
+    blogTitle: "'s TinyMind Blog",
+    blogShortTitle: "'s Blog",
+    blogDescription: "Write and sync blog in Markdown with data stored in GitHub."
+  }
+};
+
 function getLocale(request: NextRequest): string {
   try {
-  const negotiatorHeaders: Record<string, string> = {};
-  request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
+    const negotiatorHeaders: Record<string, string> = {};
+    request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
 
-  const languages = new Negotiator({ headers: negotiatorHeaders }).languages();
-  return match(languages, locales, 'en');
-  } catch (error) {
-    console.error('Error determining locale:', error);
+    const languages = new Negotiator({ headers: negotiatorHeaders }).languages();
+    return match(languages, locales, 'en');
+  } catch {
     return 'en'; // fallback to English
   }
 }
 
-function loadTranslations(locale: string) {
+async function loadTranslations(locale: string): Promise<unknown> {
+  // Check cache first (BoundedCache handles TTL internally)
+  const cached = translationsCache.get(locale);
+  if (cached) {
+    return cached;
+  }
+
   try {
-  const filePath = path.join(process.cwd(), 'messages', `${locale}.json`);
-  const fileContent = fs.readFileSync(filePath, 'utf8');
-  return JSON.parse(fileContent);
-  } catch (error) {
-    console.error(`Error loading translations for locale ${locale}:`, error);
+    const filePath = path.join(process.cwd(), 'messages', `${locale}.json`);
+    const fileContent = await fs.readFile(filePath, 'utf8');
+    const data = JSON.parse(fileContent);
+
+    // Cache the result
+    translationsCache.set(locale, data);
+    return data;
+  } catch {
     // Fallback to English translations
-    try {
-      const fallbackPath = path.join(process.cwd(), 'messages', 'en.json');
-      const fallbackContent = fs.readFileSync(fallbackPath, 'utf8');
-      return JSON.parse(fallbackContent);
-    } catch (fallbackError) {
-      console.error('Error loading fallback translations:', fallbackError);
-      // Return minimal default translations
-      return {
-        HomePage: {
-          blogTitle: "'s TinyMind Blog",
-          blogShortTitle: "'s Blog",
-          blogDescription: "Write and sync blog in Markdown with data stored in GitHub."
-        }
-      };
+    if (locale !== 'en') {
+      return loadTranslations('en');
     }
+    return defaultTranslations;
   }
 }
 
@@ -67,22 +77,21 @@ export async function GET(
     }
 
   const lang = getLocale(request);
-  const translations = loadTranslations(lang);
+  const translations = await loadTranslations(lang) as { HomePage?: { blogTitle?: string; blogShortTitle?: string; blogDescription?: string } };
     
     let iconPath = '/icon.jpg'; // default fallback
     
     try {
       const { iconPath: userIconPath } = await getIconUrls(username);
       iconPath = userIconPath || '/icon.jpg';
-    } catch (iconError) {
-      console.error(`Error getting icon for user ${username}:`, iconError);
+    } catch {
       // Continue with default icon
     }
 
   const manifest = {
-    name: `${username}${translations.HomePage.blogTitle || "'s TinyMind Blog"}`,
-    short_name: `${username}${translations.HomePage.blogShortTitle || "'s Blog"}`,
-      description: `${translations.HomePage.blogDescription || "Write and sync blog in Markdown with data stored in GitHub."}`,
+    name: `${username}${translations.HomePage?.blogTitle || "'s TinyMind Blog"}`,
+    short_name: `${username}${translations.HomePage?.blogShortTitle || "'s Blog"}`,
+    description: `${translations.HomePage?.blogDescription || "Write and sync blog in Markdown with data stored in GitHub."}`,
     start_url: `/${username}`,
     display: 'standalone',
     background_color: '#ffffff',
@@ -103,9 +112,7 @@ export async function GET(
         'Cache-Control': 'public, max-age=3600, s-maxage=3600', // Cache for 1 hour
       },
     });
-  } catch (error) {
-    console.error('Error generating manifest:', error);
-    
+  } catch {
     // Return a minimal valid manifest even on error
     const fallbackManifest = {
       name: 'TinyMind Blog',

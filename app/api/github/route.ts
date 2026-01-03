@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { deleteThought, createBlogPost, createThought, getBlogPosts, getThoughts, updateThought, deleteBlogPost, updateBlogPost, getBlogPost, getAboutPage, createAboutPage, updateAboutPage } from '@/lib/githubApi';
+import { createErrorResponse, ErrorCodes } from '@/lib/apiErrors';
+import { blogPostSchema, thoughtSchema, aboutPageSchema, blogIdSchema, thoughtIdSchema, apiActionSchema } from '@/lib/validation';
 
 export const dynamic = 'force-dynamic'; // Disable caching for this route
 export const revalidate = 60; // Revalidate every 60 seconds
@@ -14,66 +16,105 @@ const headers = {
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('POST request received');
     const session = await getServerSession(authOptions);
-    
+
     if (!session || !session.accessToken) {
-      console.log('No valid session found');
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401, headers });
+      return NextResponse.json(
+        { error: 'Unauthorized', code: ErrorCodes.UNAUTHORIZED },
+        { status: 401, headers }
+      );
     }
 
-    const { action, ...data } = await request.json();
-    console.log('Action:', action);
-    console.log('Data:', JSON.stringify(data, null, 2));
+    const body = await request.json();
+    const { action, ...data } = body;
+
+    // Validate action
+    const actionResult = apiActionSchema.safeParse(action);
+    if (!actionResult.success) {
+      return NextResponse.json(
+        { error: 'Invalid action', code: ErrorCodes.BAD_REQUEST },
+        { status: 400, headers }
+      );
+    }
 
     switch (action) {
-      case 'createBlogPost':
-        const createResult = await createBlogPost(data.title, data.content, session.accessToken);
+      case 'createBlogPost': {
+        const validated = blogPostSchema.parse({ title: data.title, content: data.content });
+        const createResult = await createBlogPost(validated.title, validated.content, session.accessToken);
         return NextResponse.json({ message: 'Blog post created successfully', newId: createResult.newId }, { headers });
-      case 'updateBlogPost':
-        const result = await updateBlogPost(data.id, data.title, data.content, session.accessToken);
+      }
+
+      case 'updateBlogPost': {
+        const validatedId = blogIdSchema.parse(data.id);
+        const validated = blogPostSchema.parse({ title: data.title, content: data.content });
+        const result = await updateBlogPost(validatedId, validated.title, validated.content, session.accessToken);
         if (result && result.newId) {
           return NextResponse.json({ message: 'Blog post updated successfully', newId: result.newId }, { headers });
         }
         return NextResponse.json({ message: 'Blog post updated successfully' }, { headers });
-      case 'deleteBlogPost':
-        await deleteBlogPost(data.id, session.accessToken);
+      }
+
+      case 'deleteBlogPost': {
+        const validatedId = blogIdSchema.parse(data.id);
+        await deleteBlogPost(validatedId, session.accessToken);
         return NextResponse.json({ message: 'Blog post deleted successfully' }, { headers });
-      case 'createThought':
-        await createThought(data.content, data.image, session.accessToken);
+      }
+
+      case 'createThought': {
+        const validated = thoughtSchema.parse({ content: data.content, image: data.image });
+        await createThought(validated.content, validated.image, session.accessToken);
         return NextResponse.json({ message: 'Thought created successfully' }, { headers });
-      case 'updateThought':
-        await updateThought(data.id, data.content, session.accessToken);
+      }
+
+      case 'updateThought': {
+        const validatedId = thoughtIdSchema.parse(data.id);
+        const validated = thoughtSchema.parse({ content: data.content });
+        await updateThought(validatedId, validated.content, session.accessToken);
         return NextResponse.json({ message: 'Thought updated successfully' }, { headers });
-      case 'deleteThought':
-        await deleteThought(data.id, session.accessToken);
+      }
+
+      case 'deleteThought': {
+        const validatedId = thoughtIdSchema.parse(data.id);
+        await deleteThought(validatedId, session.accessToken);
         return NextResponse.json({ message: 'Thought deleted successfully' }, { headers });
-      case 'createAboutPage':
-        await createAboutPage(data.content, session.accessToken);
+      }
+
+      case 'createAboutPage': {
+        const validated = aboutPageSchema.parse({ content: data.content });
+        await createAboutPage(validated.content, session.accessToken);
         return NextResponse.json({ message: 'About page created successfully' }, { headers });
-      case 'updateAboutPage':
-        await updateAboutPage(data.content, session.accessToken);
+      }
+
+      case 'updateAboutPage': {
+        const validated = aboutPageSchema.parse({ content: data.content });
+        await updateAboutPage(validated.content, session.accessToken);
         return NextResponse.json({ message: 'About page updated successfully' }, { headers });
+      }
+
       default:
-        return NextResponse.json({ error: 'Invalid action' }, { status: 400, headers });
+        return NextResponse.json(
+          { error: 'Invalid action', code: ErrorCodes.BAD_REQUEST },
+          { status: 400, headers }
+        );
     }
   } catch (error) {
-    console.error('Error in /api/github POST:', error);
-    if (error instanceof Error) {
-      console.error('Error stack:', error.stack);
-      return NextResponse.json({ error: error.message, stack: error.stack }, { status: 500, headers });
+    // Log error server-side only in development
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error in /api/github POST:', error);
     }
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500, headers });
+    return createErrorResponse(error, headers);
   }
 }
 
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session || !session.accessToken) {
-      console.log('No valid session found');
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401, headers });
+      return NextResponse.json(
+        { error: 'Unauthorized', code: ErrorCodes.UNAUTHORIZED },
+        { status: 401, headers }
+      );
     }
 
     const { searchParams } = new URL(request.url);
@@ -81,29 +122,44 @@ export async function GET(request: NextRequest) {
     const id = searchParams.get('id');
 
     switch (action) {
-      case 'getBlogPosts':
+      case 'getBlogPosts': {
         const posts = await getBlogPosts(session.accessToken);
         return NextResponse.json(posts, { headers });
-      case 'getBlogPost':
+      }
+
+      case 'getBlogPost': {
         if (!id) {
-          return NextResponse.json({ error: 'Missing id parameter' }, { status: 400, headers });
+          return NextResponse.json(
+            { error: 'Missing id parameter', code: ErrorCodes.BAD_REQUEST },
+            { status: 400, headers }
+          );
         }
-        const post = await getBlogPost(id, session.accessToken);
+        const validatedId = blogIdSchema.parse(id);
+        const post = await getBlogPost(validatedId, session.accessToken);
         return NextResponse.json(post, { headers });
-      case 'getThoughts':
+      }
+
+      case 'getThoughts': {
         const thoughts = await getThoughts(session.accessToken);
         return NextResponse.json(thoughts, { headers });
-      case 'getAboutPage':
+      }
+
+      case 'getAboutPage': {
         const aboutPage = await getAboutPage(session.accessToken);
         return NextResponse.json(aboutPage, { headers });
+      }
+
       default:
-        return NextResponse.json({ error: 'Invalid action' }, { status: 400, headers });
+        return NextResponse.json(
+          { error: 'Invalid action', code: ErrorCodes.BAD_REQUEST },
+          { status: 400, headers }
+        );
     }
   } catch (error) {
-    console.error('Error in /api/github GET:', error);
-    if (error instanceof Error) {
-      return NextResponse.json({ error: error.message }, { status: 500, headers });
+    // Log error server-side only in development
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error in /api/github GET:', error);
     }
-    return NextResponse.json({ error: 'An unexpected error occurred' }, { status: 500, headers });
+    return createErrorResponse(error, headers);
   }
 }

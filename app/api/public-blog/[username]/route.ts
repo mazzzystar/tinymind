@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Octokit } from '@octokit/rest';
 import { getBlogPostsPublicFast, BlogPost } from '@/lib/githubApi';
+import { BoundedCache } from '@/lib/cache';
 
-// Cache for blog posts with timestamps
-const blogCache = new Map<string, { data: BlogPost[], timestamp: number }>();
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+// Bounded cache with max 100 users and 5 minute TTL
+const blogCache = new BoundedCache<BlogPost[]>(100, 5 * 60 * 1000);
 
 export async function GET(
   request: NextRequest,
@@ -12,12 +12,12 @@ export async function GET(
 ) {
   const username = params.username;
   const cacheKey = `${username}/tinymind-blog`;
-  
+
   try {
     // Check cache first
     const cached = blogCache.get(cacheKey);
-    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-      return NextResponse.json(cached.data);
+    if (cached) {
+      return NextResponse.json(cached);
     }
 
     // Use GitHub token if available, otherwise fallback to unauthenticated
@@ -34,20 +34,18 @@ export async function GET(
     );
 
     // Cache the result
-    blogCache.set(cacheKey, {
-      data: blogPosts,
-      timestamp: Date.now()
-    });
+    blogCache.set(cacheKey, blogPosts);
 
     return NextResponse.json(blogPosts);
   } catch (error: unknown) {
-    console.error('Error in public-blog API:', error);
-    
-    // Return cached data if available, even if stale
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error in public-blog API:', error);
+    }
+
+    // Return cached data if available (BoundedCache handles TTL)
     const cached = blogCache.get(cacheKey);
     if (cached) {
-      console.log('Returning stale cached data due to error');
-      return NextResponse.json(cached.data);
+      return NextResponse.json(cached);
     }
     
     // Handle rate limiting

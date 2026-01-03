@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useMemo, memo } from "react";
 import { BlogPost } from "@/lib/githubApi";
 import Link from "next/link";
 
@@ -9,21 +9,18 @@ function formatDate(dateString: string): string {
   return date.toISOString().split("T")[0]; // Returns YYYY-MM-DD format
 }
 
-export default function PublicBlogList({
+function PublicBlogListComponent({
   posts,
   username,
 }: {
   posts: BlogPost[];
   username: string;
 }) {
-  const [sortedPosts, setSortedPosts] = useState<BlogPost[]>([]);
-
-  useEffect(() => {
-    const sorted = [...posts].sort(
+  // Use useMemo instead of useEffect+useState for sorting
+  const sortedPosts = useMemo(() =>
+    [...posts].sort(
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
-    setSortedPosts(sorted);
-  }, [posts]);
+    ), [posts]);
 
   // Show message if no posts
   if (posts.length === 0) {
@@ -78,3 +75,5 @@ export default function PublicBlogList({
     </div>
   );
 }
+
+export default memo(PublicBlogListComponent);

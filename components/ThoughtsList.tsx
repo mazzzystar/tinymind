@@ -7,10 +7,6 @@ import GitHubSignInButton from "./GitHubSignInButton";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,19 +25,8 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
-import "katex/dist/katex.min.css";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
 import { formatTimestamp } from "@/utils/dateFormatting";
-import { transformGithubImageUrl } from "@/lib/urlUtils";
-import React, { HTMLAttributes } from "react";
-
-// Interface for code component props if not already defined elsewhere
-interface CodeProps extends HTMLAttributes<HTMLElement> {
-  inline?: boolean;
-  className?: string;
-  children?: React.ReactNode;
-}
+import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
 
 export default function ThoughtsList() {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
@@ -253,62 +238,7 @@ export default function ThoughtsList() {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm, remarkMath]}
-                rehypePlugins={[rehypeKatex]}
-                components={{
-                  code: ({
-                    inline,
-                    className,
-                    children,
-                    ...props
-                  }: CodeProps) => {
-                    const match = /language-(\w+)/.exec(className || "");
-                    return !inline && match ? (
-                      <SyntaxHighlighter
-                        style={
-                          tomorrow as { [key: string]: React.CSSProperties }
-                        }
-                        language={match[1]}
-                        PreTag="div"
-                      >
-                        {String(children).replace(/\n$/, "")}
-                      </SyntaxHighlighter>
-                    ) : (
-                      <code className={className} {...props}>
-                        {children}
-                      </code>
-                    );
-                  },
-                  a: ({ children, ...props }) => (
-                    <a
-                      {...props}
-                      className="text-gray-400 no-underline hover:text-gray-600 hover:underline hover:underline-offset-4 transition-colors duration-200 break-words"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {children}
-                    </a>
-                  ),
-                  blockquote: ({ children }) => (
-                    <div className="pl-4 border-l-4 border-gray-200 text-gray-400">
-                      {children}
-                    </div>
-                  ),
-                  img: (props) => {
-                    const transformedSrc = transformGithubImageUrl(props.src);
-                    return (
-                      <img
-                        {...props}
-                        src={transformedSrc}
-                        alt={props.alt || "image"}
-                      />
-                    );
-                  },
-                }}
-              >
-                {getDisplayContent(thought)}
-              </ReactMarkdown>
+              <MarkdownRenderer content={getDisplayContent(thought)} />
 
               {isLongThought(thought.content) && (
                 <Button
