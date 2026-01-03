@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TinyMind Quick Thoughts</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Not Logged In State -->
+    <div id="not-logged-in" class="state hidden">
+      <div class="card">
+        <div class="card-header">
+          <h1 class="card-title">TinyMind</h1>
+        </div>
+        <div class="card-content centered">
+          <svg class="lock-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <p class="message" data-i18n="loginRequired">Please log in to TinyMind first</p>
+          <a href="https://tinymind.me/login" target="_blank" class="btn btn-primary" data-i18n="goToTinyMind">
+            Go to TinyMind
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="state">
+      <div class="card">
+        <div class="card-content centered">
+          <div class="spinner"></div>
+          <p class="message" data-i18n="checkingAuth">Checking authentication...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Editor State -->
+    <div id="editor" class="state hidden">
+      <div class="card">
+        <div class="card-header">
+          <h1 class="card-title" data-i18n="createThought">Create Thought</h1>
+          <p class="card-subtitle" data-i18n="contentPublic">Content will be public</p>
+        </div>
+        <div class="card-content">
+          <div class="editor-container" id="dropzone">
+            <!-- Tabs -->
+            <div class="tabs">
+              <button type="button" class="tab active" data-tab="write" data-i18n="write">Write</button>
+              <button type="button" class="tab" data-tab="preview" data-i18n="preview">Preview</button>
+              <label class="tab image-btn" for="image-input" title="Upload Image">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <input type="file" id="image-input" accept="image/*" hidden>
+              </label>
+            </div>
+
+            <!-- Write Panel -->
+            <div class="tab-panel active" id="write-panel">
+              <textarea
+                id="content"
+                data-i18n-placeholder="placeholder"
+                placeholder="Write your thought in Markdown..."
+                rows="10"
+              ></textarea>
+            </div>
+
+            <!-- Preview Panel -->
+            <div class="tab-panel" id="preview-panel">
+              <div id="preview-content" class="markdown-preview"></div>
+            </div>
+
+            <!-- Drag overlay -->
+            <div id="drag-overlay" class="drag-overlay hidden">
+              <p data-i18n="dropImageHere">Drop image here</p>
+            </div>
+
+            <!-- Uploading overlay -->
+            <div id="upload-overlay" class="upload-overlay hidden">
+              <div class="spinner"></div>
+              <p data-i18n="uploadingImage">Uploading image...</p>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="actions">
+            <button type="button" id="publish-btn" class="btn btn-primary btn-publish">
+              <span class="btn-text" data-i18n="publish">Publish</span>
+              <div class="spinner small hidden"></div>
+            </button>
+          </div>
+          <p class="shortcut-hint" data-i18n="shortcutHint">Tip: Press Ctrl+Enter (Cmd+Enter on Mac) to publish</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success State -->
+    <div id="success" class="state hidden">
+      <div class="card">
+        <div class="card-content centered">
+          <div class="success-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <p class="message success-message" data-i18n="thoughtPublished">Thought published!</p>
+          <div class="success-actions">
+            <button type="button" id="new-thought-btn" class="btn btn-secondary" data-i18n="createAnother">
+              Create Another
+            </button>
+            <a href="https://tinymind.me/thoughts" target="_blank" class="btn btn-outline" data-i18n="viewOnTinyMind">
+              View on TinyMind
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

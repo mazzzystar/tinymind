@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import { deleteThought, createBlogPost, createThought, getBlogPosts, getThoughts, updateThought, deleteBlogPost, updateBlogPost, getBlogPost, getAboutPage, createAboutPage, updateAboutPage } from '@/lib/githubApi';
+import { deleteThought, createBlogPost, createThought, getBlogPosts, getThoughts, updateThought, deleteBlogPost, updateBlogPost, getBlogPost, getAboutPage, createAboutPage, updateAboutPage, uploadImage } from '@/lib/githubApi';
 import { createErrorResponse, ErrorCodes } from '@/lib/apiErrors';
 import { blogPostSchema, thoughtSchema, aboutPageSchema, blogIdSchema, thoughtIdSchema, apiActionSchema } from '@/lib/validation';
 
@@ -22,6 +22,48 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Unauthorized', code: ErrorCodes.UNAUTHORIZED },
         { status: 401, headers }
+      );
+    }
+
+    // Handle FormData requests (for image uploads from Chrome extension)
+    const contentType = request.headers.get('content-type') || '';
+    if (contentType.includes('multipart/form-data')) {
+      const formData = await request.formData();
+      const action = formData.get('action');
+
+      if (action === 'uploadImage') {
+        const file = formData.get('file') as File | null;
+
+        if (!file) {
+          return NextResponse.json(
+            { error: 'No file provided', code: ErrorCodes.BAD_REQUEST },
+            { status: 400, headers }
+          );
+        }
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+          return NextResponse.json(
+            { error: 'Only image files are allowed', code: ErrorCodes.BAD_REQUEST },
+            { status: 400, headers }
+          );
+        }
+
+        // Validate file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+          return NextResponse.json(
+            { error: 'File size must be less than 10MB', code: ErrorCodes.BAD_REQUEST },
+            { status: 400, headers }
+          );
+        }
+
+        const url = await uploadImage(file, session.accessToken);
+        return NextResponse.json({ url }, { headers });
+      }
+
+      return NextResponse.json(
+        { error: 'Invalid action for FormData request', code: ErrorCodes.BAD_REQUEST },
+        { status: 400, headers }
       );
     }
 

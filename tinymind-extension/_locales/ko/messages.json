@@ -1,0 +1,122 @@
+{
+  "extName": {
+    "message": "TinyMind 빠른 생각",
+    "description": "The name of the extension"
+  },
+  "extDescription": {
+    "message": "브라우저 어디서나 TinyMind에 생각을 빠르게 게시",
+    "description": "The description of the extension"
+  },
+  "contextMenuTitle": {
+    "message": "TinyMind 생각에 추가",
+    "description": "Context menu item title"
+  },
+  "createThought": {
+    "message": "생각 작성",
+    "description": "Title of the editor card"
+  },
+  "contentPublic": {
+    "message": "콘텐츠는 공개됩니다",
+    "description": "Subtitle warning that content is public"
+  },
+  "write": {
+    "message": "작성",
+    "description": "Write tab label"
+  },
+  "preview": {
+    "message": "미리보기",
+    "description": "Preview tab label"
+  },
+  "placeholder": {
+    "message": "마크다운으로 생각을 작성하세요...",
+    "description": "Textarea placeholder"
+  },
+  "publish": {
+    "message": "게시",
+    "description": "Publish button text"
+  },
+  "publishing": {
+    "message": "게시 중...",
+    "description": "Publishing in progress text"
+  },
+  "shortcutHint": {
+    "message": "팁: Ctrl+Enter (Mac에서는 Cmd+Enter)로 게시",
+    "description": "Keyboard shortcut hint"
+  },
+  "loginRequired": {
+    "message": "먼저 TinyMind에 로그인하세요",
+    "description": "Message shown when not logged in"
+  },
+  "goToTinyMind": {
+    "message": "TinyMind로 이동",
+    "description": "Login button text"
+  },
+  "checkingAuth": {
+    "message": "인증 확인 중...",
+    "description": "Loading message while checking auth"
+  },
+  "thoughtPublished": {
+    "message": "생각이 게시되었습니다!",
+    "description": "Success message after publishing"
+  },
+  "createAnother": {
+    "message": "하나 더 작성",
+    "description": "Button to create another thought"
+  },
+  "viewOnTinyMind": {
+    "message": "TinyMind에서 보기",
+    "description": "Link to view thoughts on TinyMind"
+  },
+  "dropImageHere": {
+    "message": "여기에 이미지를 놓으세요",
+    "description": "Drag and drop overlay text"
+  },
+  "uploadingImage": {
+    "message": "이미지 업로드 중...",
+    "description": "Image upload in progress text"
+  },
+  "imageUploaded": {
+    "message": "이미지가 업로드되었습니다",
+    "description": "Image upload success message"
+  },
+  "uploadFailed": {
+    "message": "이미지 업로드 실패",
+    "description": "Image upload error message"
+  },
+  "publishFailed": {
+    "message": "게시 실패",
+    "description": "Publish error message"
+  },
+  "onlyImagesAllowed": {
+    "message": "이미지 파일만 허용됩니다",
+    "description": "Error when non-image file is selected"
+  },
+  "imageTooLarge": {
+    "message": "이미지는 10MB 미만이어야 합니다",
+    "description": "Error when image is too large"
+  },
+  "contentTooLong": {
+    "message": "콘텐츠가 너무 깁니다 (최대 50,000자)",
+    "description": "Error when content exceeds limit"
+  },
+  "writeFirst": {
+    "message": "먼저 무언가를 작성하세요",
+    "description": "Error when trying to publish empty content"
+  },
+  "uploadInProgress": {
+    "message": "업로드가 진행 중입니다",
+    "description": "Error when trying to upload while another upload is running"
+  },
+  "requestTimeout": {
+    "message": "요청 시간이 초과되었습니다. 다시 시도하세요.",
+    "description": "Error when request times out"
+  },
+  "notAuthenticated": {
+    "message": "인증되지 않았습니다. 먼저 tinymind.me에 로그인하세요.",
+    "description": "Error when not authenticated"
+  },
+  "from": {
+    "message": "출처",
+    "description": "Source attribution prefix for context menu"
+  }
+}

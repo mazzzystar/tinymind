@@ -1,0 +1,122 @@
+{
+  "extName": {
+    "message": "TinyMind 快速想法",
+    "description": "The name of the extension"
+  },
+  "extDescription": {
+    "message": "喺瀏覽器任何地方快速發布想法到 TinyMind",
+    "description": "The description of the extension"
+  },
+  "contextMenuTitle": {
+    "message": "加入到 TinyMind 想法",
+    "description": "Context menu item title"
+  },
+  "createThought": {
+    "message": "建立想法",
+    "description": "Title of the editor card"
+  },
+  "contentPublic": {
+    "message": "內容將會公開",
+    "description": "Subtitle warning that content is public"
+  },
+  "write": {
+    "message": "撰寫",
+    "description": "Write tab label"
+  },
+  "preview": {
+    "message": "預覽",
+    "description": "Preview tab label"
+  },
+  "placeholder": {
+    "message": "用 Markdown 寫低你嘅想法...",
+    "description": "Textarea placeholder"
+  },
+  "publish": {
+    "message": "發布",
+    "description": "Publish button text"
+  },
+  "publishing": {
+    "message": "發布緊...",
+    "description": "Publishing in progress text"
+  },
+  "shortcutHint": {
+    "message": "提示：撳 Ctrl+Enter（Mac 撳 Cmd+Enter）發布",
+    "description": "Keyboard shortcut hint"
+  },
+  "loginRequired": {
+    "message": "請先登入 TinyMind",
+    "description": "Message shown when not logged in"
+  },
+  "goToTinyMind": {
+    "message": "前往 TinyMind",
+    "description": "Login button text"
+  },
+  "checkingAuth": {
+    "message": "檢查緊身份驗證...",
+    "description": "Loading message while checking auth"
+  },
+  "thoughtPublished": {
+    "message": "想法已發布！",
+    "description": "Success message after publishing"
+  },
+  "createAnother": {
+    "message": "再建立一條",
+    "description": "Button to create another thought"
+  },
+  "viewOnTinyMind": {
+    "message": "喺 TinyMind 睇",
+    "description": "Link to view thoughts on TinyMind"
+  },
+  "dropImageHere": {
+    "message": "將圖片拖放到呢度",
+    "description": "Drag and drop overlay text"
+  },
+  "uploadingImage": {
+    "message": "上載緊圖片...",
+    "description": "Image upload in progress text"
+  },
+  "imageUploaded": {
+    "message": "圖片上載成功",
+    "description": "Image upload success message"
+  },
+  "uploadFailed": {
+    "message": "圖片上載失敗",
+    "description": "Image upload error message"
+  },
+  "publishFailed": {
+    "message": "發布失敗",
+    "description": "Publish error message"
+  },
+  "onlyImagesAllowed": {
+    "message": "只允許圖片檔案",
+    "description": "Error when non-image file is selected"
+  },
+  "imageTooLarge": {
+    "message": "圖片必須細過 10MB",
+    "description": "Error when image is too large"
+  },
+  "contentTooLong": {
+    "message": "內容太長（最多 50,000 字）",
+    "description": "Error when content exceeds limit"
+  },
+  "writeFirst": {
+    "message": "請先寫啲嘢",
+    "description": "Error when trying to publish empty content"
+  },
+  "uploadInProgress": {
+    "message": "上載緊",
+    "description": "Error when trying to upload while another upload is running"
+  },
+  "requestTimeout": {
+    "message": "請求逾時，請重試。",
+    "description": "Error when request times out"
+  },
+  "notAuthenticated": {
+    "message": "未登入，請先登入 tinymind.me。",
+    "description": "Error when not authenticated"
+  },
+  "from": {
+    "message": "來自",
+    "description": "Source attribution prefix for context menu"
+  }
+}

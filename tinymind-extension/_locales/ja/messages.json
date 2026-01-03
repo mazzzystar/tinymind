@@ -1,0 +1,122 @@
+{
+  "extName": {
+    "message": "TinyMind クイックアイデア",
+    "description": "The name of the extension"
+  },
+  "extDescription": {
+    "message": "ブラウザのどこからでもTinyMindにアイデアを素早く投稿",
+    "description": "The description of the extension"
+  },
+  "contextMenuTitle": {
+    "message": "TinyMind アイデアに追加",
+    "description": "Context menu item title"
+  },
+  "createThought": {
+    "message": "アイデアを作成",
+    "description": "Title of the editor card"
+  },
+  "contentPublic": {
+    "message": "コンテンツは公開されます",
+    "description": "Subtitle warning that content is public"
+  },
+  "write": {
+    "message": "書く",
+    "description": "Write tab label"
+  },
+  "preview": {
+    "message": "プレビュー",
+    "description": "Preview tab label"
+  },
+  "placeholder": {
+    "message": "Markdownでアイデアを書く...",
+    "description": "Textarea placeholder"
+  },
+  "publish": {
+    "message": "公開",
+    "description": "Publish button text"
+  },
+  "publishing": {
+    "message": "公開中...",
+    "description": "Publishing in progress text"
+  },
+  "shortcutHint": {
+    "message": "ヒント：Ctrl+Enter（MacではCmd+Enter）で公開",
+    "description": "Keyboard shortcut hint"
+  },
+  "loginRequired": {
+    "message": "まずTinyMindにログインしてください",
+    "description": "Message shown when not logged in"
+  },
+  "goToTinyMind": {
+    "message": "TinyMindへ移動",
+    "description": "Login button text"
+  },
+  "checkingAuth": {
+    "message": "認証を確認中...",
+    "description": "Loading message while checking auth"
+  },
+  "thoughtPublished": {
+    "message": "アイデアが公開されました！",
+    "description": "Success message after publishing"
+  },
+  "createAnother": {
+    "message": "もう一つ作成",
+    "description": "Button to create another thought"
+  },
+  "viewOnTinyMind": {
+    "message": "TinyMindで見る",
+    "description": "Link to view thoughts on TinyMind"
+  },
+  "dropImageHere": {
+    "message": "ここに画像をドロップ",
+    "description": "Drag and drop overlay text"
+  },
+  "uploadingImage": {
+    "message": "画像をアップロード中...",
+    "description": "Image upload in progress text"
+  },
+  "imageUploaded": {
+    "message": "画像がアップロードされました",
+    "description": "Image upload success message"
+  },
+  "uploadFailed": {
+    "message": "画像のアップロードに失敗しました",
+    "description": "Image upload error message"
+  },
+  "publishFailed": {
+    "message": "公開に失敗しました",
+    "description": "Publish error message"
+  },
+  "onlyImagesAllowed": {
+    "message": "画像ファイルのみ許可されています",
+    "description": "Error when non-image file is selected"
+  },
+  "imageTooLarge": {
+    "message": "画像は10MB未満である必要があります",
+    "description": "Error when image is too large"
+  },
+  "contentTooLong": {
+    "message": "コンテンツが長すぎます（最大50,000文字）",
+    "description": "Error when content exceeds limit"
+  },
+  "writeFirst": {
+    "message": "まず何か書いてください",
+    "description": "Error when trying to publish empty content"
+  },
+  "uploadInProgress": {
+    "message": "アップロード中です",
+    "description": "Error when trying to upload while another upload is running"
+  },
+  "requestTimeout": {
+    "message": "リクエストがタイムアウトしました。もう一度お試しください。",
+    "description": "Error when request times out"
+  },
+  "notAuthenticated": {
+    "message": "認証されていません。まずtinymind.meにログインしてください。",
+    "description": "Error when not authenticated"
+  },
+  "from": {
+    "message": "出典",
+    "description": "Source attribution prefix for context menu"
+  }
+}

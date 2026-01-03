@@ -1,0 +1,122 @@
+{
+  "extName": {
+    "message": "TinyMind Quick Thoughts",
+    "description": "The name of the extension"
+  },
+  "extDescription": {
+    "message": "Quickly post Thoughts to TinyMind from anywhere in your browser",
+    "description": "The description of the extension"
+  },
+  "contextMenuTitle": {
+    "message": "Add to TinyMind thoughts",
+    "description": "Context menu item title"
+  },
+  "createThought": {
+    "message": "Create Thought",
+    "description": "Title of the editor card"
+  },
+  "contentPublic": {
+    "message": "Content will be public",
+    "description": "Subtitle warning that content is public"
+  },
+  "write": {
+    "message": "Write",
+    "description": "Write tab label"
+  },
+  "preview": {
+    "message": "Preview",
+    "description": "Preview tab label"
+  },
+  "placeholder": {
+    "message": "Write your thought in Markdown...",
+    "description": "Textarea placeholder"
+  },
+  "publish": {
+    "message": "Publish",
+    "description": "Publish button text"
+  },
+  "publishing": {
+    "message": "Publishing...",
+    "description": "Publishing in progress text"
+  },
+  "shortcutHint": {
+    "message": "Tip: Press Ctrl+Enter (Cmd+Enter on Mac) to publish",
+    "description": "Keyboard shortcut hint"
+  },
+  "loginRequired": {
+    "message": "Please log in to TinyMind first",
+    "description": "Message shown when not logged in"
+  },
+  "goToTinyMind": {
+    "message": "Go to TinyMind",
+    "description": "Login button text"
+  },
+  "checkingAuth": {
+    "message": "Checking authentication...",
+    "description": "Loading message while checking auth"
+  },
+  "thoughtPublished": {
+    "message": "Thought published!",
+    "description": "Success message after publishing"
+  },
+  "createAnother": {
+    "message": "Create Another",
+    "description": "Button to create another thought"
+  },
+  "viewOnTinyMind": {
+    "message": "View on TinyMind",
+    "description": "Link to view thoughts on TinyMind"
+  },
+  "dropImageHere": {
+    "message": "Drop image here",
+    "description": "Drag and drop overlay text"
+  },
+  "uploadingImage": {
+    "message": "Uploading image...",
+    "description": "Image upload in progress text"
+  },
+  "imageUploaded": {
+    "message": "Image uploaded",
+    "description": "Image upload success message"
+  },
+  "uploadFailed": {
+    "message": "Failed to upload image",
+    "description": "Image upload error message"
+  },
+  "publishFailed": {
+    "message": "Failed to publish thought",
+    "description": "Publish error message"
+  },
+  "onlyImagesAllowed": {
+    "message": "Only image files are allowed",
+    "description": "Error when non-image file is selected"
+  },
+  "imageTooLarge": {
+    "message": "Image must be smaller than 10MB",
+    "description": "Error when image is too large"
+  },
+  "contentTooLong": {
+    "message": "Content is too long (max 50,000 characters)",
+    "description": "Error when content exceeds limit"
+  },
+  "writeFirst": {
+    "message": "Please write something first",
+    "description": "Error when trying to publish empty content"
+  },
+  "uploadInProgress": {
+    "message": "Upload already in progress",
+    "description": "Error when trying to upload while another upload is running"
+  },
+  "requestTimeout": {
+    "message": "Request timed out. Please try again.",
+    "description": "Error when request times out"
+  },
+  "notAuthenticated": {
+    "message": "Not authenticated. Please log in to tinymind.me first.",
+    "description": "Error when not authenticated"
+  },
+  "from": {
+    "message": "From",
+    "description": "Source attribution prefix for context menu"
+  }
+}
