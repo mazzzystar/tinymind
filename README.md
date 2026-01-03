@@ -13,12 +13,28 @@ https://github.com/user-attachments/assets/4c9f590e-dd1e-4e9f-95a0-45b236752494
 <img width="1188" alt="image" src="https://github.com/user-attachments/assets/2a74609d-da01-4085-ad9d-73b7825c4528">
 
 ## Usage
-https://tinymind.me 
+https://tinymind.me
 
 MacOS version packaged using [Pake](https://github.com/tw93/Pake):
 
 [<img width="128" alt="icon_512x512" src="https://github.com/user-attachments/assets/a6f82868-2d30-480c-b439-f158b5b389c9">](https://github.com/mazzzystar/tinymind/blob/main/public/Tinymind.dmg)
 
+### Chrome Extension
+
+Capture thoughts and quotes from anywhere in your browser.
+
+[**Download Chrome Extension**](https://github.com/mazzzystar/tinymind/releases/tag/extension-v1.0.0)
+
+Features:
+- Quick popup editor with Markdown support
+- Right-click any selected text → "Add to TinyMind thoughts"
+- Drag & drop or paste images
+- Supports 20 languages
+
+Installation:
+1. Download and unzip `tinymind-extension-v1.0.0.zip`
+2. Go to `chrome://extensions/` → Enable "Developer mode"
+3. Click "Load unpacked" → Select the `tinymind-extension` folder
 
 ## How It Works
 
@@ -36,12 +52,13 @@ Your data remains secure:
 - Only write access to public repositories
 - Full control via your GitHub account
 
-## Features in Development
+## Features
 
 - [x] Blog and Thoughts support Markdown
 - [x] Add a feature to let writers manage their own blogs (add, delete, edit posts)
 - [x] Supports user drag-and-drop image uploads
 - [x] Shareable user main pages (e.g., [tinymind.me/mazzzystar](https://www.tinymind.me/mazzzystar))
+- [x] Chrome Extension to capture thoughts & quotes from anywhere
 
 ## Creator List
 If you use Tinymind for blogging or writing thoughts, feel free to comment below this issue(https://github.com/mazzzystar/tinymind/issues/18) to share your homepage URL for others to discover your work! 🎉

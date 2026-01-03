@@ -61,6 +61,6 @@
   },
   "metadata": {
     "title": "TinyMind - GitHubでブログと思考を書く。",
-    "description": "GitHubに保存されたデータでMarkdownでブログ投稿と思考を書いて同期します。"
+    "description": "GitHubに保存されたデータでMarkdownでブログ投稿と思考を書いて同期します。Chrome拡張機能でどこからでも思考をキャプチャできます。"
   }
 }
