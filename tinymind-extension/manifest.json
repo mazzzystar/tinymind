@@ -6,7 +6,6 @@
   "default_locale": "en",
   "permissions": [
     "cookies",
-    "storage",
     "contextMenus",
     "activeTab"
   ],
