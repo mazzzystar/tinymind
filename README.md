@@ -3,7 +3,7 @@
 </a>
 
 <a href="https://chromewebstore.google.com/detail/tinymind-quick-thoughts/gpfojneflmaoemniapdcgikfehpiocag">
-  <img src="https://raw.githubusercontent.com/mazzzystar/tinymind/main/public/chrome-webstore-badge.svg" alt="Available in the Chrome Web Store" height="58">
+  <img src="https://img.shields.io/chrome-web-store/v/gpfojneflmaoemniapdcgikfehpiocag?label=Chrome%20Extension&logo=googlechrome&logoColor=white&style=for-the-badge" alt="Chrome Web Store">
 </a>
 
 Turn your GitHub into a blog & memo data storage place with one-click Sign in. No server needed - every input automatically syncs to your GitHub repository.
@@ -27,7 +27,7 @@ MacOS version packaged using [Pake](https://github.com/tw93/Pake):
 
 Capture thoughts and quotes from anywhere in your browser.
 
-[<img src="https://raw.githubusercontent.com/mazzzystar/tinymind/main/public/chrome-webstore-badge.svg" alt="Available in the Chrome Web Store" height="50">](https://chromewebstore.google.com/detail/tinymind-quick-thoughts/gpfojneflmaoemniapdcgikfehpiocag)
+[<img src="https://img.shields.io/chrome-web-store/v/gpfojneflmaoemniapdcgikfehpiocag?label=Install%20from%20Chrome%20Web%20Store&logo=googlechrome&logoColor=white&style=for-the-badge" alt="Install from Chrome Web Store">](https://chromewebstore.google.com/detail/tinymind-quick-thoughts/gpfojneflmaoemniapdcgikfehpiocag)
 
 Features:
 - Quick popup editor with Markdown support
