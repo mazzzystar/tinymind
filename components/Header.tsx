@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
-import { FaGithub } from "react-icons/fa";
+import { FaGithub, FaChrome } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 import { useEffect, useState, useMemo } from "react";
 import { getUserLogin } from "@/lib/githubApi";
@@ -145,14 +145,25 @@ export default function Header({
               </div>
             </div>
           )}
-          <Link
-            href="https://github.com/mazzzystar/tinymind"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-black hover:text-gray-500"
-          >
-            <FaGithub size={24} />
-          </Link>
+          <div className="flex items-center space-x-3">
+            <Link
+              href="https://chromewebstore.google.com/detail/tinymind-quick-thoughts/gpfojneflmaoemniapdcgikfehpiocag"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:text-black transition-colors"
+              title="Get Chrome Extension"
+            >
+              <FaChrome size={22} />
+            </Link>
+            <Link
+              href="https://github.com/mazzzystar/tinymind"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-black hover:text-gray-500"
+            >
+              <FaGithub size={24} />
+            </Link>
+          </div>
         </div>
       </div>
     </header>
