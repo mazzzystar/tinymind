@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
-import { FaGithub, FaChrome } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 import { useEffect, useState, useMemo } from "react";
 import { getUserLogin } from "@/lib/githubApi";
@@ -150,10 +150,18 @@ export default function Header({
               href="https://chromewebstore.google.com/detail/tinymind-quick-thoughts/gpfojneflmaoemniapdcgikfehpiocag"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-500 hover:text-black transition-colors"
+              className="hover:opacity-80 transition-opacity"
               title="Get Chrome Extension"
             >
-              <FaChrome size={22} />
+              <svg width="22" height="22" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="24" cy="24" r="22" fill="#fff"/>
+                <path fill="#4CAF50" d="M24,4C16.5,4,10.1,8.5,7.2,15h16.8c4.4,0,8,3.6,8,8l6.7,11.6C42.8,30.4,44,27.4,44,24C44,12.9,35.1,4,24,4z"/>
+                <path fill="#F44336" d="M7.2,15C5.1,18.5,4,22.1,4,24c0,11.1,8.9,20,20,20c3.4,0,6.6-0.8,9.3-2.3L26.5,31C22,31,18.3,28,17.2,24L7.2,15z"/>
+                <path fill="#FFC107" d="M44,24c0-3.4-0.8-6.6-2.3-9.3l-10,17.4c1.1,1.9,1.3,4.3,0.4,6.5l6.7,11.6C43,44.6,44,42.3,44,40C44,35.6,44,29.6,44,24z"/>
+                <path fill="#2196F3" d="M24,4c-7.5,0-13.9,4.5-16.8,11l10,17.4c1.1-1.9,3.2-3.4,5.8-3.4h13.3c0.5-1.6,0.7-3.3,0.7-5C37,12.9,31.1,4,24,4z"/>
+                <circle cx="24" cy="24" r="8" fill="#fff"/>
+                <circle cx="24" cy="24" r="6" fill="#2196F3"/>
+              </svg>
             </Link>
             <Link
               href="https://github.com/mazzzystar/tinymind"
