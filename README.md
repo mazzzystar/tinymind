@@ -2,6 +2,10 @@
   <img src="https://raw.githubusercontent.com/mazzzystar/tinymind/main/public/Tinymind-banner.png" alt="Tinymind Blog Banner">
 </a>
 
+<a href="https://chromewebstore.google.com/detail/tinymind-quick-thoughts/gpfojneflmaoemniapdcgikfehpiocag">
+  <img src="https://img.shields.io/chrome-web-store/v/gpfojneflmaoemniapdcgikfehpiocag?label=Chrome%20Extension&logo=googlechrome&logoColor=white&style=for-the-badge" alt="Chrome Web Store">
+</a>
+
 Turn your GitHub into a blog & memo data storage place with one-click Sign in. No server needed - every input automatically syncs to your GitHub repository.
 https://tinymind.me
 
@@ -23,18 +27,13 @@ MacOS version packaged using [Pake](https://github.com/tw93/Pake):
 
 Capture thoughts and quotes from anywhere in your browser.
 
-[**Download Chrome Extension**](https://github.com/mazzzystar/tinymind/releases/tag/extension-v1.0.0)
+[<img src="https://img.shields.io/chrome-web-store/v/gpfojneflmaoemniapdcgikfehpiocag?label=Install%20from%20Chrome%20Web%20Store&logo=googlechrome&logoColor=white&style=for-the-badge" alt="Install from Chrome Web Store">](https://chromewebstore.google.com/detail/tinymind-quick-thoughts/gpfojneflmaoemniapdcgikfehpiocag)
 
 Features:
 - Quick popup editor with Markdown support
 - Right-click any selected text → "Add to TinyMind thoughts"
 - Drag & drop or paste images
 - Supports 20 languages
-
-Installation:
-1. Download and unzip `tinymind-extension-v1.0.0.zip`
-2. Go to `chrome://extensions/` → Enable "Developer mode"
-3. Click "Load unpacked" → Select the `tinymind-extension` folder
 
 ## How It Works
 
