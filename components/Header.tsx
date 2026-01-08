@@ -5,7 +5,8 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
-import { FaGithub, FaChrome } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
+import ChromeIcon from "@/components/icons/ChromeIcon";
 import { useTranslations } from "next-intl";
 import { useEffect, useState, useMemo } from "react";
 import { getUserLogin } from "@/lib/githubApi";
@@ -153,7 +154,7 @@ export default function Header({
               className="text-gray-500 hover:text-black transition-colors"
               title="Get Chrome Extension"
             >
-              <FaChrome size={22} />
+              <ChromeIcon size={22} />
             </Link>
             <Link
               href="https://github.com/mazzzystar/tinymind"
