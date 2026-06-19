@@ -3,7 +3,7 @@
 import { memo, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { BlogPost } from "@/lib/githubApi";
+import type { BlogPost } from "@/lib/contentTypes";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 

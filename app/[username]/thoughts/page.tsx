@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import PublicThoughtsList from "@/components/PublicThoughtsList";
+import { getPublicThoughts } from "@/lib/publicData";
 
 // Add this to disable static page generation
 export const revalidate = 60;
@@ -53,22 +54,7 @@ export default async function PublicThoughtsPage({
   const { username } = await params;
 
   try {
-    // Use the authenticated API endpoint instead of direct GitHub API
-    const response = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-      }/api/public/${username}`,
-      {
-        next: { revalidate: 300 }, // 5 minutes cache
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    const thoughts = data.thoughts || [];
+    const thoughts = await getPublicThoughts(username);
 
     return (
       <div className="max-w-2xl mx-auto px-4 py-8">

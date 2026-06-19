@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { getThoughts, Thought } from "@/lib/githubApi";
+import type { Thought } from "@/lib/contentTypes";
 import GitHubSignInButton from "./GitHubSignInButton";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -80,7 +80,11 @@ export default function ThoughtsList() {
       }
 
       try {
-        const fetchedThoughts = await getThoughts(session.accessToken);
+        const response = await fetch("/api/github?action=getThoughts");
+        if (!response.ok) {
+          throw new Error("Failed to fetch thoughts");
+        }
+        const fetchedThoughts = (await response.json()) as Thought[];
         setThoughts(fetchedThoughts);
         setError(null);
       } catch (error) {

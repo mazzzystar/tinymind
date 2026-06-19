@@ -9,7 +9,15 @@ import { FaGithub } from "react-icons/fa";
 import ChromeIcon from "@/components/icons/ChromeIcon";
 import { useTranslations } from "next-intl";
 import { useEffect, useState, useMemo } from "react";
-import { getUserLogin } from "@/lib/githubApi";
+
+async function fetchCurrentUsername(): Promise<string | null> {
+  const response = await fetch("/api/github?action=getUserLogin");
+  if (!response.ok) {
+    return null;
+  }
+  const data = (await response.json()) as { username?: string };
+  return data.username ?? null;
+}
 
 export default function Header({
   username: propUsername,
@@ -24,21 +32,26 @@ export default function Header({
   const [avatarUrl, setAvatarUrl] = useState<string>("/icon.jpg");
 
   useEffect(() => {
-    if (session?.accessToken) {
-      getUserLogin(session.accessToken).then((login) => {
-        if (propUsername) {
-          setAvatarUrl(`https://github.com/${propUsername}.png`);
-        } else if (login) {
-          setAvatarUrl(`https://github.com/${login}.png`);
-        } else {
-          setAvatarUrl("/icon.jpg");
-        }
-      });
-    } else if (propUsername) {
+    let cancelled = false;
+
+    if (propUsername) {
       setAvatarUrl(`https://github.com/${propUsername}.png`);
-    } else {
-      setAvatarUrl("/icon.jpg");
+      return;
     }
+
+    if (!session?.accessToken) {
+      setAvatarUrl("/icon.jpg");
+      return;
+    }
+
+    fetchCurrentUsername().then((login) => {
+      if (cancelled) return;
+      setAvatarUrl(login ? `https://github.com/${login}.png` : "/icon.jpg");
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, [session, propUsername]);
 
   useEffect(() => {

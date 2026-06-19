@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Octokit } from '@octokit/rest';
-import { getBlogPostsPublicFast, getThoughtsPublic, getAboutPagePublic } from '@/lib/githubApi';
+import { getPublicProfileData } from '@/lib/publicData';
 
 export const dynamic = 'force-dynamic'; // Disable caching for this route
 export const revalidate = 300; // Revalidate every 5 minutes
@@ -16,18 +15,9 @@ export async function GET(
   };
 
   const { username } = await params;
-  
-  // Use authenticated GitHub token for higher rate limits
-  const githubToken = process.env.GITHUB_TOKEN;
-  const octokit = githubToken ? new Octokit({ auth: githubToken }) : new Octokit();
 
   try {
-    // Fetch all public data concurrently with optimized methods
-    const [blogPosts, thoughts, aboutPage] = await Promise.all([
-      getBlogPostsPublicFast(octokit, username, 'tinymind-blog'), // **PERFORMANCE**: Use fast method
-      getThoughtsPublic(octokit, username, 'tinymind-blog'),
-      getAboutPagePublic(octokit, username, 'tinymind-blog').catch(() => null) // Don't fail if no about page
-    ]);
+    const { blogPosts, thoughts, aboutPage } = await getPublicProfileData(username);
 
     return NextResponse.json(
       { blogPosts, thoughts, aboutPage },

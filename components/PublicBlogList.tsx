@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, memo } from "react";
-import { BlogPost } from "@/lib/githubApi";
+import type { BlogPost } from "@/lib/contentTypes";
 import Link from "next/link";
 
 function formatDate(dateString: string): string {

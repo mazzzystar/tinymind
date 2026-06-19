@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import { deleteThought, createBlogPost, createThought, getBlogPosts, getThoughts, updateThought, deleteBlogPost, updateBlogPost, getBlogPost, getAboutPage, createAboutPage, updateAboutPage, uploadImage } from '@/lib/githubApi';
+import { deleteThought, createBlogPost, createThought, getBlogPosts, getThoughts, updateThought, deleteBlogPost, updateBlogPost, getBlogPost, getAboutPage, createAboutPage, updateAboutPage, uploadImage, getUserLogin } from '@/lib/githubApi';
 import { createErrorResponse, ErrorCodes } from '@/lib/apiErrors';
 import { blogPostSchema, thoughtSchema, aboutPageSchema, blogIdSchema, thoughtIdSchema, apiActionSchema } from '@/lib/validation';
 
@@ -10,7 +10,7 @@ export const revalidate = 60; // Revalidate every 60 seconds
 
 // Add cache control headers
 const headers = {
-  'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30',
+  'Cache-Control': 'private, no-store',
   'Content-Type': 'application/json',
 };
 
@@ -184,6 +184,11 @@ export async function GET(request: NextRequest) {
       case 'getThoughts': {
         const thoughts = await getThoughts(session.accessToken);
         return NextResponse.json(thoughts, { headers });
+      }
+
+      case 'getUserLogin': {
+        const username = await getUserLogin(session.accessToken);
+        return NextResponse.json({ username }, { headers });
       }
 
       case 'getAboutPage': {

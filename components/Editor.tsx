@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useState, useEffect, useCallback } from "react";
+import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,17 +13,47 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { CgImage } from "react-icons/cg";
 import { useTranslations } from "next-intl";
-import { getThoughts, uploadImage } from "@/lib/githubApi";
+import type { Thought } from "@/lib/contentTypes";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/components/ui/use-toast";
 import { useDropzone } from "react-dropzone";
 import { Tooltip } from "react-tooltip";
 import { GrInfo } from "react-icons/gr";
-import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
+
+const MarkdownRenderer = dynamic(
+  () =>
+    import("@/components/shared/MarkdownRenderer").then(
+      (mod) => mod.MarkdownRenderer
+    ),
+  {
+    loading: () => <div className="text-sm text-gray-400">Loading preview...</div>,
+  }
+);
 
 function removeFrontmatter(content: string): string {
   const frontmatterRegex = /^---\n([\s\S]*?)\n---\n/;
   return content.replace(frontmatterRegex, "");
+}
+
+async function uploadImageFile(file: File): Promise<string> {
+  const formData = new FormData();
+  formData.append("action", "uploadImage");
+  formData.append("file", file);
+
+  const response = await fetch("/api/github", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to upload image");
+  }
+
+  const data = (await response.json()) as { url?: string };
+  if (!data.url) {
+    throw new Error("Image upload did not return a URL");
+  }
+  return data.url;
 }
 
 export default function Editor({
@@ -52,7 +83,11 @@ export default function Editor({
     async (id: string) => {
       if (!session?.accessToken) return;
       try {
-        const thoughts = await getThoughts(session.accessToken);
+        const response = await fetch("/api/github?action=getThoughts");
+        if (!response.ok) {
+          throw new Error("Failed to fetch thoughts");
+        }
+        const thoughts = (await response.json()) as Thought[];
         const thought = thoughts.find((t) => t.id === id);
         if (thought) {
           setContent(thought.content);
@@ -225,7 +260,7 @@ export default function Editor({
 
       setIsImageUploading(true);
       try {
-        const imageUrl = await uploadImage(file, session.accessToken);
+        const imageUrl = await uploadImageFile(file);
         const imageMarkdown = `![${file.name}](${imageUrl})`;
 
         if (cursorPosition !== null) {
@@ -307,7 +342,7 @@ export default function Editor({
             const file = item.getAsFile();
             if (!file) continue;
 
-            const imageUrl = await uploadImage(file, session.accessToken);
+            const imageUrl = await uploadImageFile(file);
             const imageMarkdown = `![${
               file.name || "Pasted image"
             }](${imageUrl})`;

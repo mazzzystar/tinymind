@@ -1,4 +1,5 @@
 import PublicBlogList from "@/components/PublicBlogList";
+import { getPublicBlogPosts } from "@/lib/publicData";
 
 // Increase cache duration and add error boundary
 export const revalidate = 300; // 5 minutes
@@ -11,21 +12,7 @@ export default async function PublicHomePage({
   const { username } = await params;
 
   try {
-    // Use the cached API endpoint to avoid exposing GitHub token to clients
-    const response = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-      }/api/public-blog/${username}`,
-      {
-        next: { revalidate: 300 }, // 5 minutes cache
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-
-    const blogPosts = await response.json();
+    const blogPosts = await getPublicBlogPosts(username);
 
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">

@@ -83,6 +83,7 @@ export const apiActionSchema = z.enum([
   'updateThought',
   'deleteThought',
   'getThoughts',
+  'getUserLogin',
   'createAboutPage',
   'updateAboutPage',
   'getAboutPage',

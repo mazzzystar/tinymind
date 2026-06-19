@@ -7,6 +7,7 @@ import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import { transformGithubImageUrl } from "@/lib/urlUtils";
 import React, { HTMLAttributes } from "react";
+import { getPublicAboutPage } from "@/lib/publicData";
 
 export const revalidate = 60;
 
@@ -65,22 +66,7 @@ export default async function PublicAboutPage({
   const { username } = await params;
 
   try {
-    // Use the authenticated API endpoint instead of direct GitHub API
-    const response = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-      }/api/public/${username}`,
-      {
-        next: { revalidate: 300 }, // 5 minutes cache
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    const aboutPage = data.aboutPage;
+    const aboutPage = await getPublicAboutPage(username);
 
     if (!aboutPage) {
       return (

@@ -1,10 +1,18 @@
 "use client";
 
-import { getUserLogin } from "@/lib/githubApi";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+
+async function fetchCurrentUsername(): Promise<string | null> {
+  const response = await fetch("/api/github?action=getUserLogin");
+  if (!response.ok) {
+    return null;
+  }
+  const data = (await response.json()) as { username?: string };
+  return data.username ?? null;
+}
 
 const Footer = () => {
   const { data: session } = useSession();
@@ -12,9 +20,21 @@ const Footer = () => {
   const t = useTranslations("HomePage");
 
   useEffect(() => {
+    let cancelled = false;
+
     if (session?.accessToken) {
-      getUserLogin(session.accessToken).then(setUserLogin);
+      fetchCurrentUsername().then((login) => {
+        if (!cancelled) {
+          setUserLogin(login);
+        }
+      });
+    } else {
+      setUserLogin(null);
     }
+
+    return () => {
+      cancelled = true;
+    };
   }, [session]);
 
   if (!session || !session.user?.name || !userLogin) {

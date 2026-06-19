@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next'
+import { getPublicBlogPosts } from '@/lib/publicData'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://tinymind.me'
@@ -55,20 +56,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           priority: 0.5,
         })
 
-        // Use the authenticated API endpoint instead of direct GitHub calls
         try {
-          const response = await fetch(`${baseUrl}/api/public-blog/${username}`)
-          if (response.ok) {
-            const blogPosts = await response.json()
-            
-            for (const post of blogPosts) {
-              dynamicPages.push({
-                url: `${baseUrl}/${username}/blog/${encodeURIComponent(post.id)}`,
-                lastModified: new Date(post.date),
-                changeFrequency: 'monthly',
-                priority: 0.6,
-              })
-            }
+          const blogPosts = await getPublicBlogPosts(username)
+          for (const post of blogPosts) {
+            dynamicPages.push({
+              url: `${baseUrl}/${username}/blog/${encodeURIComponent(post.id)}`,
+              lastModified: new Date(post.date),
+              changeFrequency: 'monthly',
+              priority: 0.6,
+            })
           }
         } catch (blogError) {
           console.error(`Error fetching blog posts for ${username}:`, blogError)
@@ -83,4 +79,4 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   return [...staticPages, ...dynamicPages]
-} 
+}

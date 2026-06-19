@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Thought } from "@/lib/githubApi";
+import type { Thought } from "@/lib/contentTypes";
 import { formatTimestamp } from "@/utils/dateFormatting";
 import { Button } from "@/components/ui/button";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";

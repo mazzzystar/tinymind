@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import type { BlogPost } from "@/lib/githubApi";
+import type { BlogPost } from "@/lib/contentTypes";
 import GitHubSignInButton from "@/components/GitHubSignInButton";
 
 function decodeContent(content: string): string {

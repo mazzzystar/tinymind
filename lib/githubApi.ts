@@ -3,6 +3,9 @@ import path from 'path';
 import { apiCache, BoundedCache } from './cache';
 import { withRetry } from './retry';
 import { validatePath } from './validation';
+import type { AboutPage, BlogPost, Thought } from './contentTypes';
+
+export type { AboutPage, BlogPost, Thought } from './contentTypes';
 
 // Add this type definition at the top of the file
 type UpdateFileParams = Parameters<Octokit['repos']['createOrUpdateFileContents']>[0];
@@ -39,25 +42,6 @@ export function isGitHubError(error: unknown): error is { status: number; messag
     'status' in error &&
     typeof (error as { status: unknown }).status === 'number'
   );
-}
-
-export interface BlogPost {
-  id: string;
-  title: string;
-  content: string;
-  date: string;
-}
-
-export type Thought = {
-  id: string;
-  content: string;
-  timestamp: string;
-  image?: string;
-};
-
-// Add interface for AboutPage
-export interface AboutPage {
-  content: string;
 }
 
 function getOctokit(accessToken: string | undefined) {

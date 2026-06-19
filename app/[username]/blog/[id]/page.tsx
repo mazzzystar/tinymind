@@ -1,5 +1,7 @@
 import { Metadata } from "next";
-import BlogPostClient from "./BlogPostClient";
+import { notFound } from "next/navigation";
+import { BlogPostContent } from "@/components/BlogPostContent";
+import { getPublicBlogPosts } from "@/lib/publicData";
 
 function decodeContent(content: string): string {
   try {
@@ -22,7 +24,20 @@ export default async function PublicBlogPost({
   params: Promise<{ username: string; id: string }>;
 }) {
   const { username, id } = await params;
-  return <BlogPostClient username={username} id={id} />;
+  const posts = await getPublicBlogPosts(username);
+  const post = posts.find((p) => p.id === decodeContent(id));
+
+  if (!post) {
+    notFound();
+  }
+
+  return (
+    <BlogPostContent
+      title={post.title}
+      date={post.date}
+      content={removeFrontmatter(decodeContent(post.content))}
+    />
+  );
 }
 
 export async function generateMetadata({
@@ -33,27 +48,7 @@ export async function generateMetadata({
   const { username, id } = await params;
 
   try {
-    // Use the secure API endpoint instead of direct GitHub API call
-    const response = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-      }/api/public-blog/${username}`,
-      {
-        next: { revalidate: 300 }, // 5 minutes cache
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-
-    const posts: Array<{
-      id: string;
-      title: string;
-      content: string;
-      date: string;
-    }> = await response.json();
-
+    const posts = await getPublicBlogPosts(username);
     const post = posts.find((p) => p.id === decodeContent(id));
 
     if (!post) {
