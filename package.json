@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "start": "next start",
     "lint": "next lint"
   },
@@ -27,9 +30,9 @@
     "katex": "^0.16.11",
     "lucide-react": "^0.441.0",
     "marked": "^14.1.2",
-    "next": "^14.2.35",
+    "next": "^15.5.19",
     "next-auth": "^4.24.7",
-    "next-intl": "^3.19.3",
+    "next-intl": "^3.26.5",
     "react": "^18",
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
@@ -49,6 +52,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.19.11",
     "@shadcn/ui": "^0.0.4",
     "@types/negotiator": "^0.6.3",
     "@types/node": "^20",
@@ -57,9 +61,10 @@
     "@types/react-syntax-highlighter": "^15.5.13",
     "autoprefixer": "^10.4.20",
     "eslint": "^8",
-    "eslint-config-next": "^14.2.35",
+    "eslint-config-next": "^15.5.19",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.11",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.103.0"
   }
 }

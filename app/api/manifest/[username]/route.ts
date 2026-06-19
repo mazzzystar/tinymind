@@ -1,15 +1,56 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { match } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
-import fs from 'fs/promises';
-import path from 'path';
 import { getIconUrls } from '@/lib/githubApi';
 import { BoundedCache } from '@/lib/cache';
+import ar from '@/messages/ar.json';
+import de from '@/messages/de.json';
+import en from '@/messages/en.json';
+import es from '@/messages/es.json';
+import fr from '@/messages/fr.json';
+import hi from '@/messages/hi.json';
+import id from '@/messages/id.json';
+import it from '@/messages/it.json';
+import ja from '@/messages/ja.json';
+import ko from '@/messages/ko.json';
+import nl from '@/messages/nl.json';
+import pl from '@/messages/pl.json';
+import pt from '@/messages/pt.json';
+import ru from '@/messages/ru.json';
+import th from '@/messages/th.json';
+import tr from '@/messages/tr.json';
+import vi from '@/messages/vi.json';
+import zh from '@/messages/zh.json';
+import zhHK from '@/messages/zh-HK.json';
+import zhTW from '@/messages/zh-TW.json';
 
 const locales = [
   'en', 'zh', 'zh-HK', 'zh-TW', 'ar', 'de', 'es', 'fr', 'hi', 'id', 'it', 'ja',
   'ko', 'nl', 'pl', 'pt', 'ru', 'th', 'tr', 'vi'
 ];
+
+const translationsByLocale: Record<string, unknown> = {
+  ar,
+  de,
+  en,
+  es,
+  fr,
+  hi,
+  id,
+  it,
+  ja,
+  ko,
+  nl,
+  pl,
+  pt,
+  ru,
+  th,
+  tr,
+  vi,
+  zh,
+  'zh-HK': zhHK,
+  'zh-TW': zhTW,
+};
 
 // Bounded cache for translations (max 25 locales, 5 min TTL)
 const translationsCache = new BoundedCache<unknown>(25, 5 * 60 * 1000);
@@ -42,29 +83,17 @@ async function loadTranslations(locale: string): Promise<unknown> {
     return cached;
   }
 
-  try {
-    const filePath = path.join(process.cwd(), 'messages', `${locale}.json`);
-    const fileContent = await fs.readFile(filePath, 'utf8');
-    const data = JSON.parse(fileContent);
-
-    // Cache the result
-    translationsCache.set(locale, data);
-    return data;
-  } catch {
-    // Fallback to English translations
-    if (locale !== 'en') {
-      return loadTranslations('en');
-    }
-    return defaultTranslations;
-  }
+  const data = translationsByLocale[locale] ?? translationsByLocale.en ?? defaultTranslations;
+  translationsCache.set(locale, data);
+  return data;
 }
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { username: string } }
+  { params }: { params: Promise<{ username: string }> }
 ) {
   try {
-  const username = params.username;
+    const { username } = await params;
     
     // Validate username
     if (!username || typeof username !== 'string' || username.trim() === '') {

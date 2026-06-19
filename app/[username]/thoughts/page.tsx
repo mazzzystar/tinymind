@@ -7,28 +7,29 @@ export const revalidate = 60;
 export async function generateMetadata({
   params,
 }: {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }): Promise<Metadata> {
+  const { username } = await params;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://tinymind.me";
-  const canonicalUrl = `${baseUrl}/${params.username}/thoughts`;
+  const canonicalUrl = `${baseUrl}/${username}/thoughts`;
 
   return {
-    title: `${params.username}'s Thoughts - TinyMind`,
-    description: `Explore quick thoughts and ideas by ${params.username} on TinyMind. Short-form content synced with GitHub.`,
+    title: `${username}'s Thoughts - TinyMind`,
+    description: `Explore quick thoughts and ideas by ${username} on TinyMind. Short-form content synced with GitHub.`,
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: `${params.username}'s Thoughts`,
-      description: `Explore quick thoughts and ideas by ${params.username} on TinyMind.`,
+      title: `${username}'s Thoughts`,
+      description: `Explore quick thoughts and ideas by ${username} on TinyMind.`,
       url: canonicalUrl,
       siteName: "TinyMind",
       type: "website",
     },
     twitter: {
       card: "summary",
-      title: `${params.username}'s Thoughts`,
-      description: `Explore quick thoughts and ideas by ${params.username} on TinyMind.`,
+      title: `${username}'s Thoughts`,
+      description: `Explore quick thoughts and ideas by ${username} on TinyMind.`,
     },
     robots: {
       index: true,
@@ -47,9 +48,9 @@ export async function generateMetadata({
 export default async function PublicThoughtsPage({
   params,
 }: {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }) {
-  const username = params.username;
+  const { username } = await params;
 
   try {
     // Use the authenticated API endpoint instead of direct GitHub API

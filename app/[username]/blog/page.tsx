@@ -4,28 +4,29 @@ import PublicBlogList from "@/components/PublicBlogList";
 export async function generateMetadata({
   params,
 }: {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }): Promise<Metadata> {
+  const { username } = await params;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://tinymind.me";
-  const canonicalUrl = `${baseUrl}/${params.username}/blog`;
+  const canonicalUrl = `${baseUrl}/${username}/blog`;
 
   return {
-    title: `${params.username}'s Blog Posts - TinyMind`,
-    description: `Read all blog posts by ${params.username} on TinyMind. Discover insights, tutorials, and thoughts shared through GitHub-synced content.`,
+    title: `${username}'s Blog Posts - TinyMind`,
+    description: `Read all blog posts by ${username} on TinyMind. Discover insights, tutorials, and thoughts shared through GitHub-synced content.`,
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: `${params.username}'s Blog Posts`,
-      description: `Read all blog posts by ${params.username} on TinyMind.`,
+      title: `${username}'s Blog Posts`,
+      description: `Read all blog posts by ${username} on TinyMind.`,
       url: canonicalUrl,
       siteName: "TinyMind",
       type: "website",
     },
     twitter: {
       card: "summary",
-      title: `${params.username}'s Blog Posts`,
-      description: `Read all blog posts by ${params.username} on TinyMind.`,
+      title: `${username}'s Blog Posts`,
+      description: `Read all blog posts by ${username} on TinyMind.`,
     },
     robots: {
       index: true,
@@ -47,9 +48,9 @@ export const revalidate = 300; // 5 minutes instead of 60 seconds
 export default async function PublicBlogListPage({
   params,
 }: {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }) {
-  const username = params.username;
+  const { username } = await params;
 
   try {
     // Use the cached API endpoint to avoid exposing GitHub token to clients

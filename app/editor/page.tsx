@@ -6,13 +6,14 @@ import GitHubSignInButton from "@/components/GitHubSignInButton";
 export default async function EditorPage({
   searchParams,
 }: {
-  searchParams: { type?: string };
+  searchParams: Promise<{ type?: string }>;
 }) {
+  const { type } = await searchParams;
   const session = await getServerSession(authOptions);
   const defaultType =
-    searchParams.type === "blog"
+    type === "blog"
       ? "blog"
-      : searchParams.type === "about"
+      : type === "about"
       ? "about"
       : "thought";
 

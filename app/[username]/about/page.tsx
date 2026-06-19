@@ -19,28 +19,29 @@ interface CodeProps extends HTMLAttributes<HTMLElement> {
 export async function generateMetadata({
   params,
 }: {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }): Promise<Metadata> {
+  const { username } = await params;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://tinymind.me";
-  const canonicalUrl = `${baseUrl}/${params.username}/about`;
+  const canonicalUrl = `${baseUrl}/${username}/about`;
 
   return {
-    title: `About ${params.username} - TinyMind`,
-    description: `Learn more about ${params.username}. Personal information and background shared on TinyMind.`,
+    title: `About ${username} - TinyMind`,
+    description: `Learn more about ${username}. Personal information and background shared on TinyMind.`,
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: `About ${params.username}`,
-      description: `Learn more about ${params.username} on TinyMind.`,
+      title: `About ${username}`,
+      description: `Learn more about ${username} on TinyMind.`,
       url: canonicalUrl,
       siteName: "TinyMind",
       type: "profile",
     },
     twitter: {
       card: "summary",
-      title: `About ${params.username}`,
-      description: `Learn more about ${params.username} on TinyMind.`,
+      title: `About ${username}`,
+      description: `Learn more about ${username} on TinyMind.`,
     },
     robots: {
       index: true,
@@ -59,9 +60,9 @@ export async function generateMetadata({
 export default async function PublicAboutPage({
   params,
 }: {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }) {
-  const username = params.username;
+  const { username } = await params;
 
   try {
     // Use the authenticated API endpoint instead of direct GitHub API

@@ -14,6 +14,7 @@ src-tauri/
 
 # next.js
 /.next/
+/.open-next/
 /out/
 
 # production
@@ -33,8 +34,11 @@ yarn-error.log*
 
 # vercel
 .vercel
+.wrangler/
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 tinymind-extension-v1.0.0.zip
+.claude/settings.local.json
+.dev.vars*

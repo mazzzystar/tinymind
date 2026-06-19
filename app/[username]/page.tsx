@@ -6,9 +6,9 @@ export const revalidate = 300; // 5 minutes
 export default async function PublicHomePage({
   params,
 }: {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }) {
-  const username = params.username;
+  const { username } = await params;
 
   try {
     // Use the cached API endpoint to avoid exposing GitHub token to clients

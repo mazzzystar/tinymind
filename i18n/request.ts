@@ -3,7 +3,8 @@ import { headers } from 'next/headers';
 
 export default getRequestConfig(async () => {
   // Get the Accept-Language header
-  const acceptLanguage = headers().get('Accept-Language');
+  const requestHeaders = await headers();
+  const acceptLanguage = requestHeaders.get('Accept-Language');
 
   // Parse the Accept-Language header to get the preferred language
   let browserLocale = acceptLanguage ? acceptLanguage.split(',')[0] : 'en';

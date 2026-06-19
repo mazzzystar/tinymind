@@ -16,20 +16,21 @@ function removeFrontmatter(content: string): string {
   return content.replace(frontmatterRegex, "");
 }
 
-export default function PublicBlogPost({
+export default async function PublicBlogPost({
   params,
 }: {
-  params: { username: string; id: string };
+  params: Promise<{ username: string; id: string }>;
 }) {
-  return <BlogPostClient username={params.username} id={params.id} />;
+  const { username, id } = await params;
+  return <BlogPostClient username={username} id={id} />;
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: { username: string; id: string };
+  params: Promise<{ username: string; id: string }>;
 }): Promise<Metadata> {
-  const { username, id } = params;
+  const { username, id } = await params;
 
   try {
     // Use the secure API endpoint instead of direct GitHub API call

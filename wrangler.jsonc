@@ -1,0 +1,37 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "tinymind",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-06-19",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "routes": [
+    {
+      "pattern": "tinymind.me",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.tinymind.me",
+      "custom_domain": true
+    }
+  ],
+  "vars": {
+    "ALLOWED_ORIGIN": "https://tinymind.me",
+    "NEXTAUTH_URL": "https://tinymind.me",
+    "NEXT_PUBLIC_BASE_URL": "https://tinymind.me"
+  },
+  "secrets": {
+    "required": [
+      "GITHUB_ID",
+      "GITHUB_SECRET",
+      "NEXTAUTH_SECRET",
+      "GITHUB_TOKEN"
+    ]
+  }
+}
