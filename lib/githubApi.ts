@@ -1,5 +1,6 @@
-import { Octokit } from '@octokit/rest';
+import type { Octokit } from '@octokit/rest';
 import path from 'path';
+import { createOctokit } from './octokit';
 import { apiCache, BoundedCache, invalidateOwner } from './cache';
 import { withRetry } from './retry';
 import { usernameSchema, validatePath } from './validation';
@@ -107,7 +108,7 @@ function getOctokit(accessToken: string | undefined) {
   if (!accessToken) {
     throw new Error('Access token is required');
   }
-  return new Octokit({ auth: accessToken });
+  return createOctokit(accessToken);
 }
 
 async function getRepoInfo(accessToken: string | undefined) {

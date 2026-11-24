@@ -1,6 +1,6 @@
 import "server-only";
 
-import { Octokit } from "@octokit/rest";
+import { createOctokit } from "./octokit";
 import { BoundedCache, registerInvalidatableCache } from "./cache";
 import {
   getAboutPagePublic,
@@ -26,7 +26,7 @@ registerInvalidatableCache(profileCache);
 
 function createPublicOctokit() {
   const githubToken = process.env.GITHUB_TOKEN || process.env.GITHUB_ACCESS_TOKEN;
-  return githubToken ? new Octokit({ auth: githubToken }) : new Octokit();
+  return createOctokit(githubToken);
 }
 
 /**

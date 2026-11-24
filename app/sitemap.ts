@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
-import { Octokit } from '@octokit/rest'
+import type { Octokit } from '@octokit/rest'
+import { createOctokit } from '@/lib/octokit'
 
 const BASE_URL = 'https://tinymind.me'
 const PUBLIC_REPO = 'tinymind-blog'
@@ -149,7 +150,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   let users: DiscoveredUser[] = []
   const token = process.env.GITHUB_TOKEN || process.env.GITHUB_ACCESS_TOKEN
-  const octokit = token ? new Octokit({ auth: token }) : new Octokit()
+  const octokit = createOctokit(token)
   try {
     users = await withTimeout(discoverUsers(octokit), 20_000, 'User discovery')
   } catch (error) {
